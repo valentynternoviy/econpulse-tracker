@@ -127,6 +127,8 @@ class CollectorService:
                         )
                     )
                     if item is None:
+                        if not quote.icon_url:
+                            continue
                         item = ItemORM(
                             game_id=market.game_id,
                             name=quote.name,
