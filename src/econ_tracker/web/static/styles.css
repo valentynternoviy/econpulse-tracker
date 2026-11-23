@@ -848,47 +848,82 @@ mark.wf-hl {
 }
 
 .rust-bar-center {
+  flex: 1 1 340px;
+  max-width: 480px;
+}
+
+.rust-search-combo {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  align-items: stretch;
+  width: 100%;
+  background: var(--stage);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.15s ease;
+}
+
+.rust-search-combo:focus-within {
+  border-color: var(--accent);
 }
 
 .rust-select-item-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  min-width: 220px;
-  justify-content: space-between;
+  gap: 8px;
   padding: 8px 14px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border-strong);
-  background: #23242b;
+  border: none;
+  border-right: 1px solid var(--border);
+  background: #25262e;
   color: var(--text);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
 }
-.rust-select-item-btn:hover { background: #2b2c35; border-color: var(--accent); }
+.rust-select-item-btn:hover { background: #2e303a; color: #ffffff; }
 
 .rust-select-item-btn img {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
   vertical-align: middle;
 }
 
 .rust-clear-item-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  background: #23242b;
+  padding: 0 9px;
+  border: none;
+  border-right: 1px solid var(--border);
+  background: #25262e;
   color: var(--text-muted);
-  font-size: 18px;
+  font-size: 16px;
   cursor: pointer;
 }
-.rust-clear-item-btn:hover { color: #fff; border-color: var(--accent); }
+.rust-clear-item-btn:hover { color: #ffffff; background: #2e303a; }
+
+.rust-combo-input-wrap {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px 0 4px;
+}
+
+.rust-combo-input {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+}
+
+.rust-combo-input::placeholder {
+  color: var(--text-dim);
+}
 
 .rust-bar-right {
   display: flex;
@@ -1235,10 +1270,10 @@ mark.wf-hl {
 }
 
 .detail-art-stage img {
-  width: 82%;
-  height: 280px;
-  max-width: 340px;
+  max-width: 100%;
   max-height: 300px;
+  width: auto;
+  height: auto;
   object-fit: contain;
   display: block;
   filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.75));
