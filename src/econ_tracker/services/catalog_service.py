@@ -35,74 +35,48 @@ _Q2 = Decimal("0.01")
 
 CATEGORY_LABELS: dict[str, str] = {
     # Rust
-    "clothing": "Одежда и броня",
-    "weapons": "Оружие",
-    "deployables": "Постройки и двери",
-    "tools": "Инструменты",
+    "weapons": "Зброя",
+    "clothing": "Одяг та броня",
+    "deployables": "Конструкції та двері",
+    "tools": "Інструменти",
     # Warframe
-    "warframes": "Варфреймы",
-    "mods": "Моды",
-    "arcanes": "Мистификаторы",
-    "relics": "Реликвии",
-    "companions": "Компаньоны",
-    "other": "Прочее",
+    "warframes": "Варфрейми",
+    "mods": "Моди",
+    "arcanes": "Містифікатори",
+    "relics": "Реліквії",
+    "companions": "Компаньйони",
+    "other": "Інше",
 }
 
 SUBCATEGORY_LABELS: dict[str, str] = {
-    # Rust clothing
-    "hoodie": "Худи",
-    "pants": "Штаны",
-    "facemask": "Металл. маска",
-    "chestplate": "Нагрудник",
-    "kilt": "Килт",
-    "jacket": "Куртка",
-    "gloves": "Перчатки",
-    "boots": "Ботинки",
-    "headgear": "Головной убор",
-    "shirt": "Футболка",
-    "hazmat": "Хазмат",
-    # Rust weapons
-    "ak47": "AK-47",
-    "mp5": "MP5A4",
-    "lr300": "LR-300",
-    "thompson": "Томпсон",
-    "sar": "Полуавтомат (SAR)",
-    "sniper": "Винтовка (Bolt)",
-    "shotgun": "Дробовик",
-    "pistol": "Пистолет / Револьвер",
-    "custom_smg": "Custom SMG",
-    "heavy": "Тяжёлое",
-    "bow": "Лук / Арбалет",
-    "melee": "Ближний бой",
-    # Rust deployables & tools
-    "furnace": "Печка",
-    "garage_door": "Гаражная дверь",
-    "sheet_metal_door": "Металл. дверь",
-    "armored_door": "Бронир. дверь",
-    "storage_box": "Большой ящик",
-    "sleeping_bag": "Спальник",
-    "base_decor": "Интерьер базы",
-    "hatchet": "Топор",
-    "pickaxe": "Кирка",
-    "rock": "Камень",
-    "hammer": "Киянка",
-    "raiding": "Рейд-заряды",
-    # Warframe
-    "prime_set": "Prime Сет",
-    "blueprint": "Чертёж",
-    "primary": "Основное",
-    "secondary": "Вторичное",
+    # Warframe (Ukrainian)
+    "prime_set": "Прайм-комплект",
+    "blueprint": "Кресленик",
+    "primary": "Основна зброя",
+    "secondary": "Допоміжна зброя",
+    "melee": "Ближній бій",
     "mod": "Мод",
     "aura": "Аура",
-    "stance": "Стойка",
+    "stance": "Стійка",
     "augment": "Аугмент",
-    "arcane": "Мистификатор",
-    "void_relic": "Реликвия Бездны",
-    "weapon_set": "Оружейный сет",
-    "weapon_part": "Компонент оружия",
-    "companion": "Страж / Компаньон",
-    "misc": "Другое",
-    "general": "Общее",
+    "arcane": "Містифікатор",
+    "void_relic": "Реліквія Порожнечі",
+    "weapon_set": "Комплект зброї",
+    "weapon_part": "Компонент зброї",
+    "companion": "Супутник",
+    "misc": "Інше",
+    "general": "Загальне",
+    # Rust crisp base-item labels
+    "assault_rifle": "Assault Rifle",
+    "lr_300_assault_rifle": "LR-300 Assault Rifle",
+    "semi_automatic_rifle": "Semi-Automatic Rifle",
+    "semi_automatic_pistol": "Semi-Automatic Pistol",
+    "mp5a4": "MP5A4",
+    "custom_smg": "Custom SMG",
+    "m249": "M249",
+    "m39_rifle": "M39 Rifle",
+    "l96_rifle": "L96 Rifle",
+    "t_shirt": "T-Shirt",
 }
 
 
@@ -131,7 +105,11 @@ class CatalogService:
 
         if q:
             pattern = f"%{q.strip().lower()}%"
-            stmt = stmt.where(func.lower(ItemORM.name).like(pattern))
+            stmt = stmt.where(
+                func.lower(ItemORM.name).like(pattern)
+                | func.lower(func.coalesce(ItemORM.name_en, "")).like(pattern)
+                | func.lower(ItemORM.external_id).like(pattern)
+            )
         if game:
             stmt = stmt.where(GameORM.code == game.lower())
         if item_type:
@@ -161,6 +139,7 @@ class CatalogService:
 
         # Deterministic sorting with tie-breaker ItemORM.id ASC (prevents pagination drift)
         order_map: dict[ItemSortOption, list[Any]] = {
+            "newest": [ItemORM.released_at.desc().nulls_last(), ItemORM.id.asc()],
             "price_asc": [ItemORM.latest_min_price.asc().nulls_last(), ItemORM.id.asc()],
             "price_desc": [ItemORM.latest_min_price.desc().nulls_last(), ItemORM.id.asc()],
             "volume_desc": [ItemORM.latest_total_volume.desc(), ItemORM.id.asc()],
@@ -199,6 +178,8 @@ class CatalogService:
             select(
                 ItemORM.item_type,
                 ItemORM.subcategory,
+                func.max(ItemORM.base_item_shortname).label("shortname"),
+                func.max(ItemORM.icon_url).label("sample_icon"),
                 func.count(ItemORM.id).label("cnt"),
                 func.coalesce(func.sum(ItemORM.latest_total_volume), 0).label("vol"),
             )
@@ -212,16 +193,23 @@ class CatalogService:
         grouped: dict[str, list[SubcategoryFacet]] = defaultdict(list)
         cat_totals: dict[str, tuple[int, int]] = {}
 
-        for item_type, subcat, cnt, vol in rows:
+        for item_type, subcat, shortname, sample_icon, cnt, vol in rows:
             cnt_i, vol_i = int(cnt), int(vol)
             sub_code = str(subcat)
             sub_label = SUBCATEGORY_LABELS.get(sub_code, sub_code.replace("_", " ").title())
+            stock_icon = (
+                f"https://wiki.rustclash.com/img/items180/{shortname}.png"
+                if shortname
+                else (str(sample_icon) if sample_icon else None)
+            )
             grouped[str(item_type)].append(
                 SubcategoryFacet(
                     code=sub_code,
                     label=sub_label,
                     items_count=cnt_i,
                     total_volume=vol_i,
+                    shortname=str(shortname) if shortname else None,
+                    icon_url=stock_icon,
                 )
             )
             prev_c, prev_v = cat_totals.get(str(item_type), (0, 0))
@@ -439,9 +427,11 @@ def _to_item_summary(item: ItemORM) -> ItemSummaryResponse:
         game_id=item.game_id,
         game_code=item.game.code if item.game else "",
         name=item.name,
+        name_en=item.name_en,
         normalized_name=item.normalized_name,
         item_type=item.item_type,
         subcategory=item.subcategory,
+        base_item_shortname=item.base_item_shortname,
         rarity=item.rarity,
         external_id=item.external_id,
         is_available=item.is_available,

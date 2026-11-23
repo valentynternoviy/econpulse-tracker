@@ -1,189 +1,234 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="warframe">
+<html lang="uk" data-theme="warframe">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EconPulse — Игровая экономика Warframe & Rust</title>
+  <title>EconPulse — Моніторинг ігрової економіки (Warframe & Rust)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
 </head>
 <body>
 
   <!-- ====================================================================
-       SCREEN 1: MINIMALIST SPLIT-SCREEN GAME SELECTOR
+       ЕКРАН 1: ОБ'ЄМНИЙ 3D-ПОРТАЛ ВИБОРУ ГРИ (WARFRAME / RUST)
        ==================================================================== -->
   <div id="splash-screen">
-    <div class="splash-top-meta">
+    <div class="splash-top-pill">
       <span>ECON.PULSE</span>
-      <a href="/docs" target="_blank" rel="noopener">OpenAPI / Swagger</a>
+      <a href="/docs" target="_blank" rel="noopener">OpenAPI</a>
     </div>
 
-    <!-- LEFT: WARFRAME -->
+    <!-- ЛІВОРУЧ: WARFRAME (віддзеркалений арт + окремий шар персонажа) -->
     <section class="splash-pane" data-game="warframe">
-      <div class="splash-art-stage">
-        <img class="splash-art" src="/static/img/warframe_hero.jpg" alt="Warframe" />
+      <div class="splash-layer-bg">
+        <img src="/static/img/warframe_bg.jpg" alt="Warframe фон" />
       </div>
-      <div class="splash-gradient"></div>
-      <div class="splash-sheen"></div>
-      <div class="splash-footer">
-        <div class="splash-accent-bar"></div>
-        <h1 class="splash-title">WARFRAME</h1>
-        <div class="splash-market-cap" id="splash-cap-warframe">Загрузка рынка...</div>
+      <div class="splash-layer-char">
+        <img src="/static/img/warframe_char.png" alt="Warframe персонаж" />
+      </div>
+      <div class="splash-vignette"></div>
+      <div class="splash-bottom-info">
+        <h1 class="splash-game-name">WARFRAME</h1>
+        <p class="splash-market-cap" id="splash-cap-warframe">Завантаження ринку...</p>
       </div>
     </section>
 
-    <!-- RIGHT: RUST -->
+    <!-- ПРАВОРУЧ: RUST (хазмат окремим 3D-шаром поверх фону) -->
     <section class="splash-pane" data-game="rust">
-      <div class="splash-art-stage">
-        <img class="splash-art" src="/static/img/rust_hero.jpg" alt="Rust" />
+      <div class="splash-layer-bg">
+        <img src="/static/img/rust_bg.jpg" alt="Rust фон" />
       </div>
-      <div class="splash-gradient"></div>
-      <div class="splash-sheen"></div>
-      <div class="splash-footer">
-        <div class="splash-accent-bar"></div>
-        <h1 class="splash-title">RUST</h1>
-        <div class="splash-market-cap" id="splash-cap-rust">Загрузка рынка...</div>
+      <div class="splash-layer-char">
+        <img src="/static/img/rust_char.png" alt="Rust персонаж" />
+      </div>
+      <div class="splash-vignette"></div>
+      <div class="splash-bottom-info">
+        <h1 class="splash-game-name">RUST</h1>
+        <p class="splash-market-cap" id="splash-cap-rust">Завантаження ринку...</p>
       </div>
     </section>
   </div>
 
   <!-- ====================================================================
-       SCREEN 2: THEMED GAME ECONOMY APPLICATION SHELL
+       ЕКРАН 2: ОСНОВНИЙ ЗАСТОСУНОК (ДВІ АВТЕНТИЧНІ ТЕМИ ТА СИСТЕМИ КАТАЛОГУ)
        ==================================================================== -->
   <div id="app-shell" class="hidden">
     <header class="topbar">
       <div class="topbar-inner">
         <div class="topbar-left">
-          <button class="btn btn-sm" id="btn-back-splash" title="Вернуться к выбору игры">← Игры</button>
-          <div class="game-switch-pill">
-            <button class="game-switch-btn" data-switch-game="warframe">Warframe</button>
-            <button class="game-switch-btn" data-switch-game="rust">Rust</button>
+          <button class="btn btn-sm" id="btn-back-splash" title="Повернутися до вибору гри">← Ігри</button>
+          <div class="universe-switch">
+            <button class="universe-btn" data-switch-game="warframe">Warframe</button>
+            <button class="universe-btn" data-switch-game="rust">Rust</button>
           </div>
         </div>
 
         <nav class="nav-tabs" id="nav-tabs">
           <button class="nav-tab active" data-tab="catalog">Каталог</button>
           <button class="nav-tab" data-tab="stats">Статистика</button>
-          <button class="nav-tab" data-tab="portfolio">Портфель</button>
-          <button class="nav-tab" data-tab="alerts">
-            Алерты <span class="badge-count hidden" id="unread-badge">0</span>
+          <button class="nav-tab" data-tab="anomalies">Аномалії</button>
+          <button class="nav-tab hidden" data-tab="portfolio" id="nav-tab-portfolio">Портфель</button>
+          <button class="nav-tab hidden" data-tab="alerts" id="nav-tab-alerts">
+            Сповіщення <span class="badge-count hidden" id="unread-badge">0</span>
           </button>
-          <button class="nav-tab" data-tab="anomalies">Аномалии</button>
-          <button class="nav-tab hidden" data-tab="admin" id="nav-tab-admin">Админка</button>
+          <button class="nav-tab hidden" data-tab="admin" id="nav-tab-admin">Адмінка</button>
         </nav>
 
         <div class="topbar-right">
-          <a class="btn btn-sm" href="/docs" target="_blank" rel="noopener">API Docs</a>
-          <span id="user-pill" class="muted mono hidden" style="font-size:12px;"></span>
-          <button class="btn btn-sm btn-primary" id="btn-auth">Войти</button>
-          <button class="btn btn-sm hidden" id="btn-logout">Выйти</button>
+          <a class="btn btn-sm" href="/docs" target="_blank" rel="noopener">API</a>
+          <span id="user-pill" class="user-badge hidden"></span>
+          <button class="btn btn-sm btn-primary" id="btn-auth">Увійти</button>
+          <button class="btn btn-sm hidden" id="btn-logout">Вийти</button>
         </div>
       </div>
     </header>
 
+    <!-- ================================================================
+         WARFRAME: АТМОСФЕРНИЙ ФОТО-БАНЕР З ПОШУКОМ (ЯК НА WARFRAME.MARKET)
+         ================================================================ -->
+    <section id="wf-hero-banner" class="wf-hero hidden">
+      <img class="wf-hero-bg" src="/static/img/warframe_banner.jpg" alt="Warframe Market" />
+      <div class="wf-hero-overlay"></div>
+      <div class="wf-hero-content">
+        <div class="wf-hero-brand">WARFRAME MARKET · МОНІТОРИНГ</div>
+        <div class="wf-search-bar">
+          <input id="wf-search-input" type="search" placeholder="Пошук предмета (українською або англійською)..." />
+          <button class="wf-search-btn" id="wf-search-btn" title="Знайти">🔍</button>
+        </div>
+        <div class="wf-hero-stats">
+          <span id="wf-stat-items">—</span>
+          <span>·</span>
+          <span id="wf-stat-offers">—</span>
+          <span>·</span>
+          <span id="wf-stat-cap">—</span>
+        </div>
+      </div>
+    </section>
+
     <main class="main-wrap">
-      <!-- Compact Game Banner -->
-      <section class="game-banner" id="game-banner">
-        <div>
-          <h1 id="banner-title">WARFRAME</h1>
-          <div class="muted" id="banner-subtitle">Мониторинг рынка и истории цен</div>
-        </div>
-        <div class="game-banner-meta">
-          <div>
-            <div class="banner-stat-lbl">Предметов</div>
-            <div class="banner-stat-val" id="banner-items">—</div>
-          </div>
-          <div>
-            <div class="banner-stat-lbl">Лотов на продаже</div>
-            <div class="banner-stat-val" id="banner-offers">—</div>
-          </div>
-          <div>
-            <div class="banner-stat-lbl">Общая стоимость рынка</div>
-            <div class="banner-stat-val" id="banner-cap">—</div>
-          </div>
-        </div>
-      </section>
 
-      <!-- TAB: CATALOG -->
+      <!-- ==============================================================
+           ВКЛАДКА: КАТАЛОГ (ОДИН ІЗ ДВОХ АВТЕНТИЧНИХ ІНТЕРФЕЙСІВ)
+           ============================================================== -->
       <section id="tab-catalog" class="tab-panel">
-        <div class="section-label">Категории предметов</div>
-        <div class="category-bar" id="category-bar"></div>
 
-        <!-- Expandable Subcategory Outline Silhouettes -->
-        <div class="subcategory-strip hidden" id="subcategory-strip"></div>
+        <!-- АВТЕНТИЧНИЙ ІНТЕРФЕЙС RUST (RUSTCLASH + КОНСОЛЬ РОЗРОБНИКА) -->
+        <div id="rust-catalog-view" class="hidden">
+          <div class="rust-skins-bar">
+            <div class="rust-bar-left">
+              <h2 class="rust-section-title">СКІНИ RUST</h2>
+              <span class="rust-cap-meta" id="rust-cap-meta"></span>
+            </div>
 
-        <!-- Filter & Sort Toolbar -->
-        <div class="toolbar">
-          <input class="input search-input" id="filter-q" type="search" placeholder="Поиск по названию предмета или скина..." />
-          <select class="select" id="filter-rarity">
-            <option value="">Любая редкость</option>
-            <option value="legendary">Legendary</option>
-            <option value="prime">Prime</option>
-            <option value="rare">Rare</option>
-            <option value="uncommon">Uncommon</option>
-            <option value="common">Common</option>
-          </select>
-          <input class="input mono" id="filter-min" type="number" step="0.5" min="0" placeholder="От $" style="width:92px;" />
-          <input class="input mono" id="filter-max" type="number" step="0.5" min="0" placeholder="До $" style="width:92px;" />
-          <select class="select" id="filter-sort">
-            <option value="volume_desc">По кол-ву на рынке ↓</option>
-            <option value="price_desc">Сначала дорогие ↓</option>
-            <option value="price_asc">Сначала дешёвые ↑</option>
-            <option value="spread_desc">Макс. спред ↓</option>
-            <option value="change_desc">Рост за 24ч ↓</option>
-            <option value="name_asc">По названию А–Я</option>
-          </select>
-          <button class="btn btn-sm" id="btn-reset-filters">Сброс</button>
-        </div>
+            <div class="rust-bar-center">
+              <button class="rust-select-item-btn" id="btn-rust-select-item">
+                <span id="rust-selected-pill-content">Обрати предмет</span>
+                <span class="rust-search-ico">🔍</span>
+              </button>
+              <button class="rust-clear-item-btn hidden" id="btn-rust-clear-item" title="Скинути обраний предмет">×</button>
+            </div>
 
-        <div class="card">
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Предмет</th>
-                  <th>Редкость</th>
-                  <th>Цена</th>
-                  <th>На рынке (лотов)</th>
-                  <th>Спред</th>
-                  <th>24ч</th>
-                  <th>MA-7</th>
-                </tr>
-              </thead>
-              <tbody id="catalog-tbody"></tbody>
-            </table>
+            <div class="rust-bar-right">
+              <input class="input" id="rust-search-input" type="search" placeholder="Пошук скіна..." style="width:170px;" />
+              <select class="select" id="rust-rarity-select">
+                <option value="">Усі рідкості</option>
+                <option value="legendary">Легендарний</option>
+                <option value="rare">Рідкісний</option>
+                <option value="uncommon">Незвичайний</option>
+                <option value="common">Звичайний</option>
+              </select>
+              <select class="select" id="rust-sort-select">
+                <option value="newest">Сортування: Нові</option>
+                <option value="volume_desc">Популярні (лоти)</option>
+                <option value="price_desc">Спочатку дорожчі</option>
+                <option value="price_asc">Спочатку дешевші</option>
+                <option value="spread_desc">Макс. спред</option>
+              </select>
+            </div>
           </div>
-          <div class="pagination">
-            <span id="pagination-info">—</span>
+
+          <!-- ВИПАДНА ПАНЕЛЬ СТОКОВИХ ІГРОВИХ ПРЕДМЕТІВ (ЯК У КОНСОЛІ RUST / RUSTCLASH) -->
+          <div class="rust-picker-drawer hidden" id="rust-picker-drawer">
+            <div class="rust-picker-tabs" id="rust-picker-tabs"></div>
+            <div class="rust-picker-grid" id="rust-picker-grid"></div>
+          </div>
+
+          <!-- СІТКА ОБ'ЄМНИХ КАРТОК СКІНІВ RUST -->
+          <div class="rust-skins-grid" id="rust-skins-grid"></div>
+
+          <div class="pagination-bar">
+            <span id="rust-pagination-info">—</span>
             <div class="pagination-controls">
-              <button class="btn btn-sm" id="btn-prev-page">← Назад</button>
-              <span class="mono" id="pagination-page">1 / 1</span>
-              <button class="btn btn-sm" id="btn-next-page">Вперёд →</button>
+              <button class="btn btn-sm" id="rust-prev-page">← Попередня</button>
+              <span class="num" id="rust-pagination-page">1 / 1</span>
+              <button class="btn btn-sm" id="rust-next-page">Наступна →</button>
             </div>
           </div>
         </div>
+
+        <!-- АВТЕНТИЧНИЙ ІНТЕРФЕЙС WARFRAME (ЯК НА WARFRAME.MARKET) -->
+        <div id="wf-catalog-view" class="hidden">
+          <div class="wf-controls-bar">
+            <div class="wf-cat-tabs" id="wf-cat-tabs"></div>
+            <div class="wf-filter-right">
+              <select class="select" id="wf-subcat-select">
+                <option value="">Усі підтипи</option>
+              </select>
+              <select class="select" id="wf-rarity-select">
+                <option value="">Усі рідкості</option>
+                <option value="prime">Прайм</option>
+                <option value="legendary">Легендарний</option>
+                <option value="rare">Рідкісний</option>
+                <option value="uncommon">Незвичайний</option>
+                <option value="common">Звичайний</option>
+              </select>
+              <select class="select" id="wf-sort-select">
+                <option value="volume_desc">За попитом (ордери)</option>
+                <option value="price_desc">Спочатку дорожчі</option>
+                <option value="price_asc">Спочатку дешевші</option>
+                <option value="spread_desc">Макс. спред</option>
+                <option value="change_desc">Зростання 24год</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- ДВОКОЛОНКОВА СІТКА КАРТОК ОРДЕРІВ WARFRAME.MARKET -->
+          <div class="wf-orders-grid" id="wf-orders-grid"></div>
+
+          <div class="pagination-bar" style="margin-top:16px;">
+            <span id="wf-pagination-info">—</span>
+            <div class="pagination-controls">
+              <button class="btn btn-sm" id="wf-prev-page">← Попередня</button>
+              <span class="num" id="wf-pagination-page">1 / 1</span>
+              <button class="btn btn-sm" id="wf-next-page">Наступна →</button>
+            </div>
+          </div>
+        </div>
+
       </section>
 
-      <!-- TAB: ANALYTICS / STATS -->
+      <!-- ==============================================================
+           ВКЛАДКА: СТАТИСТИКА ТА АНАЛІТИКА
+           ============================================================== -->
       <section id="tab-stats" class="tab-panel hidden">
         <div class="kpi-grid" id="stats-kpis"></div>
 
         <div class="card" style="margin-bottom:20px;">
           <div class="card-header">
-            <h3>Наибольший разрыв цен между площадками (Спред)</h3>
-            <span class="muted" style="font-size:12px;">Сравнение в единой валюте USD</span>
+            <h3>Найбільша різниця цін між майданчиками (Спред)</h3>
+            <span class="muted">Зіставлення цін у єдиній валюті USD</span>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th>Предмет</th>
-                  <th>Дешевле всего</th>
-                  <th>Дороже всего</th>
-                  <th>Разница ($)</th>
+                  <th>Найдешевше</th>
+                  <th>Найдорожче</th>
+                  <th>Різниця ($)</th>
                   <th>Спред (%)</th>
                 </tr>
               </thead>
@@ -194,19 +239,19 @@
 
         <div class="grid-2">
           <div class="card">
-            <div class="card-header"><h3>Лидеры роста за 24 часа</h3></div>
+            <div class="card-header"><h3>Лідери зростання за 24 години</h3></div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Предмет</th><th>Цена</th><th>24ч</th></tr></thead>
+                <thead><tr><th>Предмет</th><th>Ціна</th><th>Зміна 24год</th></tr></thead>
                 <tbody id="stats-gainers-tbody"></tbody>
               </table>
             </div>
           </div>
           <div class="card">
-            <div class="card-header"><h3>Лидеры падения за 24 часа</h3></div>
+            <div class="card-header"><h3>Лідери падіння за 24 години</h3></div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Предмет</th><th>Цена</th><th>24ч</th></tr></thead>
+                <thead><tr><th>Предмет</th><th>Ціна</th><th>Зміна 24год</th></tr></thead>
                 <tbody id="stats-losers-tbody"></tbody>
               </table>
             </div>
@@ -214,128 +259,42 @@
         </div>
 
         <div class="card">
-          <div class="card-header"><h3>Средняя цена по группам редкости</h3></div>
+          <div class="card-header"><h3>Середня ціна за групами рідкості</h3></div>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Редкость</th><th>Предметов</th><th>Средняя цена (USD)</th><th>Всего лотов</th></tr></thead>
+              <thead><tr><th>Рідкість</th><th>Предметів</th><th>Середня ціна (USD)</th><th>Усього лотів</th></tr></thead>
               <tbody id="stats-rarity-tbody"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- TAB: PORTFOLIO -->
-      <section id="tab-portfolio" class="tab-panel hidden">
-        <div id="portfolio-guest-notice" class="card" style="padding:28px; text-align:center;">
-          <p style="margin-bottom:14px;">Войдите в аккаунт, чтобы вести портфель сделок и отслеживать прибыль/убыток.</p>
-          <button class="btn btn-primary" onclick="window.__openAuthModal()">Войти / Демо-аккаунт</button>
-        </div>
-
-        <div id="portfolio-content" class="hidden">
-          <div class="kpi-grid" id="portfolio-kpis"></div>
-
-          <div class="card" style="margin-bottom:20px;">
-            <div class="card-header"><h3>Позиции портфеля</h3></div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Предмет</th>
-                    <th>Кол-во</th>
-                    <th>Средняя покупка</th>
-                    <th>Текущая цена</th>
-                    <th>Вложено</th>
-                    <th>Реализ. PnL</th>
-                    <th>Нереализ. PnL</th>
-                  </tr>
-                </thead>
-                <tbody id="portfolio-positions-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header"><h3>История сделок</h3></div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Дата</th>
-                    <th>Предмет</th>
-                    <th>Площадка</th>
-                    <th>Сторона</th>
-                    <th>Кол-во</th>
-                    <th>Цена</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody id="portfolio-trades-tbody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB: WATCHLIST & ALERTS -->
-      <section id="tab-alerts" class="tab-panel hidden">
-        <div id="alerts-guest-notice" class="card" style="padding:28px; text-align:center;">
-          <p style="margin-bottom:14px;">Войдите, чтобы управлять пороговыми подписками и лентой уведомлений.</p>
-          <button class="btn btn-primary" onclick="window.__openAuthModal()">Войти / Демо-аккаунт</button>
-        </div>
-
-        <div id="alerts-content" class="hidden">
-          <div class="grid-2">
-            <div class="card">
-              <div class="card-header"><h3>Мои подписки (Watchlist)</h3></div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Предмет</th><th>Площадка</th><th>Условие</th><th>Пауза</th><th></th></tr></thead>
-                  <tbody id="watch-tbody"></tbody>
-                </table>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <h3>Лента уведомлений</h3>
-                <label style="font-size:12px; display:flex; align-items:center; gap:6px; cursor:pointer;">
-                  <input type="checkbox" id="alerts-unread-only" /> Только непрочитанные
-                </label>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>Сообщение</th><th>Время</th><th></th></tr></thead>
-                  <tbody id="alerts-tbody"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB: ANOMALIES -->
+      <!-- ==============================================================
+           ВКЛАДКА: АНОМАЛІЇ (ЗАКРИТТЯ ДЛЯ АНАЛІТИКА / АДМІНА)
+           ============================================================== -->
       <section id="tab-anomalies" class="tab-panel hidden">
         <div class="toolbar">
           <select class="select" id="anomaly-status-filter">
-            <option value="">Все события</option>
-            <option value="open" selected>Только открытые</option>
-            <option value="closed">Закрытые</option>
+            <option value="">Усі події</option>
+            <option value="open" selected>Лише відкриті</option>
+            <option value="closed">Закриті</option>
           </select>
         </div>
         <div class="card">
           <div class="card-header">
-            <h3>Ценовые аномалии (отклонение от 7-дневного скользящего среднего)</h3>
-            <span class="muted" style="font-size:12px;">Закрытие доступно ролям Analyst / Admin</span>
+            <h3>Цінові аномалії (відхилення від 7-денного ковзного середнього)</h3>
+            <span class="muted">Підтвердження та закриття доступні ролям Аналітик і Адміністратор</span>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
                   <th>Предмет</th>
-                  <th>Площадка</th>
-                  <th>MA-7 → Цена</th>
-                  <th>Макс. отклонение</th>
-                  <th>Длительность</th>
-                  <th>Статус / Комментарий</th>
+                  <th>Майданчик</th>
+                  <th>MA-7 → Ціна</th>
+                  <th>Макс. відхилення</th>
+                  <th>Тривалість</th>
+                  <th>Статус / Коментар</th>
                   <th></th>
                 </tr>
               </thead>
@@ -345,24 +304,108 @@
         </div>
       </section>
 
-      <!-- TAB: ADMIN -->
+      <!-- ==============================================================
+           ВКЛАДКА: ОСОБИСТИЙ ПОРТФЕЛЬ (ТРЕКЕР УГОД КОРИСТУВАЧА)
+           ============================================================== -->
+      <section id="tab-portfolio" class="tab-panel hidden">
+        <div class="info-banner">
+          Особистий обліковий портфель трейдера: фіксуйте власні купівлі та продажі предметів із реальних торгових майданчиків, щоб відстежувати середньозважену ціну входу та фінансовий результат (PnL).
+        </div>
+
+        <div class="kpi-grid" id="portfolio-kpis"></div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header"><h3>Позиції портфеля</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Предмет</th>
+                  <th>Кількість</th>
+                  <th>Середня купівля</th>
+                  <th>Поточна ціна</th>
+                  <th>Вкладено</th>
+                  <th>Реалізований PnL</th>
+                  <th>Нереалізований PnL</th>
+                </tr>
+              </thead>
+              <tbody id="portfolio-positions-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>Журнал угод</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Дата</th>
+                  <th>Предмет</th>
+                  <th>Майданчик</th>
+                  <th>Операція</th>
+                  <th>Кількість</th>
+                  <th>Ціна (USD)</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="portfolio-trades-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           ВКЛАДКА: СПОСТЕРЕЖЕННЯ ТА СПОВІЩЕННЯ
+           ============================================================== -->
+      <section id="tab-alerts" class="tab-panel hidden">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3>Список спостереження (Пороги)</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Предмет</th><th>Майданчик</th><th>Умова</th><th>Тиха пауза</th><th></th></tr></thead>
+                <tbody id="watch-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3>Стрічка сповіщень</h3>
+              <label style="font-size:12.5px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                <input type="checkbox" id="alerts-unread-only" /> Лише непрочитані
+              </label>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Повідомлення</th><th>Час</th><th></th></tr></thead>
+                <tbody id="alerts-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==============================================================
+           ВКЛАДКА: АДМІНІСТРУВАННЯ
+           ============================================================== -->
       <section id="tab-admin" class="tab-panel hidden">
         <div class="card">
           <div class="card-header">
-            <h3>Состояние сбора данных по площадкам</h3>
-            <button class="btn btn-primary btn-sm" id="btn-collect-all">Запустить сбор со всех площадок</button>
+            <h3>Стан збору даних із зовнішніх майданчиків</h3>
+            <button class="btn btn-primary btn-sm" id="btn-collect-all">Запустити збір з усіх майданчиків</button>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Площадка</th>
-                  <th>Игра</th>
+                  <th>Майданчик</th>
+                  <th>Гра</th>
                   <th>Валюта</th>
-                  <th>Интервал</th>
-                  <th>Последний запуск</th>
-                  <th>Принято / Отклонено</th>
-                  <th>Статус / Ошибка</th>
+                  <th>Розклад</th>
+                  <th>Останній запуск</th>
+                  <th>Прийнято / Відхилено</th>
+                  <th>Статус / Помилка</th>
                   <th></th>
                 </tr>
               </thead>
@@ -375,110 +418,125 @@
   </div>
 
   <!-- ====================================================================
-       MODAL: ITEM DETAIL CARD + CHART.JS + CSV + WATCH / TRADE FORMS
+       МОДАЛЬНЕ ВІКНО: ДЕТАЛЬНА КАРТКА ПРЕДМЕТА / СКІНА
        ==================================================================== -->
   <div class="modal-backdrop hidden" id="item-modal">
     <div class="modal-panel">
       <div class="modal-head">
-        <div style="display:flex; gap:14px; align-items:center;">
-          <div class="item-outline-thumb" id="modal-item-icon" style="width:46px; height:46px;"></div>
-          <div>
-            <h2 id="modal-item-title" style="font-size:20px; font-weight:800;">Item</h2>
-            <div class="muted" id="modal-item-meta" style="font-size:12.5px; margin-top:3px;"></div>
-          </div>
+        <div>
+          <h2 id="modal-item-title" style="font-size:22px; font-weight:700;">—</h2>
+          <div class="muted" id="modal-item-subtitle" style="font-size:13px; margin-top:2px;"></div>
         </div>
         <button class="modal-close" id="btn-close-item-modal">×</button>
       </div>
 
-      <div id="modal-item-desc" class="item-desc-box hidden"></div>
+      <!-- Двоколонковий макет як на RustClash (ліворуч ціни й характеристики, праворуч великий рендер) -->
+      <div class="detail-top-grid">
+        <div class="detail-left">
+          <div id="modal-item-desc" class="item-desc-box hidden"></div>
 
-      <!-- Current prices across markets -->
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-header">
-          <h3>Текущие цены по площадкам</h3>
-          <span class="mono" id="modal-spread-badge" style="font-size:12.5px;"></span>
+          <div class="card" style="margin-bottom:14px;">
+            <div class="card-header">
+              <h3>Ціни на майданчиках</h3>
+              <span class="num" id="modal-spread-badge" style="font-size:13px; font-weight:700;"></span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Майданчик</th><th>Ориг. ціна</th><th>У USD</th><th>Лоти</th></tr>
+                </thead>
+                <tbody id="modal-markets-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="table-wrap">
+              <table class="meta-kv-table">
+                <tbody id="modal-meta-tbody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Площадка</th><th>Исходная цена</th><th>В USD</th><th>На продаже (лотов)</th><th>Проверено</th></tr>
-            </thead>
-            <tbody id="modal-markets-tbody"></tbody>
-          </table>
+
+        <div class="detail-art-stage">
+          <img id="modal-item-image" src="" alt="" referrerpolicy="no-referrer" />
         </div>
       </div>
 
-      <!-- History Chart + Step Switcher + CSV Export -->
-      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
-        <div class="game-switch-pill" id="history-step-switch">
-          <button class="game-switch-btn" data-step="hour">Час</button>
-          <button class="game-switch-btn active" data-step="day">Сутки</button>
-          <button class="game-switch-btn" data-step="week">Неделя</button>
+      <!-- Графік історії ціни + обсягу -->
+      <div class="history-controls-row">
+        <div class="universe-switch" id="history-step-switch">
+          <button class="universe-btn" data-step="hour">Година</button>
+          <button class="universe-btn active" data-step="day">Доба</button>
+          <button class="universe-btn" data-step="week">Тиждень</button>
         </div>
-        <a class="btn btn-sm" id="btn-export-csv" href="#" target="_blank">Скачать историю (CSV)</a>
       </div>
 
       <div class="chart-box">
         <canvas id="price-chart"></canvas>
       </div>
 
-      <!-- Quick Actions for Logged-in Users: Watch & Trade -->
-      <div id="modal-user-actions" class="grid-2 hidden">
+      <!-- Швидкі дії авторизованого користувача -->
+      <div id="modal-user-actions" class="grid-2 hidden" style="margin-top:16px;">
         <div class="card" style="padding:14px 16px;">
-          <h4 style="margin-bottom:10px; font-size:13.5px;">Добавить в отслеживание (Алерт)</h4>
+          <h4 style="margin-bottom:10px; font-size:13.5px;">Додати спостереження (Алерт)</h4>
           <form id="form-quick-watch" class="form-grid">
             <div class="field">
-              <label>Площадка</label>
+              <label>Майданчик</label>
               <select class="select" id="watch-market-select"></select>
             </div>
             <div class="field">
-              <label>Условие</label>
+              <label>Умова</label>
               <select class="select" id="watch-dir-select">
-                <option value="below">Ниже порога</option>
-                <option value="above">Выше порога</option>
+                <option value="below">Нижче порогу</option>
+                <option value="above">Вище порогу</option>
               </select>
             </div>
             <div class="field">
-              <label>Порог (USD)</label>
-              <input class="input mono" id="watch-threshold-input" type="number" step="0.01" min="0.01" required />
+              <label>Поріг (USD)</label>
+              <input class="input num" id="watch-threshold-input" type="number" step="0.01" min="0.01" required />
             </div>
-            <button class="btn btn-primary btn-sm" type="submit">Подписаться</button>
+            <button class="btn btn-primary btn-sm" type="submit">Стежити</button>
           </form>
         </div>
 
         <div class="card" style="padding:14px 16px;">
-          <h4 style="margin-bottom:10px; font-size:13.5px;">Записать сделку в портфель</h4>
+          <h4 style="margin-bottom:10px; font-size:13.5px;">Зафіксувати угоду у портфелі</h4>
           <form id="form-quick-trade" class="form-grid">
             <div class="field">
-              <label>Площадка</label>
+              <label>Майданчик</label>
               <select class="select" id="trade-market-select"></select>
             </div>
             <div class="field">
-              <label>Операция</label>
+              <label>Операція</label>
               <select class="select" id="trade-side-select">
-                <option value="buy">Покупка (Buy)</option>
-                <option value="sell">Продажа (Sell)</option>
+                <option value="buy">Купівля</option>
+                <option value="sell">Продаж</option>
               </select>
             </div>
             <div class="field">
-              <label>Кол-во</label>
-              <input class="input mono" id="trade-qty-input" type="number" min="1" value="1" required />
+              <label>Кількість</label>
+              <input class="input num" id="trade-qty-input" type="number" min="1" value="1" required />
             </div>
             <div class="field">
-              <label>Цена (USD)</label>
-              <input class="input mono" id="trade-price-input" type="number" step="0.01" min="0.01" required />
+              <label>Ціна (USD)</label>
+              <input class="input num" id="trade-price-input" type="number" step="0.01" min="0.01" required />
             </div>
-            <button class="btn btn-primary btn-sm" type="submit">Сохранить</button>
+            <button class="btn btn-primary btn-sm" type="submit">Зберегти</button>
           </form>
         </div>
       </div>
 
-      <!-- History Table -->
-      <details style="margin-top:14px;">
-        <summary class="muted" style="cursor:pointer; font-size:12.5px;">Показать таблицу агрегированной истории (min / max / avg / median)</summary>
-        <div class="table-wrap" style="margin-top:10px; max-height:220px; overflow-y:auto;">
+      <!-- Згорнута таблиця історії + акуратний експорт CSV всередині -->
+      <details style="margin-top:16px;">
+        <summary class="muted" style="cursor:pointer; font-size:13px;">Таблиця агрегованої історії (мін / макс / середнє / медіана)</summary>
+        <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+          <a class="btn btn-sm" id="btn-export-csv" href="#" target="_blank">Експорт CSV</a>
+        </div>
+        <div class="table-wrap" style="margin-top:8px; max-height:220px; overflow-y:auto;">
           <table>
-            <thead><tr><th>Период (UTC)</th><th>Min</th><th>Max</th><th>Avg</th><th>Median</th><th>Объём</th></tr></thead>
+            <thead><tr><th>Період (UTC)</th><th>Мін</th><th>Макс</th><th>Середнє</th><th>Медіана</th><th>Обсяг</th></tr></thead>
             <tbody id="modal-history-tbody"></tbody>
           </table>
         </div>
@@ -487,21 +545,21 @@
   </div>
 
   <!-- ====================================================================
-       MODAL: AUTH (LOGIN / REGISTER / QUICK DEMO ROLES)
+       МОДАЛЬНЕ ВІКНО: АВТОРИЗАЦІЯ
        ==================================================================== -->
   <div class="modal-backdrop hidden" id="auth-modal">
     <div class="modal-panel narrow">
       <div class="modal-head">
         <div>
-          <h2 style="font-size:18px; font-weight:800;">Авторизация</h2>
-          <div class="muted" style="font-size:12px;">JWT-сессия и разграничение ролей</div>
+          <h2 style="font-size:18px; font-weight:700;">Вхід до кабінету</h2>
+          <div class="muted" style="font-size:12.5px;">JWT-автентифікація та рольовий доступ</div>
         </div>
         <button class="modal-close" id="btn-close-auth-modal">×</button>
       </div>
 
       <form id="form-auth" style="display:flex; flex-direction:column; gap:12px;">
         <div class="field">
-          <label>Логин</label>
+          <label>Логін</label>
           <input class="input" id="auth-username" required minlength="3" placeholder="username" />
         </div>
         <div class="field">
@@ -509,17 +567,17 @@
           <input class="input" id="auth-password" type="password" required minlength="6" placeholder="••••••" />
         </div>
         <div style="display:flex; gap:8px; margin-top:4px;">
-          <button class="btn btn-primary" type="submit" data-auth-mode="login" style="flex:1;">Войти</button>
-          <button class="btn" type="button" id="btn-do-register" style="flex:1;">Регистрация</button>
+          <button class="btn btn-primary" type="submit" style="flex:1;">Увійти</button>
+          <button class="btn" type="button" id="btn-do-register" style="flex:1;">Реєстрація</button>
         </div>
       </form>
 
       <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border);">
-        <div class="section-label">Быстрый вход (демо-роли)</div>
+        <div class="muted" style="font-size:12px; margin-bottom:8px;">Швидкий вхід (демо-ролі):</div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
-          <button class="btn btn-sm" data-demo-login="trader:trader123!">User (trader)</button>
-          <button class="btn btn-sm" data-demo-login="analyst:analyst123!">Analyst</button>
-          <button class="btn btn-sm" data-demo-login="admin:admin123!">Admin</button>
+          <button class="btn btn-sm" data-demo-login="trader:trader123!">Користувач</button>
+          <button class="btn btn-sm" data-demo-login="analyst:analyst123!">Аналітик</button>
+          <button class="btn btn-sm" data-demo-login="admin:admin123!">Адміністратор</button>
         </div>
       </div>
     </div>

@@ -1,77 +1,78 @@
 /* ==========================================================================
-   EconPulse — Clean Authentic Dual-Universe UI (Warframe & Rust)
+   EconPulse — Natural Fonts, Authentic Warframe.market & RustClash Styles
+   Zero neon, crisp elevation depth, 100% Ukrainian UI
    ========================================================================== */
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #0a0f18;
-  --surface: #111824;
-  --surface-2: #162030;
-  --border: rgba(148, 163, 184, 0.16);
-  --border-strong: rgba(148, 163, 184, 0.3);
-  --text: #eef2f6;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
-  --accent: #38bdf8;
-  --accent-2: #c9a961;
-  --accent-soft: rgba(56, 189, 248, 0.12);
-  --pos: #34d399;
-  --neg: #f87171;
-  --warn: #fbbf24;
-  --radius: 10px;
+  --font-main: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --bg: #13181b;
+  --surface: #192126;
+  --surface-2: #212c33;
+  --stage: #101518;
+  --border: #2a373f;
+  --border-strong: #3d525e;
+  --text: #e6ecef;
+  --text-muted: #93a6b0;
+  --text-dim: #667983;
+  --accent: #3f8ea3;
+  --accent-hover: #4da3ba;
+  --accent-soft: rgba(63, 142, 163, 0.14);
+  --pos: #44b578;
+  --neg: #d95e5e;
+  --gold: #c9a961;
+  --radius: 6px;
+  --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-lift: 0 12px 28px rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
 }
 
-/* WARFRAME THEME — Orokin Slate, Steel Cyan & Muted Gold */
+/* WARFRAME.MARKET MATTE TEAL-SLATE PALETTE */
 html[data-theme="warframe"] {
-  --bg: #090e17;
-  --surface: #101826;
-  --surface-2: #162235;
-  --border: rgba(125, 179, 214, 0.16);
-  --border-strong: rgba(56, 189, 248, 0.42);
-  --accent: #38bdf8;
-  --accent-2: #c9a961;
-  --accent-soft: rgba(56, 189, 248, 0.12);
+  --bg: #13181b;
+  --surface: #1a2328;
+  --surface-2: #222e35;
+  --stage: #111619;
+  --border: #28363e;
+  --border-strong: #3e6070;
+  --accent: #3f8ea3;
+  --accent-hover: #4ea4bb;
+  --accent-soft: rgba(63, 142, 163, 0.15);
 }
 
-/* RUST THEME — Industrial Charcoal, Facepunch Rust Red & Sand */
+/* RUSTCLASH MATTE CHARCOAL & FACEPUNCH RUST PALETTE */
 html[data-theme="rust"] {
-  --bg: #11100f;
-  --surface: #1a1816;
-  --surface-2: #24211e;
-  --border: rgba(214, 198, 184, 0.14);
-  --border-strong: rgba(205, 65, 43, 0.5);
+  --bg: #121215;
+  --surface: #1b1b20;
+  --surface-2: #24252c;
+  --stage: #141418;
+  --border: #2a2b32;
+  --border-strong: #464854;
   --accent: #cd412b;
-  --accent-2: #d97706;
-  --accent-soft: rgba(205, 65, 43, 0.15);
+  --accent-hover: #de4c35;
+  --accent-soft: rgba(205, 65, 43, 0.16);
 }
 
 html, body {
   min-height: 100%;
   background: var(--bg);
   color: var(--text);
-  font-family: var(--font-sans);
+  font-family: var(--font-main);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.48;
   -webkit-font-smoothing: antialiased;
 }
 
-button, input, select, textarea {
-  font-family: inherit;
-  color: inherit;
-}
-
+button, input, select { font-family: inherit; color: inherit; }
 .hidden { display: none !important; }
-.mono { font-family: var(--font-mono); }
+.num { font-variant-numeric: tabular-nums; }
 .pos { color: var(--pos); }
 .neg { color: var(--neg); }
 .muted { color: var(--text-muted); }
 
 /* ==========================================================================
-   SCREEN 1: MINIMALIST 3D SPLIT-SCREEN GAME PICKER
+   SCREEN 1: TRUE 3D LAYERED SPLIT-SCREEN GAME PICKER
    ========================================================================== */
 #splash-screen {
   position: fixed;
@@ -80,16 +81,44 @@ button, input, select, textarea {
   display: flex;
   width: 100vw;
   height: 100vh;
-  background: #06080c;
+  background: #0b0c0e;
   overflow: hidden;
   transition: opacity 0.45s var(--ease), transform 0.55s var(--ease);
 }
 
 #splash-screen.exiting {
   opacity: 0;
-  transform: scale(1.03);
+  transform: scale(1.02);
   pointer-events: none;
 }
+
+.splash-top-pill {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(14, 16, 20, 0.78);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: #cbd5e1;
+}
+
+.splash-top-pill a {
+  color: #93a6b0;
+  text-decoration: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.16);
+  padding-left: 12px;
+}
+.splash-top-pill a:hover { color: #ffffff; }
 
 .splash-pane {
   position: relative;
@@ -97,20 +126,19 @@ button, input, select, textarea {
   height: 100%;
   overflow: hidden;
   cursor: pointer;
-  perspective: 1200px;
-  transition: flex 0.65s var(--ease), filter 0.55s var(--ease);
+  transition: flex 0.65s var(--ease), filter 0.5s var(--ease);
 }
 
-#splash-screen.hover-warframe .splash-pane[data-game="warframe"] { flex: 1.38 1 58%; }
+#splash-screen.hover-warframe .splash-pane[data-game="warframe"] { flex: 1.35 1 58%; }
 #splash-screen.hover-warframe .splash-pane[data-game="rust"] {
   flex: 0.86 1 42%;
-  filter: brightness(0.58) saturate(0.65);
+  filter: brightness(0.62) saturate(0.75);
 }
 
-#splash-screen.hover-rust .splash-pane[data-game="rust"] { flex: 1.38 1 58%; }
+#splash-screen.hover-rust .splash-pane[data-game="rust"] { flex: 1.35 1 58%; }
 #splash-screen.hover-rust .splash-pane[data-game="warframe"] {
   flex: 0.86 1 42%;
-  filter: brightness(0.58) saturate(0.65);
+  filter: brightness(0.62) saturate(0.75);
 }
 
 .splash-pane[data-game="warframe"]::after {
@@ -120,156 +148,105 @@ button, input, select, textarea {
   right: 0;
   width: 1px;
   height: 100%;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.35), transparent);
-  z-index: 20;
+  z-index: 30;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.28), transparent);
   pointer-events: none;
 }
 
-.splash-art-stage {
+/* Layer 1: Background scenery (subtle depth offset) */
+.splash-layer-bg,
+.splash-layer-char {
   position: absolute;
-  inset: -4%;
-  width: 108%;
-  height: 108%;
-  transform-style: preserve-3d;
-  transition: transform 0.6s var(--ease);
+  inset: -3%;
+  width: 106%;
+  height: 106%;
+  pointer-events: none;
+  transition: transform 0.65s var(--ease);
   will-change: transform;
 }
 
-.splash-art {
+.splash-layer-bg { z-index: 2; }
+.splash-layer-char { z-index: 8; }
+
+.splash-layer-bg img,
+.splash-layer-char img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center;
   display: block;
-  transition: transform 0.7s var(--ease), filter 0.55s ease;
-  filter: brightness(0.84) contrast(1.04);
 }
 
-.splash-pane[data-game="rust"] .splash-art {
-  object-position: 62% center;
+.splash-pane[data-game="rust"] .splash-layer-bg img,
+.splash-pane[data-game="rust"] .splash-layer-char img {
+  object-position: 72% center;
 }
 
-.splash-pane:hover .splash-art {
-  transform: scale(1.06);
-  filter: brightness(0.98) contrast(1.06);
+.splash-layer-char img {
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.72));
+  transition: transform 0.65s var(--ease), filter 0.55s ease;
 }
 
-.splash-gradient {
+.splash-pane:hover .splash-layer-char img {
+  transform: scale(1.045) translateY(-6px);
+  filter: drop-shadow(0 28px 42px rgba(0, 0, 0, 0.85));
+}
+
+.splash-vignette {
   position: absolute;
   inset: 0;
-  z-index: 5;
+  z-index: 12;
   pointer-events: none;
   background: linear-gradient(
     to top,
-    rgba(6, 9, 14, 0.92) 0%,
-    rgba(6, 9, 14, 0.38) 30%,
-    rgba(6, 9, 14, 0.08) 65%,
-    rgba(6, 9, 14, 0.35) 100%
+    rgba(10, 12, 15, 0.92) 0%,
+    rgba(10, 12, 15, 0.35) 28%,
+    rgba(10, 12, 15, 0.05) 65%,
+    rgba(10, 12, 15, 0.25) 100%
   );
 }
 
-.splash-sheen {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.splash-pane:hover .splash-sheen { opacity: 1; }
-
-.splash-footer {
+.splash-bottom-info {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 12;
-  padding: 0 44px 44px;
+  z-index: 20;
+  padding: 0 42px 40px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 8px;
-  transition: transform 0.5s var(--ease);
+  gap: 5px;
+  transition: transform 0.45s var(--ease);
 }
 
-.splash-pane[data-game="rust"] .splash-footer {
+.splash-pane[data-game="rust"] .splash-bottom-info {
   align-items: flex-end;
   text-align: right;
 }
 
-.splash-pane:hover .splash-footer {
+.splash-pane:hover .splash-bottom-info {
   transform: translateY(-6px);
 }
 
-.splash-title {
-  font-size: clamp(36px, 4.4vw, 58px);
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  line-height: 1;
+.splash-game-name {
+  font-size: clamp(32px, 3.8vw, 50px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.05;
   color: #f8fafc;
-  text-transform: uppercase;
-  text-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
-}
-
-.splash-pane[data-game="warframe"] .splash-title {
-  font-family: 'Cinzel', Georgia, serif;
-}
-
-.splash-pane[data-game="rust"] .splash-title {
-  font-family: 'Oswald', Impact, sans-serif;
-  letter-spacing: 0.18em;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.65);
 }
 
 .splash-market-cap {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: rgba(226, 232, 240, 0.8);
-  letter-spacing: 0.04em;
+  font-size: 13.5px;
+  font-weight: 400;
+  color: rgba(226, 232, 240, 0.84);
+  font-variant-numeric: tabular-nums;
 }
-
-.splash-accent-bar {
-  width: 44px;
-  height: 3px;
-  border-radius: 2px;
-  margin-bottom: 4px;
-  transition: width 0.45s var(--ease);
-}
-
-.splash-pane[data-game="warframe"] .splash-accent-bar { background: #38bdf8; }
-.splash-pane[data-game="rust"] .splash-accent-bar     { background: #cd412b; }
-.splash-pane:hover .splash-accent-bar                 { width: 88px; }
-
-.splash-top-meta {
-  position: fixed;
-  top: 22px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 110;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 7px 18px;
-  border-radius: 999px;
-  background: rgba(8, 11, 17, 0.72);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  font-family: var(--font-mono);
-  font-size: 11.5px;
-  letter-spacing: 0.08em;
-  color: #cbd5e1;
-}
-
-.splash-top-meta a {
-  color: #94a3b8;
-  text-decoration: none;
-  border-left: 1px solid rgba(255, 255, 255, 0.16);
-  padding-left: 12px;
-}
-.splash-top-meta a:hover { color: #ffffff; }
 
 /* ==========================================================================
-   MAIN APPLICATION SHELL
+   TOP NAVIGATION BAR
    ========================================================================== */
 #app-shell {
   min-height: 100vh;
@@ -280,53 +257,53 @@ button, input, select, textarea {
 .topbar {
   position: sticky;
   top: 0;
-  z-index: 50;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  backdrop-filter: blur(14px);
+  z-index: 60;
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
 }
 
 .topbar-inner {
-  max-width: 1360px;
+  max-width: 1380px;
   margin: 0 auto;
-  padding: 12px 24px;
+  padding: 10px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
-.topbar-left {
+.topbar-left, .topbar-right {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
-.game-switch-pill {
+.universe-switch {
   display: inline-flex;
-  background: var(--surface);
+  background: var(--stage);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 3px;
+  border-radius: var(--radius);
+  padding: 2px;
   gap: 2px;
 }
 
-.game-switch-btn {
-  padding: 6px 13px;
+.universe-btn {
+  padding: 5px 12px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   background: transparent;
   color: var(--text-muted);
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.16s ease;
 }
 
-.game-switch-btn.active {
+.universe-btn.active {
   background: var(--accent);
-  color: #fff;
+  color: #ffffff;
 }
 
 .nav-tabs {
@@ -338,288 +315,107 @@ button, input, select, textarea {
 
 .nav-tab {
   padding: 7px 13px;
-  border: 1px solid transparent;
-  border-radius: 7px;
+  border: none;
+  border-bottom: 2px solid transparent;
   background: transparent;
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 500;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.18s ease;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.nav-tab:hover { color: var(--text); background: var(--surface); }
+.nav-tab:hover { color: var(--text); }
 .nav-tab.active {
-  color: var(--text);
-  background: var(--surface-2);
-  border-color: var(--border-strong);
+  color: #ffffff;
+  border-bottom-color: var(--accent);
 }
 
 .badge-count {
   background: var(--accent);
   color: #fff;
-  font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   padding: 1px 6px;
   border-radius: 999px;
 }
 
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.user-badge {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  padding: 4px 10px;
+  background: var(--stage);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
 
 /* ==========================================================================
-   BUTTONS & INPUTS
+   COMMON BUTTONS, INPUTS, CARDS
    ========================================================================== */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  padding: 8px 14px;
-  border-radius: 8px;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: var(--surface-2);
   color: var(--text);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.18s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.btn:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.btn:hover:not(:disabled) {
+  border-color: var(--border-strong);
+  filter: brightness(1.08);
+}
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn-primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: #ffffff;
 }
-.btn-primary:hover { filter: brightness(1.1); background: var(--accent); }
-.btn-sm { padding: 5px 10px; font-size: 12px; }
-.btn-danger { border-color: rgba(248, 113, 113, 0.4); color: #fca5a5; }
-.btn-danger:hover { background: rgba(248, 113, 113, 0.14); }
+.btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+.btn-sm { padding: 5px 11px; font-size: 12.5px; }
+.btn-danger { border-color: rgba(217, 94, 94, 0.45); color: #f29d9d; }
+.btn-danger:hover:not(:disabled) { background: rgba(217, 94, 94, 0.16); }
 
 .input, .select {
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 7px 11px;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: var(--surface);
+  background: var(--stage);
   color: var(--text);
   font-size: 13px;
   outline: none;
-  transition: border-color 0.18s ease;
 }
 .input:focus, .select:focus { border-color: var(--accent); }
 
-/* ==========================================================================
-   MAIN CONTENT CONTAINER
-   ========================================================================== */
 .main-wrap {
-  max-width: 1360px;
+  max-width: 1380px;
   width: 100%;
   margin: 0 auto;
-  padding: 24px 24px 56px;
+  padding: 20px 24px 56px;
   flex: 1;
-}
-
-/* Game Banner Header (compact, crisp) */
-.game-banner {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  margin-bottom: 22px;
-  padding: 22px 26px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 118px;
-  background-color: var(--surface);
-  background-size: cover;
-  background-position: center 35%;
-}
-
-.game-banner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--bg) 94%, transparent) 22%, color-mix(in srgb, var(--bg) 68%, transparent) 100%);
-}
-
-.game-banner > * { position: relative; z-index: 2; }
-
-.game-banner h1 {
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  margin-bottom: 4px;
-}
-
-.game-banner-meta {
-  display: flex;
-  gap: 22px;
-  flex-wrap: wrap;
-}
-
-.banner-stat-lbl {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-}
-
-.banner-stat-val {
-  font-family: var(--font-mono);
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text);
-}
-
-/* ==========================================================================
-   CATEGORY & SUBCATEGORY (WIREFRAME OUTLINE SILHOUETTES)
-   ========================================================================== */
-.section-label {
-  font-size: 11.5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
-
-.category-bar {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.cat-chip {
-  padding: 9px 16px;
-  border-radius: 9px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-muted);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.18s ease;
-}
-
-.cat-chip:hover { color: var(--text); border-color: var(--border-strong); }
-.cat-chip.active {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: var(--text);
-}
-
-.cat-chip .cnt {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  color: var(--text-dim);
-}
-
-/* Subcategory outline silhouette cards (e.g., Hoodie outline, Furnace outline, AK outline) */
-.subcategory-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-  gap: 10px;
-  margin-bottom: 20px;
-  padding: 14px;
-  border-radius: 11px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-}
-
-.subcat-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  padding: 12px 8px;
-  border-radius: 9px;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-muted);
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.18s ease;
-}
-
-.subcat-card svg {
-  width: 34px;
-  height: 34px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: 0.85;
-  transition: transform 0.2s ease, opacity 0.2s ease;
-}
-
-.subcat-card:hover {
-  border-color: var(--border-strong);
-  color: var(--text);
-}
-
-.subcat-card:hover svg { transform: scale(1.08); opacity: 1; }
-
-.subcat-card.active {
-  border-color: var(--accent);
-  background: var(--accent-soft);
-  color: var(--text);
-}
-
-.subcat-card.active svg { stroke: var(--accent); opacity: 1; }
-
-.subcat-name {
-  font-size: 11.5px;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.subcat-cnt {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  color: var(--text-dim);
-}
-
-/* ==========================================================================
-   FILTER TOOLBAR & ITEMS TABLE / GRID
-   ========================================================================== */
-.toolbar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.toolbar .search-input {
-  flex: 1 1 240px;
 }
 
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
   overflow: hidden;
 }
 
 .card-header {
-  padding: 14px 18px;
+  padding: 13px 18px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
@@ -627,111 +423,556 @@ button, input, select, textarea {
   gap: 12px;
   flex-wrap: wrap;
 }
-
 .card-header h3 { font-size: 14.5px; font-weight: 700; }
 
 .table-wrap { overflow-x: auto; }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th {
   text-align: left;
-  padding: 11px 16px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  padding: 10px 15px;
+  font-size: 11.5px;
+  font-weight: 500;
   color: var(--text-muted);
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
 }
-
 td {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  padding: 11px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   vertical-align: middle;
 }
-
-tbody tr.clickable { cursor: pointer; transition: background 0.14s ease; }
+tbody tr.clickable { cursor: pointer; transition: background 0.12s ease; }
 tbody tr.clickable:hover td { background: var(--surface-2); }
 
-.item-cell {
+/* ==========================================================================
+   WARFRAME.MARKET HERO BANNER & ORDER CARDS
+   ========================================================================== */
+.wf-hero {
+  position: relative;
+  width: 100%;
+  min-height: 235px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
 }
 
-.item-outline-thumb {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  color: var(--text-muted);
+.wf-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+  filter: brightness(0.62);
 }
 
-.item-outline-thumb svg {
-  width: 22px;
-  height: 22px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.wf-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(19, 24, 27, 0.38), rgba(19, 24, 27, 0.92));
 }
 
-.rarity-pill {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 5px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: capitalize;
-  border: 1px solid var(--border);
-  background: var(--bg);
-  color: var(--text-muted);
+.wf-hero-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 660px;
+  padding: 28px 20px;
+  text-align: center;
 }
 
-.rarity-pill.prime, .rarity-pill.legendary {
-  border-color: rgba(201, 169, 97, 0.55);
-  color: #e6c982;
-  background: rgba(201, 169, 97, 0.1);
-}
-.rarity-pill.rare {
-  border-color: rgba(56, 189, 248, 0.45);
-  color: #7dd3fc;
-  background: rgba(56, 189, 248, 0.08);
-}
-.rarity-pill.uncommon {
-  border-color: rgba(52, 211, 153, 0.4);
-  color: #6ee7b7;
+.wf-hero-brand {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #cbd5e1;
+  margin-bottom: 14px;
 }
 
-.pagination {
-  padding: 14px 18px;
+.wf-search-bar {
+  display: flex;
+  background: rgba(15, 20, 23, 0.92);
+  border: 1px solid #354750;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.wf-search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 12px 16px;
+  font-size: 14.5px;
+  color: #ffffff;
+  outline: none;
+}
+
+.wf-search-btn {
+  width: 50px;
+  border: none;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 15px;
+  cursor: pointer;
+}
+.wf-search-btn:hover { background: var(--accent-hover); }
+
+.wf-hero-stats {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  font-size: 12.5px;
+  color: #b4c2c9;
+  font-variant-numeric: tabular-nums;
+}
+
+.wf-controls-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid var(--border);
-  font-size: 12.5px;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.wf-cat-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.wf-cat-tab {
+  padding: 7px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.wf-cat-tab:hover { color: var(--text); border-color: var(--border-strong); }
+.wf-cat-tab.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+}
+
+.wf-filter-right {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Warframe Market 2-column order-like cards */
+.wf-orders-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.wf-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.wf-item-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lift);
+}
+
+.wf-card-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.wf-icon-frame {
+  width: 58px;
+  height: 58px;
+  border-radius: 6px;
+  background: radial-gradient(circle at 50% 40%, #24333b, #11171a);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  flex-shrink: 0;
+}
+
+.wf-icon-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+}
+
+.wf-title-uk {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #7cc5d9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wf-title-en {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.wf-tags-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.wf-card-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.wf-plat-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #d6a4e6;
+  font-variant-numeric: tabular-nums;
+}
+
+.wf-usd-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.wf-vol-sub {
+  font-size: 11.5px;
+  color: var(--pos);
+  margin-top: 3px;
+}
+
+/* ==========================================================================
+   RUSTCLASH + DEV CONSOLE SKINS VIEW
+   ========================================================================== */
+.rust-skins-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 14px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+}
+
+.rust-section-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.rust-cap-meta {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.rust-bar-center {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.rust-select-item-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 220px;
+  justify-content: space-between;
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-strong);
+  background: #23242b;
+  color: var(--text);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.rust-select-item-btn:hover { background: #2b2c35; border-color: var(--accent); }
+
+.rust-select-item-btn img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.rust-clear-item-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: #23242b;
+  color: var(--text-muted);
+  font-size: 18px;
+  cursor: pointer;
+}
+.rust-clear-item-btn:hover { color: #fff; border-color: var(--accent); }
+
+.rust-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Dev Console / RustClash Stock Item Picker Drawer */
+.rust-picker-drawer {
+  margin-bottom: 20px;
+  background: #17181c;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+  overflow: hidden;
+}
+
+.rust-picker-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  background: #1d1e24;
+  overflow-x: auto;
+}
+
+.rust-picker-tab {
+  padding: 10px 18px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.rust-picker-tab:hover { color: #fff; }
+.rust-picker-tab.active {
+  color: #fff;
+  background: #252730;
+  border-bottom-color: var(--accent);
+}
+
+.rust-picker-grid {
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 8px;
+}
+
+.rust-stock-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 10px 8px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  background: #1f2026;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.14s ease;
+}
+
+.rust-stock-tile:hover {
+  background: #292b33;
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.rust-stock-tile.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+.rust-stock-tile img {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.55));
+}
+
+.rust-stock-name {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.rust-stock-cnt {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* Voluminous Rust Skin Grid */
+.rust-skins-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.rust-skin-card {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #1f2026 0%, #17181c 100%);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease), border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.rust-skin-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-lift);
+}
+
+.rust-skin-stage {
+  position: relative;
+  height: 170px;
+  padding: 14px;
+  background: radial-gradient(circle at 50% 45%, #2b2d36 0%, #16171b 78%);
+  display: grid;
+  place-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.rust-skin-stage img {
+  max-width: 100%;
+  max-height: 142px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 16px rgba(0, 0, 0, 0.72));
+  transition: transform 0.25s var(--ease);
+}
+
+.rust-skin-card:hover .rust-skin-stage img {
+  transform: scale(1.07);
+}
+
+.rust-new-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.rust-skin-body {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.rust-skin-title {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #f1f5f9;
+  line-height: 1.3;
+}
+
+.rust-skin-sub {
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+
+.rust-skin-footer {
+  margin-top: auto;
+  padding-top: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-variant-numeric: tabular-nums;
+}
+
+.rust-skin-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.rust-skin-vol {
+  font-size: 11.5px;
   color: var(--text-muted);
 }
 
-.pagination-controls { display: flex; gap: 8px; align-items: center; }
-
 /* ==========================================================================
-   KPI GRIDS & ANALYTICS LAYOUTS
+   PAGINATION, RARITY, KPI & MODALS
    ========================================================================== */
+.pagination-bar {
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.pagination-controls { display: flex; align-items: center; gap: 8px; }
+
+.rarity-pill {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--stage);
+  color: var(--text-muted);
+}
+.rarity-pill.prime, .rarity-pill.legendary {
+  border-color: rgba(201, 169, 97, 0.45);
+  color: #e4c887;
+  background: rgba(201, 169, 97, 0.1);
+}
+.rarity-pill.rare { border-color: rgba(77, 163, 186, 0.45); color: #83cde0; }
+.rarity-pill.uncommon { border-color: rgba(68, 181, 120, 0.4); color: #71cf9b; }
+
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 14px;
   margin-bottom: 20px;
 }
@@ -740,39 +981,39 @@ tbody tr.clickable:hover td { background: var(--surface-2); }
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
   padding: 16px 18px;
 }
 
-.kpi-lbl {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-}
-
-.kpi-val {
-  font-family: var(--font-mono);
-  font-size: 21px;
-  font-weight: 700;
-}
+.kpi-lbl { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.kpi-val { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
-/* ==========================================================================
-   MODALS (ITEM DETAIL CARD & AUTH)
-   ========================================================================== */
+.toolbar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+
+.info-banner {
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border-left: 3px solid var(--accent);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Modal */
 .modal-backdrop {
   position: fixed;
   inset: 0;
   z-index: 200;
-  background: rgba(4, 6, 10, 0.78);
-  backdrop-filter: blur(6px);
+  background: rgba(6, 8, 10, 0.78);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -781,99 +1022,119 @@ tbody tr.clickable:hover td { background: var(--surface-2); }
 
 .modal-panel {
   width: 100%;
-  max-width: 960px;
+  max-width: 980px;
   max-height: 90vh;
   overflow-y: auto;
   background: var(--surface);
   border: 1px solid var(--border-strong);
-  border-radius: 14px;
-  padding: 24px 28px;
+  border-radius: 10px;
+  padding: 22px 26px;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65);
 }
-
-.modal-panel.narrow { max-width: 440px; }
+.modal-panel.narrow { max-width: 420px; }
 
 .modal-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  padding-bottom: 16px;
-  margin-bottom: 18px;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
   border-bottom: 1px solid var(--border);
 }
 
 .modal-close {
-  background: var(--bg);
+  background: var(--stage);
   border: 1px solid var(--border);
-  border-radius: 8px;
-  width: 34px;
-  height: 34px;
+  border-radius: var(--radius);
+  width: 32px;
+  height: 32px;
   cursor: pointer;
   font-size: 18px;
   color: var(--text-muted);
 }
-.modal-close:hover { color: var(--text); border-color: var(--border-strong); }
+.modal-close:hover { color: #fff; }
+
+.detail-top-grid {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.detail-art-stage {
+  background: radial-gradient(circle at 50% 45%, #272a33, #111216);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  min-height: 250px;
+}
+
+.detail-art-stage img {
+  max-width: 240px;
+  max-height: 220px;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.75));
+}
+
+.meta-kv-table td:first-child { color: var(--text-muted); width: 45%; }
+.meta-kv-table td:last-child { font-weight: 500; text-align: right; }
 
 .item-desc-box {
   padding: 12px 14px;
-  border-radius: 9px;
-  background: var(--bg);
-  border-left: 3px solid var(--accent-2);
+  border-radius: var(--radius);
+  background: var(--stage);
+  border-left: 3px solid var(--accent);
   color: #cbd5e1;
   font-size: 13px;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+}
+
+.history-controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .chart-box {
   position: relative;
-  height: 280px;
-  padding: 14px;
-  border-radius: 10px;
-  background: var(--bg);
+  height: 265px;
+  padding: 12px;
+  border-radius: var(--radius);
+  background: var(--stage);
   border: 1px solid var(--border);
-  margin-bottom: 18px;
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
   align-items: end;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.field label {
-  font-size: 11.5px;
-  color: var(--text-muted);
-  font-weight: 600;
-}
+.field { display: flex; flex-direction: column; gap: 4px; }
+.field label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
 
 .toast {
   position: fixed;
-  right: 24px;
-  bottom: 24px;
+  right: 22px;
+  bottom: 22px;
   z-index: 300;
-  padding: 12px 18px;
-  border-radius: 10px;
+  padding: 11px 16px;
+  border-radius: var(--radius);
   background: var(--surface-2);
   border: 1px solid var(--accent);
   color: var(--text);
   font-size: 13px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-lift);
 }
-
 .toast.error { border-color: var(--neg); color: #fecaca; }
 
 @media (max-width: 900px) {
   #splash-screen { flex-direction: column; }
-  .splash-pane[data-game="warframe"]::after {
-    width: 100%; height: 1px; top: auto; bottom: 0; left: 0;
-  }
-  .grid-2 { grid-template-columns: 1fr; }
+  .splash-pane[data-game="warframe"]::after { width: 100%; height: 1px; top: auto; bottom: 0; left: 0; }
+  .wf-orders-grid, .detail-top-grid, .grid-2 { grid-template-columns: 1fr; }
 }

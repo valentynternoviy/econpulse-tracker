@@ -142,7 +142,7 @@ async def seeded_app(tmp_path: Path) -> AsyncIterator[tuple[httpx.AsyncClient, A
     async with container.engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     async with container.session_factory() as session:
-        await seed_database(session, days=10)
+        await seed_database(session, days=10, max_items_per_game=160)
 
     app = create_app(settings=settings, container=container)
     transport = ASGITransport(app=app)

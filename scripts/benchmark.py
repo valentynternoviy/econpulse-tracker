@@ -16,6 +16,7 @@ import time
 import tracemalloc
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
+from pathlib import Path
 
 from econ_tracker.domain.enums import TradeSide
 from econ_tracker.domain.logic import recalculate_position, validate_raw_quote
@@ -113,7 +114,7 @@ def bench_key_operation() -> dict[str, object]:
 async def bench_index_and_ma7() -> dict[str, object]:
     """Compare history query plan/speed BEFORE vs AFTER composite index and MA-7 caching."""
     db_file = "_bench_perf.db"
-    if os.path.exists(db_file):
+    if Path(db_file).exists():  # noqa: ASYNC240
         os.remove(db_file)
 
     eng, sf = create_engine_and_sessionmaker(f"sqlite+aiosqlite:///./{db_file}")
@@ -185,7 +186,7 @@ async def bench_index_and_ma7() -> dict[str, object]:
     conn.close()
     for suffix in ("", "-wal", "-shm"):
         p = db_file + suffix
-        if os.path.exists(p):
+        if Path(p).exists():  # noqa: ASYNC240
             os.remove(p)
 
     return {

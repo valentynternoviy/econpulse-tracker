@@ -25,8 +25,10 @@ async def test_complete_end_to_end_user_journey(
     search = (
         await client.get("/api/v1/items?game=warframe&q=Gauss%20Prime%20Set")
     ).json()
-    assert search["total"] == 1
-    gauss = search["items"][0]
+    assert search["total"] >= 1
+    gauss = next(
+        it for it in search["items"] if (it.get("name_en") or it["name"]) == "Gauss Prime Set"
+    )
     assert gauss["description"] is not None
 
     # 2. Guest opens item card & downloads price history CSV
@@ -69,7 +71,8 @@ async def test_complete_end_to_end_user_journey(
 
     unread_alerts = (await client.get("/api/v1/alerts?unread=true", headers=user_headers)).json()
     assert len(unread_alerts) == 1
-    assert "Gauss Prime Set" in unread_alerts[0]["message"]
+    msg = unread_alerts[0]["message"]
+    assert "Gauss" in msg or "Ґаусс" in msg
 
     # 6. User registers buy & partial sell trades and checks portfolio summary
     now = datetime.now(UTC)

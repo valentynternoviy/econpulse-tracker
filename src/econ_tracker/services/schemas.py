@@ -118,6 +118,8 @@ class SubcategoryFacet(BaseModel):
     label: str
     items_count: int
     total_volume: int
+    shortname: str | None = None
+    icon_url: str | None = None
 
 
 class CategoryFacet(BaseModel):
@@ -146,9 +148,11 @@ class ItemSummaryResponse(BaseModel):
     game_id: int
     game_code: str
     name: str
+    name_en: str | None = None
     normalized_name: str
     item_type: str
     subcategory: str
+    base_item_shortname: str | None = None
     rarity: str
     external_id: str
     is_available: bool
@@ -400,6 +404,7 @@ class AnalyticsOverviewResponse(BaseModel):
 
 
 ItemSortOption = Literal[
+    "newest",
     "price_asc",
     "price_desc",
     "volume_desc",
