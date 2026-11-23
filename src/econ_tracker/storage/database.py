@@ -47,8 +47,11 @@ def create_engine_and_sessionmaker(
     kwargs: dict[str, Any] = {"echo": echo, "future": True}
     if not is_sqlite:
         kwargs["pool_pre_ping"] = True
-        kwargs["pool_size"] = 10
-        kwargs["max_overflow"] = 20
+        kwargs["pool_size"] = 5
+        kwargs["max_overflow"] = 10
+        kwargs["pool_recycle"] = 300
+        if "-pooler." in database_url:
+            kwargs["connect_args"] = {"statement_cache_size": 0}
 
     engine = create_async_engine(database_url, **kwargs)
 

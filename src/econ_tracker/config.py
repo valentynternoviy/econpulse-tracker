@@ -2,9 +2,51 @@
 
 from functools import lru_cache
 from typing import Literal
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-from pydantic import Field, SecretStr
+from pydantic import Field, SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def normalize_database_url(url: str) -> str:
+    """Normalize PostgreSQL URLs for asyncpg and managed pooler compatibility."""
+    cleaned = url.strip()
+    if cleaned.startswith("postgres://"):
+        cleaned = "postgresql+asyncpg://" + cleaned[len("postgres://") :]
+    elif cleaned.startswith("postgresql://"):
+        cleaned = "postgresql+asyncpg://" + cleaned[len("postgresql://") :]
+
+    if cleaned.startswith("postgresql+asyncpg://"):
+        parts = urlsplit(cleaned)
+        raw_params = parse_qsl(parts.query, keep_blank_values=True)
+        has_ssl = any(key.lower() == "ssl" for key, _ in raw_params)
+        ssl_mode_value: str | None = None
+        filtered_params: list[tuple[str, str]] = []
+        for key, value in raw_params:
+            lowered = key.lower()
+            if lowered == "channel_binding":
+                continue
+            if lowered == "sslmode":
+                ssl_mode_value = value.lower()
+                continue
+            filtered_params.append((key, value))
+
+        if ssl_mode_value is not None and not has_ssl:
+            filtered_params.append(
+                ("ssl", "disable" if ssl_mode_value == "disable" else "require")
+            )
+
+        cleaned = urlunsplit(
+            (
+                parts.scheme,
+                parts.netloc,
+                parts.path,
+                urlencode(filtered_params),
+                parts.fragment,
+            )
+        )
+
+    return cleaned
 
 
 class Settings(BaseSettings):
@@ -38,6 +80,13 @@ class Settings(BaseSettings):
 
     log_level: str = "INFO"
     log_json: bool = True
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def _normalize_database_url(cls, value: object) -> object:
+        if isinstance(value, str):
+            return normalize_database_url(value)
+        return value
 
 
 @lru_cache(maxsize=1)
