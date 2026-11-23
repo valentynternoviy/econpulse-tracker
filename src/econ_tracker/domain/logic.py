@@ -107,11 +107,14 @@ def classify_rust_item(name: str) -> tuple[str, str, str]:
 
 
 def _infer_rust_rarity(low_name: str) -> str:
-    if any(k in low_name for k in ("big grin", "alien", "glory", "punishment", "tempered", "neon")):
+    legendary_kw = ("big grin", "alien", "glory", "punishment", "tempered", "neon")
+    rare_kw = ("gold", "dragon", "phantom", "blackout", "whiteout", "sinister")
+    uncommon_kw = ("tactical", "carbon", "metal", "forest", "desert", "arctic")
+    if any(k in low_name for k in legendary_kw):
         return "legendary"
-    if any(k in low_name for k in ("gold", "dragon", "phantom", "blackout", "whiteout", "sinister")):
+    if any(k in low_name for k in rare_kw):
         return "rare"
-    if any(k in low_name for k in ("tactical", "carbon", "metal", "forest", "desert", "arctic")):
+    if any(k in low_name for k in uncommon_kw):
         return "uncommon"
     return "common"
 
@@ -279,9 +282,12 @@ def should_trigger_watch(
     ):
         return False
 
-    if last_alert_at is not None and cooldown_minutes > 0:
-        if now - last_alert_at < timedelta(minutes=cooldown_minutes):
-            return False
+    if (
+        last_alert_at is not None
+        and cooldown_minutes > 0
+        and now - last_alert_at < timedelta(minutes=cooldown_minutes)
+    ):
+        return False
 
     return True
 
@@ -309,7 +315,11 @@ def evaluate_anomaly(
 
     if abs_dev > threshold_pct:
         if has_open_event:
-            prev_max = existing_max_deviation if existing_max_deviation is not None else Decimal("0")
+            prev_max = (
+                existing_max_deviation
+                if existing_max_deviation is not None
+                else Decimal("0")
+            )
             new_max = deviation_pct if abs_dev > abs(prev_max) else prev_max
             return AnomalyCheckResult(
                 action="update",

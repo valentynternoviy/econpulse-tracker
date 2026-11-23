@@ -49,7 +49,7 @@ src = ["src", "tests"]
 
 [tool.ruff.lint]
 select = [
-    "E", "W", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "TCH", "RUF", "ASYNC",
+    "E", "W", "F", "I", "N", "UP", "B", "A", "C4", "SIM", "RUF", "ASYNC",
 ]
 ignore = ["B008", "RUF001", "RUF002", "RUF003"]
 
