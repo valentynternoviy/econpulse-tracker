@@ -742,7 +742,6 @@ async function openItemModal(itemId) {
   const modal = document.getElementById('item-modal');
   const modalPanel = modal.querySelector('.modal-panel');
   modal.classList.remove('hidden');
-  document.getElementById('ma7-popover').classList.add('hidden');
   if (modalPanel) modalPanel.scrollTop = 0;
 
   const detail = await api(`/api/v1/items/${itemId}`);
@@ -1443,9 +1442,6 @@ function wireEvents() {
 
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.wf-search-wrap')) hideWfSuggestions();
-    if (!e.target.closest('.ma7-info-wrap')) {
-      document.getElementById('ma7-popover').classList.add('hidden');
-    }
   });
 
   document.getElementById('wf-search-btn').addEventListener('click', () => {
@@ -1508,12 +1504,6 @@ function wireEvents() {
       renderModalCurrencySection();
       if (state.game === 'warframe') loadWarframeCatalog();
     });
-  });
-
-  document.getElementById('btn-ma7-help').addEventListener('click', (e) => {
-    e.stopPropagation();
-    const pop = document.getElementById('ma7-popover');
-    pop.classList.toggle('hidden');
   });
 
   document.querySelectorAll('#alerts-game-filter button').forEach((btn) => {
