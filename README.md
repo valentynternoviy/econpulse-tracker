@@ -7,7 +7,7 @@
 ## Технологічний стек
 - **Мова:** Python 3.12+ (сувора типізація `mypy --strict`, `ruff`)
 - **API та веб-інтерфейс:** FastAPI, Uvicorn, Pydantic v2, OpenAPI / Swagger UI
-- **База даних:** PostgreSQL 16, SQLAlchemy 2.0 (async), Alembic
+- **База даних:** PostgreSQL 16–18, SQLAlchemy 2.0 (async), Alembic
 - **Збір даних:** `httpx[brotli]` (async), ледачий конвеєр генераторів, retry with exponential backoff, rate limiting
 - **Спостережуваність:** `structlog` (JSON-логи), наскрізний `X-Request-ID`, `/healthz`, RFC 9457 (`application/problem+json`)
 - **CLI:** Typer (`econ-cli`)
@@ -19,12 +19,18 @@
 3. **Rust.tm API** (`rust.tm`) — скіни Rust у валюті `USD` (зіставлення зі Skinport для обчислення спреду).
 4. **Frankfurter (ECB) / API НБУ** — актуальні курси валют для приведення до `USD`.
 
+## Публічне розгортання (Production)
+- **Веб-застосунок:** https://econ-pulse-tracker.onrender.com
+- **Документація OpenAPI (Swagger UI):** https://econ-pulse-tracker.onrender.com/docs
+- **Моніторинг стану (`/healthz`):** https://econ-pulse-tracker.onrender.com/healthz
+- **Інфраструктура:** Render.com (Docker Blueprint, `render.yaml`) + керована хмарна БД **Neon PostgreSQL 18.7** (AWS `eu-central-1`, Frankfurt).
+
 ## Швидкий запуск (Docker Compose)
 ```bash
 cp .env.example .env
 docker compose up --build
 ```
-Після запуску автоматично застосовуються міграції Alembic, база наповнюється seed-даними (≥ 300 предметів і 30 діб історії, ≥ 9 000 знімків), і сервіс стає доступним за адресами:
+Після запуску автоматично застосовуються міграції Alembic, база наповнюється seed-даними (`1 562` предмети та `30` діб історії, `31 570` знімків цін), і сервіс стає доступним за адресами:
 - Веб-інтерфейс: `http://localhost:8000/`
 - Документація OpenAPI (Swagger): `http://localhost:8000/docs`
 - Перевірка працездатності: `http://localhost:8000/healthz`
@@ -38,7 +44,7 @@ docker compose up --build
 
 ## Команди CLI
 ```bash
-econ-cli seed                # Наповнити БД (300+ предметів, 30 діб історії)
+econ-cli seed                # Наповнити БД (1 562 предмети, 31 570 знімків за 30 діб)
 econ-cli collect             # Запустити збір даних з усіх активних майданчиків
 econ-cli report --game rust  # Зформувати аналітичний звіт у консоль/JSON
 ```
