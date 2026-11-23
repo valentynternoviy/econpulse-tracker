@@ -35,12 +35,10 @@ _Q4 = Decimal("0.0001")
 _Q2 = Decimal("0.01")
 
 CATEGORY_LABELS: dict[str, str] = {
-    # Rust
     "weapons": "Зброя",
     "clothing": "Одяг та броня",
     "deployables": "Конструкції та двері",
     "tools": "Інструменти",
-    # Warframe
     "warframes": "Варфрейми",
     "mods": "Моди",
     "arcanes": "Містифікатори",
@@ -50,7 +48,6 @@ CATEGORY_LABELS: dict[str, str] = {
 }
 
 SUBCATEGORY_LABELS: dict[str, str] = {
-    # Warframe (Ukrainian)
     "prime_set": "Прайм-комплект",
     "blueprint": "Кресленик",
     "primary": "Основна зброя",
@@ -67,7 +64,6 @@ SUBCATEGORY_LABELS: dict[str, str] = {
     "companion": "Супутник",
     "misc": "Інше",
     "general": "Загальне",
-    # Rust crisp base-item labels
     "assault_rifle": "Assault Rifle",
     "lr_300_assault_rifle": "LR-300 Assault Rifle",
     "semi_automatic_rifle": "Semi-Automatic Rifle",
@@ -79,7 +75,6 @@ SUBCATEGORY_LABELS: dict[str, str] = {
     "l96_rifle": "L96 Rifle",
     "t_shirt": "T-Shirt",
 }
-
 
 class CatalogService:
     """Server-side filtering, pagination, category facets, and price history aggregation."""
@@ -138,7 +133,6 @@ class CatalogService:
             await session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
         )
 
-        # Deterministic sorting with tie-breaker ItemORM.id ASC (prevents pagination drift)
         order_map: dict[ItemSortOption, list[Any]] = {
             "newest": [ItemORM.released_at.desc().nulls_last(), ItemORM.id.asc()],
             "price_asc": [ItemORM.latest_min_price.asc().nulls_last(), ItemORM.id.asc()],
@@ -246,7 +240,6 @@ class CatalogService:
         if item is None:
             raise ResourceNotFoundError(f"Item #{item_id} not found")
 
-        # Subquery: latest snapshot timestamp per market for this item
         latest_sub = (
             select(
                 PriceSnapshotORM.market_id,
@@ -269,7 +262,6 @@ class CatalogService:
         )
         snaps = (await session.scalars(snaps_stmt)).all()
 
-        # Deduplicate in case two snapshots share exact same timestamp
         seen_markets: set[int] = set()
         quotes: list[MarketQuoteDTO] = []
         for snap in snaps:
@@ -457,16 +449,13 @@ class CatalogService:
             )
         return buf.getvalue()
 
-
 def _floor_bucket(dt: datetime, step: HistoryStep) -> datetime:
     if step == HistoryStep.HOUR:
         return dt.replace(minute=0, second=0, microsecond=0)
     if step == HistoryStep.DAY:
         return dt.replace(hour=0, minute=0, second=0, microsecond=0)
-    # WEEK: Monday 00:00 UTC
     monday = dt - timedelta(days=dt.weekday())
     return monday.replace(hour=0, minute=0, second=0, microsecond=0)
-
 
 def _to_item_summary(item: ItemORM) -> ItemSummaryResponse:
     return ItemSummaryResponse(

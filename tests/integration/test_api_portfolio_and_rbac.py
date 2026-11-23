@@ -26,14 +26,12 @@ async def test_healthz_openapi_and_correlation_id(
     assert openapi.status_code == 200
     assert "/api/v1/trades" in openapi.json()["paths"]
 
-
 @pytest.mark.integration
 async def test_trade_idempotency_oversell_backdated_delete_and_foreign_404(
     seeded_app: tuple[httpx.AsyncClient, AppContainer],
 ) -> None:
     client, _ = seeded_app
 
-    # Register two separate users to test ownership isolation (404, never 403)
     r1 = await client.post(
         "/api/v1/auth/register",
         json={"username": "alice_trader", "password": "password123"},
@@ -48,7 +46,6 @@ async def test_trade_idempotency_oversell_backdated_delete_and_foreign_404(
     assert r2.status_code == 201
     h_bob = {"Authorization": f"Bearer {r2.json()['access_token']}"}
 
-    # Grab an item + market
     items = (await client.get("/api/v1/items?game=rust&page_size=1")).json()["items"]
     item_id = items[0]["id"]
     markets = (await client.get("/api/v1/markets?game=rust")).json()
@@ -56,7 +53,6 @@ async def test_trade_idempotency_oversell_backdated_delete_and_foreign_404(
 
     t0 = datetime(2026, 11, 10, 12, 0, tzinfo=UTC)
 
-    # 1. Buy 2 @ 100 with idempotency key -> 201
     payload = {
         "item_id": item_id,
         "market_id": market_id,
@@ -70,12 +66,10 @@ async def test_trade_idempotency_oversell_backdated_delete_and_foreign_404(
     assert first.status_code == 201
     trade_id = first.json()["id"]
 
-    # 2. Repeat same request with same idempotency_key -> 200, no duplicate
     dup = await client.post("/api/v1/trades", json=payload, headers=h_alice)
     assert dup.status_code == 200
     assert dup.json()["id"] == trade_id
 
-    # 3. Attempt oversell of 5 when only 2 held -> 422 RFC 9457 problem+json
     oversell = await client.post(
         "/api/v1/trades",
         json={
@@ -93,7 +87,6 @@ async def test_trade_idempotency_oversell_backdated_delete_and_foreign_404(
     assert oversell.headers["content-type"].startswith("application/problem+json")
     assert oversell.json()["type"] == "urn:econ-tracker:error:insufficient-position"
 
-    # 4. Backdated buy 2 @ 60 BEFORE first buy -> avg_cost becomes (60*2 + 100*2)/4 = 80.00
     backdated = await client.post(
         "/api/v1/trades",
         json={
@@ -110,7 +103,6 @@ async def test_trade_idempotency_oversell_backdated_delete_and_foreign_404(
     assert backdated.status_code == 201
     backdated_id = backdated.json()["id"]
 
-    # 5. Sell 4 @ 110 -> qty becomes 0, realized_pnl = (110 - 80)*4 = 120.00, position KEPT
     sell_all = await client.post(
         "/api/v1/trades",
         json={
@@ -133,28 +125,24 @@ async def test_trade_idempotency_oversell_backdated_delete_and_foreign_404(
     assert pos["quantity"] == 0
     assert pos["realized_pnl"] == "120.00"
 
-    # 6. Foreign user accessing Alice's trade or position MUST get 404 (not 403)
     assert (await client.get(f"/api/v1/trades/{trade_id}", headers=h_bob)).status_code == 404
     assert (
         await client.get(f"/api/v1/portfolio/positions/{pos['id']}", headers=h_bob)
     ).status_code == 404
     assert (await client.delete(f"/api/v1/trades/{trade_id}", headers=h_bob)).status_code == 404
 
-    # 7. Deleting sell trade recalculates position back to qty=4, avg=80, realized=0
     assert (await client.delete(f"/api/v1/trades/{sell_id}", headers=h_alice)).status_code == 204
     port_after = (await client.get("/api/v1/portfolio", headers=h_alice)).json()
     assert port_after["positions"][0]["quantity"] == 4
     assert port_after["positions"][0]["avg_cost"] == "80.0000"
     assert port_after["positions"][0]["realized_pnl"] == "0.00"
 
-    # Deleting backdated buy recalculates avg back to 100.00, qty=2
     assert (
         await client.delete(f"/api/v1/trades/{backdated_id}", headers=h_alice)
     ).status_code == 204
     port_final = (await client.get("/api/v1/portfolio", headers=h_alice)).json()
     assert port_final["positions"][0]["quantity"] == 2
     assert port_final["positions"][0]["avg_cost"] == "100.0000"
-
 
 @pytest.mark.integration
 async def test_concurrent_sales_only_one_succeeds(
@@ -221,7 +209,6 @@ async def test_concurrent_sales_only_one_succeeds(
     port = (await client.get("/api/v1/portfolio", headers=headers)).json()
     assert port["positions"][0]["quantity"] == 1
 
-
 @pytest.mark.integration
 async def test_rbac_enforcement_for_analyst_and_admin(
     seeded_app: tuple[httpx.AsyncClient, AppContainer],
@@ -235,7 +222,6 @@ async def test_rbac_enforcement_for_analyst_and_admin(
     assert len(open_anoms) >= 1
     anom_id = open_anoms[0]["id"]
 
-    # Regular user cannot close anomaly -> 403
     r_forbid = await client.post(
         f"/api/v1/anomalies/{anom_id}/close",
         json={"comment": "Should fail"},
@@ -243,7 +229,6 @@ async def test_rbac_enforcement_for_analyst_and_admin(
     )
     assert r_forbid.status_code == 403
 
-    # Analyst closes anomaly -> 200
     r_close = await client.post(
         f"/api/v1/anomalies/{anom_id}/close",
         json={"comment": "Confirmed patch hype spike."},
@@ -253,14 +238,12 @@ async def test_rbac_enforcement_for_analyst_and_admin(
     assert r_close.json()["status"] == "closed"
     assert r_close.json()["comment"] == "Confirmed patch hype spike."
 
-    # Regular user cannot trigger manual collect -> 403; admin succeeds -> 200
     assert (await client.post("/api/v1/collect/run", headers=h_user)).status_code == 403
     r_col = await client.post("/api/v1/collect/run", headers=h_admin)
     assert r_col.status_code == 200
     runs = r_col.json()
     assert len(runs) == 4
 
-    # Verify fault isolation: wf_ps failed while wf_pc, skinport_rust, rust_tm succeeded
     by_code = {r["market_code"]: r for r in runs}
     assert by_code["wf_ps"]["status"] == "failed"
     assert "outage" in (by_code["wf_ps"]["error_message"] or "")
@@ -270,12 +253,10 @@ async def test_rbac_enforcement_for_analyst_and_admin(
     assert by_code["skinport_rust"]["status"] == "success"
     assert by_code["rust_tm"]["status"] == "success"
 
-    # Admin collection status page shows errors and counts
     status_resp = await client.get("/api/v1/admin/collection/status", headers=h_admin)
     assert status_resp.status_code == 200
     assert len(status_resp.json()) == 4
 
-    # Admin CRUD for games and markets (enforcing schedule_minutes >= 15)
     g_resp = await client.post(
         "/api/v1/admin/games",
         json={"name": "Counter-Strike 2", "code": "cs2", "is_active": True},
@@ -291,7 +272,6 @@ async def test_rbac_enforcement_for_analyst_and_admin(
     )
     assert g_patch.status_code == 200 and g_patch.json()["is_active"] is False
 
-    # Reject schedule < 15 min -> 422
     m_bad = await client.post(
         "/api/v1/admin/markets",
         json={

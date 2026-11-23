@@ -20,7 +20,6 @@ from econ_tracker.storage.orm_models import GameORM, ItemORM, PriceSnapshotORM
 
 _Q2 = Decimal("0.01")
 
-
 class AnalyticsService:
     """Compute market reports directly via SQL aggregations and precomputed item metrics."""
 
@@ -161,7 +160,6 @@ class AnalyticsService:
             )
         total_snapshots = int(await session.scalar(snap_stmt) or 0)
 
-        # Totals & game indices (average change across top-20 most liquid items per game)
         games_stmt = select(GameORM).order_by(GameORM.id.asc())
         if game:
             games_stmt = games_stmt.where(GameORM.code == game.lower())
@@ -229,13 +227,11 @@ class AnalyticsService:
                 )
             )
 
-        # Top movers 24h & 7d
         top_gainers_24h = await self._top_movers(session, game=game, window="24h", desc=True)
         top_losers_24h = await self._top_movers(session, game=game, window="24h", desc=False)
         top_gainers_7d = await self._top_movers(session, game=game, window="7d", desc=True)
         top_losers_7d = await self._top_movers(session, game=game, window="7d", desc=False)
 
-        # Rarity group averages
         rarity_stmt = (
             select(
                 ItemORM.rarity,

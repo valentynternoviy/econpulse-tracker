@@ -27,17 +27,13 @@ class ProblemDetail(BaseModel):
     instance: str | None = Field(default=None, examples=["/api/v1/trades/42"])
     request_id: str | None = Field(default=None, examples=["a1b2c3d4e5f6"])
 
-
-# ---------- Auth ----------
 class RegisterRequest(BaseModel):
     username: str = Field(min_length=3, max_length=64, pattern=r"^[a-zA-Z0-9_.-]+$")
     password: str = Field(min_length=6, max_length=128)
 
-
 class LoginRequest(BaseModel):
     username: str = Field(min_length=1, max_length=64)
     password: str = Field(min_length=1, max_length=128)
-
 
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -47,14 +43,11 @@ class UserResponse(BaseModel):
     role: UserRole
     created_at: datetime
 
-
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: UserResponse
 
-
-# ---------- Games & Markets ----------
 class GameResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -66,17 +59,14 @@ class GameResponse(BaseModel):
     total_offers: int = 0
     total_market_value_usd: Decimal = Decimal("0.00")
 
-
 class GameCreateRequest(BaseModel):
     name: str = Field(min_length=2, max_length=120)
     code: str = Field(min_length=2, max_length=32, pattern=r"^[a-z0-9_-]+$")
     is_active: bool = True
 
-
 class GameUpdateRequest(BaseModel):
     name: str | None = Field(default=None, min_length=2, max_length=120)
     is_active: bool | None = None
-
 
 class MarketResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -93,7 +83,6 @@ class MarketResponse(BaseModel):
     is_active: bool
     last_collected_at: datetime | None = None
 
-
 class MarketCreateRequest(BaseModel):
     game_id: int = Field(gt=0)
     name: str = Field(min_length=2, max_length=120)
@@ -104,15 +93,12 @@ class MarketCreateRequest(BaseModel):
     schedule_minutes: int = Field(default=15, ge=15, le=1440)
     is_active: bool = True
 
-
 class MarketUpdateRequest(BaseModel):
     name: str | None = Field(default=None, min_length=2, max_length=120)
     fee_pct: Decimal | None = Field(default=None, ge=0, le=50)
     schedule_minutes: int | None = Field(default=None, ge=15, le=1440)
     is_active: bool | None = None
 
-
-# ---------- Catalog & Price History ----------
 class SubcategoryFacet(BaseModel):
     code: str
     label: str
@@ -121,14 +107,12 @@ class SubcategoryFacet(BaseModel):
     shortname: str | None = None
     icon_url: str | None = None
 
-
 class CategoryFacet(BaseModel):
     code: str
     label: str
     items_count: int
     total_volume: int
     subcategories: list[SubcategoryFacet]
-
 
 class MarketQuoteDTO(BaseModel):
     market_id: int
@@ -142,7 +126,6 @@ class MarketQuoteDTO(BaseModel):
     collected_at: datetime
     last_checked_at: datetime
 
-
 class RelatedItemDTO(BaseModel):
     id: int
     name: str
@@ -150,7 +133,6 @@ class RelatedItemDTO(BaseModel):
     subcategory: str
     icon_url: str | None = None
     latest_min_price: Decimal | None = None
-
 
 class ItemSummaryResponse(BaseModel):
     id: int
@@ -177,7 +159,6 @@ class ItemSummaryResponse(BaseModel):
     price_change_24h_pct: Decimal | None = None
     price_change_7d_pct: Decimal | None = None
 
-
 class PaginatedItemsResponse(BaseModel):
     items: list[ItemSummaryResponse]
     total: int
@@ -185,14 +166,12 @@ class PaginatedItemsResponse(BaseModel):
     page_size: int
     pages: int
 
-
 class ItemDetailResponse(ItemSummaryResponse):
     markets: list[MarketQuoteDTO]
     cheapest_price: Decimal | None = None
     most_expensive_price: Decimal | None = None
     spread_abs: Decimal | None = None
     related_parts: list[RelatedItemDTO] = Field(default_factory=list)
-
 
 class PriceHistoryPoint(BaseModel):
     bucket: datetime
@@ -203,15 +182,12 @@ class PriceHistoryPoint(BaseModel):
     avg_volume: int
     snapshots_count: int
 
-
 class PriceHistoryResponse(BaseModel):
     item_id: int
     item_name: str
     step: HistoryStep
     points: list[PriceHistoryPoint]
 
-
-# ---------- Watchlist & Alerts ----------
 class WatchCreateRequest(BaseModel):
     item_id: int = Field(gt=0)
     market_id: int = Field(gt=0)
@@ -219,12 +195,10 @@ class WatchCreateRequest(BaseModel):
     threshold: Decimal = Field(gt=0)
     cooldown_minutes: int = Field(default=60, ge=0, le=10080)
 
-
 class WatchUpdateRequest(BaseModel):
     threshold: Decimal | None = Field(default=None, gt=0)
     direction: WatchDirection | None = None
     cooldown_minutes: int | None = Field(default=None, ge=0, le=10080)
-
 
 class WatchItemResponse(BaseModel):
     id: int
@@ -239,7 +213,6 @@ class WatchItemResponse(BaseModel):
     last_alert_at: datetime | None
     created_at: datetime
 
-
 class AlertResponse(BaseModel):
     id: int
     watch_item_id: int
@@ -251,15 +224,12 @@ class AlertResponse(BaseModel):
     is_read: bool
     created_at: datetime
 
-
 class FxRatesResponse(BaseModel):
     usd_to_uah: Decimal
     eur_to_usd: Decimal
     plt_to_usd: Decimal
     source: str
 
-
-# ---------- Portfolio & Trades (Key State Operation) ----------
 class TradeCreateRequest(BaseModel):
     item_id: int = Field(gt=0)
     market_id: int = Field(gt=0)
@@ -268,7 +238,6 @@ class TradeCreateRequest(BaseModel):
     price: Decimal = Field(gt=0)
     traded_at: datetime
     idempotency_key: str | None = Field(default=None, min_length=1, max_length=128)
-
 
 class TradeResponse(BaseModel):
     id: int
@@ -282,7 +251,6 @@ class TradeResponse(BaseModel):
     traded_at: datetime
     idempotency_key: str
     created_at: datetime
-
 
 class PositionResponse(BaseModel):
     id: int
@@ -299,7 +267,6 @@ class PositionResponse(BaseModel):
     total_pnl: Decimal
     updated_at: datetime
 
-
 class PortfolioSummaryResponse(BaseModel):
     invested: Decimal
     current_value: Decimal
@@ -310,8 +277,6 @@ class PortfolioSummaryResponse(BaseModel):
     most_profitable: PositionResponse | None = None
     least_profitable: PositionResponse | None = None
 
-
-# ---------- Anomalies ----------
 class AnomalyResponse(BaseModel):
     id: int
     item_id: int
@@ -329,15 +294,11 @@ class AnomalyResponse(BaseModel):
     duration_minutes: int
     comment: str | None
 
-
 class AnomalyCloseRequest(BaseModel):
     comment: str = Field(min_length=3, max_length=1000)
 
-
-# ---------- Collection & Admin ----------
 class CollectRunRequest(BaseModel):
     market_id: int | None = Field(default=None, gt=0)
-
 
 class CollectionRunResponse(BaseModel):
     id: int
@@ -351,7 +312,6 @@ class CollectionRunResponse(BaseModel):
     rejected_count: int
     new_snapshots_count: int
     error_message: str | None
-
 
 class MarketCollectionStatusResponse(BaseModel):
     market_id: int
@@ -368,8 +328,6 @@ class MarketCollectionStatusResponse(BaseModel):
     new_snapshots_count: int
     last_error: str | None
 
-
-# ---------- Analytics ----------
 class MoverItemDTO(BaseModel):
     item_id: int
     name: str
@@ -379,7 +337,6 @@ class MoverItemDTO(BaseModel):
     current_price: Decimal
     change_pct: Decimal
     volume: int
-
 
 class SpreadItemDTO(BaseModel):
     item_id: int
@@ -392,13 +349,11 @@ class SpreadItemDTO(BaseModel):
     cheapest_market: str
     priciest_market: str
 
-
 class RarityStatDTO(BaseModel):
     rarity: str
     items_count: int
     avg_price: Decimal
     total_volume: int
-
 
 class GameIndexDTO(BaseModel):
     game_code: str
@@ -408,7 +363,6 @@ class GameIndexDTO(BaseModel):
     avg_change_7d_pct: Decimal
     total_offers: int
     total_market_value_usd: Decimal
-
 
 class AnalyticsOverviewResponse(BaseModel):
     total_items: int
@@ -421,7 +375,6 @@ class AnalyticsOverviewResponse(BaseModel):
     top_gainers_7d: list[MoverItemDTO]
     top_losers_7d: list[MoverItemDTO]
     rarity_stats: list[RarityStatDTO]
-
 
 ItemSortOption = Literal[
     "newest",

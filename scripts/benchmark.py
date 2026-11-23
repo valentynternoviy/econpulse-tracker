@@ -46,7 +46,6 @@ def bench_lazy_vs_eager_memory(n_records: int = 50_000) -> dict[str, object]:
                 rarity="rare",
             )
 
-    # 1. Eager approach: materialize raw list + materialize validated list
     tracemalloc.start()
     t0 = time.perf_counter()
     raw_list = list(raw_stream(n_records))
@@ -62,7 +61,6 @@ def bench_lazy_vs_eager_memory(n_records: int = 50_000) -> dict[str, object]:
     _, eager_peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
 
-    # 2. Lazy streaming generator pipeline
     tracemalloc.start()
     t1 = time.perf_counter()
     stats = PipelineStats()
@@ -84,7 +82,6 @@ def bench_lazy_vs_eager_memory(n_records: int = 50_000) -> dict[str, object]:
         "eager_ms": eager_ms,
         "lazy_ms": lazy_ms,
     }
-
 
 def bench_key_operation() -> dict[str, object]:
     """Measure latency of chronological portfolio recalculation over 500 trades."""
@@ -110,7 +107,6 @@ def bench_key_operation() -> dict[str, object]:
         "avg_recalc_ms": round(avg_ms, 3),
     }
 
-
 async def bench_index_and_ma7() -> dict[str, object]:
     """Compare history query plan/speed BEFORE vs AFTER composite index and MA-7 caching."""
     db_file = "_bench_perf.db"
@@ -134,7 +130,6 @@ async def bench_index_and_ma7() -> dict[str, object]:
         "ORDER BY collected_at ASC"
     )
 
-    # Drop composite indexes to measure BEFORE state
     cur.execute("DROP INDEX IF EXISTS ix_price_snapshots_item_collected")
     cur.execute("DROP INDEX IF EXISTS ix_price_snapshots_item_market_collected")
     conn.commit()
@@ -145,7 +140,6 @@ async def bench_index_and_ma7() -> dict[str, object]:
         cur.execute(query_hist).fetchall()
     before_ms = ((time.perf_counter() - t0) / 200) * 1000
 
-    # Restore composite index (item_id, collected_at) to measure AFTER state
     cur.execute(
         "CREATE INDEX ix_price_snapshots_item_collected "
         "ON price_snapshots (item_id, collected_at)"
@@ -158,7 +152,6 @@ async def bench_index_and_ma7() -> dict[str, object]:
         cur.execute(query_hist).fetchall()
     after_ms = ((time.perf_counter() - t1) / 200) * 1000
 
-    # Compare catalog page load: on-the-fly MA-7 SQL subquery vs precomputed column on items
     q_onthefly = """
         SELECT i.id, i.name,
                (SELECT AVG(ps.normalized_price) FROM price_snapshots ps
@@ -201,7 +194,6 @@ async def bench_index_and_ma7() -> dict[str, object]:
         "ma7_speedup_x": round(onthefly_ms / max(0.001, precomputed_ms), 1),
     }
 
-
 async def main() -> None:
     report = {
         "lazy_vs_eager_memory": bench_lazy_vs_eager_memory(50_000),
@@ -209,7 +201,6 @@ async def main() -> None:
         "index_and_ma7": await bench_index_and_ma7(),
     }
     print(json.dumps(report, indent=2, ensure_ascii=False))
-
 
 if __name__ == "__main__":
     asyncio.run(main())

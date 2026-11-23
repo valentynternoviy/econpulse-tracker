@@ -36,7 +36,6 @@ logger = get_logger(__name__)
 _Q4 = Decimal("0.0001")
 _Q2 = Decimal("0.01")
 
-
 class CollectorService:
     """Orchestrate parallel collection, deduplication, precomputed MA-7, alerts, and anomalies."""
 
@@ -203,14 +202,12 @@ class CollectorService:
                     elif last_snap is not None:
                         last_snap.last_checked_at = quote.collected_at
 
-                # Mark items unavailable if they disappeared from a substantial full-market scrape
                 await self._mark_disappeared_items(
                     session,
                     market=market,
                     seen_item_ids=seen_item_ids,
                 )
 
-                # Update precomputed MA-7 and latest min/max/spread metrics on touched items
                 for iid in touched_item_ids:
                     await self._refresh_item_metrics(session, iid)
 
@@ -281,7 +278,6 @@ class CollectorService:
             ):
                 continue
 
-            # Idempotency guard per (watch_item_id, snapshot_id)
             exists = await session.scalar(
                 select(AlertORM.id).where(
                     AlertORM.watch_item_id == watch.id,
@@ -364,7 +360,6 @@ class CollectorService:
         """Mark items unavailable only if this market had previously listed items and scraped ok."""
         if not seen_item_ids:
             return
-        # Find items that only exist on this market and were not seen in this full sweep
         known_ids = set(
             (
                 await session.scalars(
@@ -374,7 +369,6 @@ class CollectorService:
                 )
             ).all()
         )
-        # Only mark disappeared if scrape covered a majority (avoids false positives on small lists)
         if len(known_ids) > 0 and len(seen_item_ids) >= int(len(known_ids) * 0.5):
             missing_ids = known_ids - seen_item_ids
             if missing_ids:
@@ -382,7 +376,6 @@ class CollectorService:
                     await session.scalars(select(ItemORM).where(ItemORM.id.in_(missing_ids)))
                 ).all()
                 for it in missing_items:
-                    # Check if seen recently on any OTHER market before hiding
                     other_recent = await session.scalar(
                         select(PriceSnapshotORM.id)
                         .where(
@@ -402,7 +395,6 @@ class CollectorService:
             return
 
         now = datetime.now(UTC)
-        # Precompute 7-day moving average from snapshots of last 7 days
         avg_7d = await session.scalar(
             select(func.avg(PriceSnapshotORM.normalized_price)).where(
                 PriceSnapshotORM.item_id == item_id,
@@ -412,7 +404,6 @@ class CollectorService:
         if avg_7d is not None:
             item.ma7_price = Decimal(str(avg_7d)).quantize(_Q4, rounding=ROUND_HALF_UP)
 
-        # Latest price per market
         latest_sub = (
             select(
                 PriceSnapshotORM.market_id,
@@ -446,10 +437,8 @@ class CollectorService:
                     _Q2, rounding=ROUND_HALF_UP
                 )
 
-
 def _ensure_utc(dt: datetime) -> datetime:
     return dt if dt.tzinfo is not None else dt.replace(tzinfo=UTC)
-
 
 def _to_run_response(run: CollectionRunORM, market: MarketORM) -> CollectionRunResponse:
     return CollectionRunResponse(

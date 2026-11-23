@@ -35,12 +35,10 @@ logger = get_logger(__name__)
 _Q4 = Decimal("0.0001")
 _Q2 = Decimal("0.01")
 
-
 class PortfolioService:
     """Manage user trades and positions with transactional locking & idempotency."""
 
     def __init__(self) -> None:
-        # In-process lock complements PostgreSQL SELECT ... FOR UPDATE on SQLite/single-node
         self._position_locks: dict[tuple[int, int], asyncio.Lock] = {}
 
     def _get_lock(self, user_id: int, item_id: int) -> asyncio.Lock:
@@ -67,12 +65,10 @@ class PortfolioService:
         lock = self._get_lock(user_id, payload.item_id)
 
         async with lock:
-            # 1. Fast idempotency check before mutating state
             existing = await self._find_trade_by_idem(session, user_id, idem_key)
             if existing is not None:
                 return _to_trade_response(existing), False
 
-            # 2. Validate referenced item & market exist
             item = await session.get(ItemORM, payload.item_id)
             if item is None:
                 raise ResourceNotFoundError(f"Item #{payload.item_id} not found")
@@ -80,11 +76,9 @@ class PortfolioService:
             if market is None:
                 raise ResourceNotFoundError(f"Market #{payload.market_id} not found")
 
-            # 3. Single atomic transaction with row-level lock on Position
             try:
                 position = await self._lock_or_init_position(session, user_id, payload.item_id)
 
-                # Re-check idempotency inside locked transaction for concurrent duplicate requests
                 existing_locked = await self._find_trade_by_idem(session, user_id, idem_key)
                 if existing_locked is not None:
                     await session.rollback()
@@ -109,7 +103,6 @@ class PortfolioService:
                 session.add(new_trade)
                 await session.flush()
 
-                # Replay ALL trades chronologically (handles backdated trades & sell validation)
                 await self._recalculate_and_persist_position(
                     session,
                     user_id=user_id,
@@ -353,10 +346,8 @@ class PortfolioService:
         position.realized_pnl = state.realized_pnl
         position.updated_at = datetime.now(UTC)
 
-
 def _ensure_utc(dt: datetime) -> datetime:
     return dt if dt.tzinfo is not None else dt.replace(tzinfo=UTC)
-
 
 def _to_trade_response(trade: TradeORM) -> TradeResponse:
     return TradeResponse(
@@ -372,7 +363,6 @@ def _to_trade_response(trade: TradeORM) -> TradeResponse:
         idempotency_key=trade.idempotency_key,
         created_at=trade.created_at,
     )
-
 
 def _to_position_response(pos: PositionORM) -> PositionResponse:
     current_price = (

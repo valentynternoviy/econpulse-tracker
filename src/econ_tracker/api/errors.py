@@ -72,7 +72,6 @@ COMMON_ERROR_RESPONSES: dict[int | str, dict[str, Any]] = {
     },
 }
 
-
 def _problem_response(
     *,
     request: Request,
@@ -94,7 +93,6 @@ def _problem_response(
         content=body.model_dump(),
         media_type=PROBLEM_MEDIA_TYPE,
     )
-
 
 def register_exception_handlers(app: FastAPI) -> None:
     """Attach RFC 9457 error handlers ensuring 500 responses never leak stack traces."""
@@ -150,7 +148,6 @@ def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(Exception)
     async def _handle_unexpected_error(request: Request, exc: Exception) -> JSONResponse:
         logger.exception("unhandled_server_error", path=str(request.url.path), error=str(exc))
-        # Strictly omit stack trace / internal details in HTTP 500 responses
         return _problem_response(
             request=request,
             status_code=500,

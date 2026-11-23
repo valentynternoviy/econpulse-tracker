@@ -28,7 +28,6 @@ class FakeFxProvider:
             "PLT": Decimal("0.050000"),
         }
 
-
 class StaticMarketAdapter:
     def __init__(
         self,
@@ -49,7 +48,6 @@ class StaticMarketAdapter:
         if self._fail_with is not None:
             raise ExternalSourceError(self._fail_with)
         return iter(self._quotes)
-
 
 @pytest.fixture
 async def seeded_app(tmp_path: Path) -> AsyncIterator[tuple[httpx.AsyncClient, AppContainer]]:
@@ -79,7 +77,6 @@ async def seeded_app(tmp_path: Path) -> AsyncIterator[tuple[httpx.AsyncClient, A
                     subcategory="prime_set",
                     rarity="prime",
                 ),
-                # Intentionally invalid quote to verify rejection accounting
                 RawMarketQuote(
                     external_id="broken_item",
                     name="Broken Zero Price",
@@ -150,7 +147,6 @@ async def seeded_app(tmp_path: Path) -> AsyncIterator[tuple[httpx.AsyncClient, A
         yield client, container
 
     await container.shutdown()
-
 
 async def auth_headers(client: httpx.AsyncClient, username: str, password: str) -> dict[str, str]:
     resp = await client.post(

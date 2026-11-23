@@ -89,9 +89,6 @@ const state = {
   sugIndex: -1,
 };
 
-// ============================================================================
-// HTTP & HELPERS
-// ============================================================================
 async function api(path, options = {}) {
   const headers = { ...(options.headers || {}) };
   if (state.token) headers.Authorization = `Bearer ${state.token}`;
@@ -185,9 +182,6 @@ function rarityBadge(code) {
   return `<span class="rarity-pill ${esc(code)}">${esc(label)}</span>`;
 }
 
-// ============================================================================
-// CUSTOM DARK DROPDOWNS & SEGMENTED TOGGLES (ZERO NATIVE BLUE MENUS)
-// ============================================================================
 function closeAllCustomSelects(exceptWrap = null) {
   document.querySelectorAll('.csel.open').forEach((w) => {
     if (w !== exceptWrap) w.classList.remove('open');
@@ -288,9 +282,6 @@ function setSegmentedValue(groupId, val) {
   });
 }
 
-// ============================================================================
-// SCREEN 1: 3D LAYERED PARALLAX SPLASH
-// ============================================================================
 function initSplash() {
   const splash = document.getElementById('splash-screen');
   splash.querySelectorAll('.splash-pane').forEach((pane) => {
@@ -307,7 +298,6 @@ function initSplash() {
       const r = pane.getBoundingClientRect();
       const nx = (e.clientX - r.left) / r.width - 0.5;
       const ny = (e.clientY - r.top) / r.height - 0.5;
-      // Background & cutout foreground move in opposite directions -> real 3D parallax
       bgLayer.style.transform = `translate3d(${-nx * 14}px, ${-ny * 9}px, 0)`;
       charLayer.style.transform = `translate3d(${nx * 22}px, ${ny * 12}px, 0)`;
     });
@@ -356,9 +346,6 @@ function returnToSplash() {
   requestAnimationFrame(() => splash.classList.remove('exiting'));
 }
 
-// ============================================================================
-// GAME THEME & CATALOG VIEW SWITCHER
-// ============================================================================
 async function selectGame(gameCode) {
   state.game = gameCode;
   state.rustPickerOpen = false;
@@ -387,7 +374,6 @@ async function selectGame(gameCode) {
   );
   updateRustSelectedPill('', '');
 
-  // Show Warframe.market photo hero ONLY on Warframe catalog
   const isWf = gameCode === 'warframe';
   document.getElementById('wf-hero-banner').classList.toggle('hidden', !isWf || state.tab !== 'catalog');
   document.getElementById('wf-catalog-view').classList.toggle('hidden', !isWf);
@@ -439,9 +425,6 @@ async function loadCurrentTab() {
   }
 }
 
-// ============================================================================
-// FACETS & DUAL CATALOGS (RUSTCLASH VS WARFRAME.MARKET)
-// ============================================================================
 async function loadFacets() {
   state.facets = await api(`/api/v1/categories?game=${encodeURIComponent(state.game)}`);
   if (state.game === 'rust') {
@@ -451,7 +434,6 @@ async function loadFacets() {
   }
 }
 
-// ---------------- RUSTCLASH CATALOG ----------------
 function renderRustPicker() {
   const drawer = document.getElementById('rust-picker-drawer');
   drawer.classList.toggle('hidden', !state.rustPickerOpen);
@@ -575,7 +557,6 @@ async function loadRustCatalog() {
   document.getElementById('rust-next-page').disabled = data.page >= data.pages;
 }
 
-// ---------------- WARFRAME.MARKET CATALOG ----------------
 function renderWarframeCategoryTabs() {
   const tabsEl = document.getElementById('wf-cat-tabs');
   const allBtn = `<button class="wf-cat-tab ${state.filters.item_type === '' ? 'active' : ''}" data-wf-cat="">Усі</button>`;
@@ -596,16 +577,6 @@ function renderWarframeCategoryTabs() {
       loadWarframeCatalog();
     });
   });
-
-  // Update subcategory dropdown for selected category
-  const subSel = document.getElementById('wf-subcat-select');
-  const activeCat = state.facets.find((f) => f.code === state.filters.item_type);
-  const subs = activeCat ? activeCat.subcategories : [];
-  subSel.innerHTML =
-    `<option value="">Усі підтипи</option>` +
-    subs.map((s) => `<option value="${esc(s.code)}">${esc(s.label)} (${s.items_count})</option>`).join('');
-  subSel.value = state.filters.subcategory;
-  refreshCustomSelect(subSel);
 }
 
 async function loadWarframeCatalog() {
@@ -668,9 +639,6 @@ async function loadWarframeCatalog() {
   document.getElementById('wf-next-page').disabled = data.page >= data.pages;
 }
 
-// ============================================================================
-// ITEM DETAIL MODAL
-// ============================================================================
 function renderModalCurrencySection() {
   const detail = state.lastDetail;
   if (!detail) return;
@@ -777,7 +745,6 @@ async function openItemModal(itemId) {
 
   renderModalCurrencySection();
 
-  // Related Prime Set Parts quick switcher
   const relWrap = document.getElementById('modal-related-wrap');
   const relList = document.getElementById('modal-related-list');
   if (detail.related_parts && detail.related_parts.length > 0) {
@@ -973,9 +940,6 @@ function renderPriceChart(points, ma7Price) {
   });
 }
 
-// ============================================================================
-// OTHER TABS (100% UKRAINIAN)
-// ============================================================================
 async function loadAnalytics() {
   const [overview, spreads] = await Promise.all([
     api(`/api/v1/stats/overview?game=${encodeURIComponent(state.game)}`),
@@ -1288,9 +1252,6 @@ async function loadAdminStatus() {
   });
 }
 
-// ============================================================================
-// AUTH FLOW
-// ============================================================================
 async function syncUser() {
   const pill = document.getElementById('user-pill');
   const btnAuth = document.getElementById('btn-auth');
@@ -1347,9 +1308,6 @@ async function performAuth(endpoint, username, password) {
   }
 }
 
-// ============================================================================
-// WIRE EVENTS
-// ============================================================================
 function wireEvents() {
   document.getElementById('btn-back-splash').addEventListener('click', returnToSplash);
   document.querySelectorAll('[data-switch-game]').forEach((b) => {
@@ -1359,7 +1317,6 @@ function wireEvents() {
     b.addEventListener('click', () => switchTab(b.dataset.tab));
   });
 
-  // Rust catalog controls
   document.getElementById('btn-rust-select-item').addEventListener('click', () => {
     state.rustPickerOpen = !state.rustPickerOpen;
     renderRustPicker();
@@ -1402,7 +1359,6 @@ function wireEvents() {
     loadRustCatalog();
   });
 
-  // Warframe catalog controls + autocomplete suggestions
   let wfTimer = null;
   let wfSugTimer = null;
   const wfInput = document.getElementById('wf-search-input');
@@ -1450,11 +1406,6 @@ function wireEvents() {
     state.filters.page = 1;
     loadWarframeCatalog();
   });
-  document.getElementById('wf-subcat-select').addEventListener('change', (e) => {
-    state.filters.subcategory = e.target.value;
-    state.filters.page = 1;
-    loadWarframeCatalog();
-  });
   document.getElementById('wf-rarity-select').addEventListener('change', (e) => {
     state.filters.rarity = e.target.value;
     state.filters.page = 1;
@@ -1476,7 +1427,6 @@ function wireEvents() {
     loadWarframeCatalog();
   });
 
-  // Item modal
   document.getElementById('btn-close-item-modal').addEventListener('click', () => {
     document.getElementById('item-modal').classList.add('hidden');
   });
@@ -1573,7 +1523,6 @@ function wireEvents() {
     }
   });
 
-  // Auth modal
   document.getElementById('btn-auth').addEventListener('click', () => {
     document.getElementById('auth-modal').classList.remove('hidden');
   });
@@ -1621,7 +1570,6 @@ async function loadFxRates() {
       source: fx.source || 'fallback',
     };
   } catch {
-    // keep safe fallback
   }
 }
 

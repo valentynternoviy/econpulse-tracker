@@ -18,7 +18,6 @@ async def test_complete_end_to_end_user_journey(
     """Walk through the full product workflow from registration to realized portfolio PnL."""
     client, _ = seeded_app
 
-    # 1. Guest explores games, categories, and locates 'Gauss Prime Set'
     games = (await client.get("/api/v1/games")).json()
     assert any(g["code"] == "warframe" for g in games)
 
@@ -31,14 +30,12 @@ async def test_complete_end_to_end_user_journey(
     )
     assert gauss["description"] is not None
 
-    # 2. Guest opens item card & downloads price history CSV
     detail = (await client.get(f"/api/v1/items/{gauss['id']}")).json()
     wf_pc_market_id = next(m["market_id"] for m in detail["markets"] if m["market_code"] == "wf_pc")
 
     csv_resp = await client.get(f"/api/v1/items/{gauss['id']}/prices?step=day&format=csv")
     assert csv_resp.status_code == 200 and len(csv_resp.text.splitlines()) >= 5
 
-    # 3. User registers account
     reg = await client.post(
         "/api/v1/auth/register",
         json={"username": "e2e_tenno", "password": "strongpassword1"},
@@ -46,7 +43,6 @@ async def test_complete_end_to_end_user_journey(
     assert reg.status_code == 201
     user_headers = {"Authorization": f"Bearer {reg.json()['access_token']}"}
 
-    # 4. User creates a WatchItem below $2.50 (seed Gauss is ~$3.26, fake collector drops to $2.00)
     watch_resp = await client.post(
         "/api/v1/watch",
         json={
@@ -60,7 +56,6 @@ async def test_complete_end_to_end_user_journey(
     )
     assert watch_resp.status_code == 201
 
-    # 5. Admin triggers collection -> Gauss drops to 40 PLT ($2.00) -> Alert triggers!
     admin_headers = await auth_headers(client, "admin", "admin123!")
     col_resp = await client.post(
         "/api/v1/collect/run",
@@ -74,7 +69,6 @@ async def test_complete_end_to_end_user_journey(
     msg = unread_alerts[0]["message"]
     assert "Gauss" in msg or "Ґаусс" in msg
 
-    # 6. User registers buy & partial sell trades and checks portfolio summary
     now = datetime.now(UTC)
     t_buy = await client.post(
         "/api/v1/trades",

@@ -45,7 +45,6 @@ _Q4 = Decimal("0.0001")
 _Q2 = Decimal("0.01")
 _CACHE_PATH = Path(__file__).resolve().parent / "real_catalog_cache.json"
 
-
 @dataclass(frozen=True, slots=True)
 class _SeedItemSpec:
     name: str
@@ -65,7 +64,6 @@ class _SeedItemSpec:
     anomaly_spike: float = 0.0
     set_group: str | None = None
 
-
 def _parse_iso_dt(raw: str | None, fallback: datetime) -> datetime:
     if not raw:
         return fallback
@@ -74,7 +72,6 @@ def _parse_iso_dt(raw: str | None, fallback: datetime) -> datetime:
         return dt if dt.tzinfo is not None else dt.replace(tzinfo=UTC)
     except ValueError:
         return fallback
-
 
 def _infer_rust_rarity(price_usd: float, has_glow: bool, is_twitch: bool) -> str:
     if price_usd >= 35.0 or has_glow:
@@ -85,7 +82,6 @@ def _infer_rust_rarity(price_usd: float, has_glow: bool, is_twitch: bool) -> str
         return "uncommon"
     return "common"
 
-
 def _load_real_specs(
     *,
     now: datetime,
@@ -95,9 +91,7 @@ def _load_real_specs(
     cache = json.loads(_CACHE_PATH.read_text(encoding="utf-8"))
     plt_to_usd = 0.04999
 
-    # ---------------- RUST SPECS ----------------
     rust_raw: list[dict[str, Any]] = cache.get("rust", [])
-    # Stratified round-robin sampling by base_type when capped (used by fast tests)
     if max_items_per_game is not None and len(rust_raw) > max_items_per_game:
         by_sub: dict[str, list[dict[str, Any]]] = {}
         for r in rust_raw:
@@ -117,7 +111,6 @@ def _load_real_specs(
     rust_specs: list[_SeedItemSpec] = []
     seen_rust: set[str] = set()
 
-    # Ensure Blackout Hoodie is always present for deterministic test queries
     def _append_rust(row: dict[str, Any], idx: int) -> None:
         name = str(row["name"]).strip()
         norm = normalize_item_name(name)
@@ -177,7 +170,6 @@ def _load_real_specs(
             len(rust_specs),
         )
 
-    # ---------------- WARFRAME UKRAINIAN SPECS ----------------
     wf_all: list[dict[str, Any]] = cache.get("warframe", [])
     wf_raw = wf_all[:max_items_per_game] if max_items_per_game is not None else wf_all
 
@@ -237,7 +229,6 @@ def _load_real_specs(
             )
         )
 
-    # Guarantee Gauss Prime Set (and its set parts) are always included
     gauss_parts = [
         x
         for x in wf_all
@@ -263,10 +254,8 @@ def _load_real_specs(
 
     return wf_specs, rust_specs
 
-
 def _hash_password(plain: str) -> str:
     return bcrypt.hashpw(plain.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
-
 
 async def seed_database(
     session: AsyncSession,
@@ -285,7 +274,6 @@ async def seed_database(
 
     now = datetime.now(UTC).replace(minute=0, second=0, microsecond=0)
 
-    # 1. Games
     games_map: dict[str, GameORM] = {}
     for code, name in (("warframe", "Warframe"), ("rust", "Rust")):
         game = await session.scalar(select(GameORM).where(GameORM.code == code))
@@ -295,7 +283,6 @@ async def seed_database(
             await session.flush()
         games_map[code] = game
 
-    # 2. Markets (2 per game for genuine M:N cross-market spread & multi-currency)
     market_defs = [
         (
             "wf_pc",
@@ -353,7 +340,6 @@ async def seed_database(
             await session.flush()
         markets_map[code] = m
 
-    # 3. Demo Users for all roles
     users_map: dict[str, UserORM] = {}
     for uname, pwd, role in (
         ("admin", "admin123!", UserRole.ADMIN.value),
@@ -367,7 +353,6 @@ async def seed_database(
             await session.flush()
         users_map[uname] = u
 
-    # 4. Items + Historical PriceSnapshots across 2 markets per item
     wf_specs, rust_specs = _load_real_specs(
         now=now, days=days, max_items_per_game=max_items_per_game
     )

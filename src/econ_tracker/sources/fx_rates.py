@@ -17,7 +17,6 @@ _DEFAULT_FALLBACK_RATES: dict[str, Decimal] = {
     "UAH": Decimal("0.024200"),
 }
 
-
 class ExchangeRateProvider:
     """Fetch live currency conversion rates into USD."""
 
@@ -57,7 +56,6 @@ class ExchangeRateProvider:
         except ExternalSourceError as exc:
             logger.warning("fx_primary_failed", provider="frankfurter", error=str(exc))
 
-        # Secondary fallback: National Bank of Ukraine open JSON API
         try:
             nbu_rows: list[dict[str, Any]] = await self._http.get_json(self.NBU_URL)
             uah_per_usd: Decimal | None = None

@@ -25,7 +25,6 @@ from econ_tracker.storage.database import Base
 def _utcnow() -> datetime:
     return datetime.now(UTC)
 
-
 class GameORM(Base):
     """Tracked game (e.g., Warframe, Rust)."""
 
@@ -41,7 +40,6 @@ class GameORM(Base):
 
     markets: Mapped[list[MarketORM]] = relationship(back_populates="game")
     items: Mapped[list[ItemORM]] = relationship(back_populates="game")
-
 
 class MarketORM(Base):
     """Virtual items marketplace (e.g., Warframe.market PC/PS, Skinport EUR, Rust.tm USD)."""
@@ -72,7 +70,6 @@ class MarketORM(Base):
     snapshots: Mapped[list[PriceSnapshotORM]] = relationship(back_populates="market")
     collection_runs: Mapped[list[CollectionRunORM]] = relationship(back_populates="market")
 
-
 class ItemORM(Base):
     """Virtual item / skin tracked across one or more markets."""
 
@@ -100,7 +97,6 @@ class ItemORM(Base):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     released_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    # Precomputed market metrics updated during collection (avoids recomputing MA-7 per page view)
     ma7_price: Mapped[Decimal | None] = mapped_column(Numeric(14, 4), nullable=True)
     latest_min_price: Mapped[Decimal | None] = mapped_column(Numeric(14, 4), nullable=True)
     latest_max_price: Mapped[Decimal | None] = mapped_column(Numeric(14, 4), nullable=True)
@@ -118,7 +114,6 @@ class ItemORM(Base):
 
     game: Mapped[GameORM] = relationship(back_populates="items")
     snapshots: Mapped[list[PriceSnapshotORM]] = relationship(back_populates="item")
-
 
 class PriceSnapshotORM(Base):
     """Historical price & offer volume snapshot (M:N link between Item and Market)."""
@@ -152,7 +147,6 @@ class PriceSnapshotORM(Base):
     item: Mapped[ItemORM] = relationship(back_populates="snapshots")
     market: Mapped[MarketORM] = relationship(back_populates="snapshots")
 
-
 class UserORM(Base):
     """Registered user with role-based permissions."""
 
@@ -165,7 +159,6 @@ class UserORM(Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=_utcnow
     )
-
 
 class WatchItemORM(Base):
     """User watch rule on an item/market pair (M:N link between User and Item)."""
@@ -194,7 +187,6 @@ class WatchItemORM(Base):
     item: Mapped[ItemORM] = relationship()
     market: Mapped[MarketORM] = relationship()
 
-
 class AlertORM(Base):
     """Triggered watch alert (idempotent per watch_item + price_snapshot)."""
 
@@ -220,7 +212,6 @@ class AlertORM(Base):
     )
 
     watch_item: Mapped[WatchItemORM] = relationship()
-
 
 class TradeORM(Base):
     """User portfolio buy/sell trade with idempotency key."""
@@ -251,7 +242,6 @@ class TradeORM(Base):
     item: Mapped[ItemORM] = relationship()
     market: Mapped[MarketORM] = relationship()
 
-
 class PositionORM(Base):
     """Aggregated portfolio position per user & item (retained when quantity reaches 0)."""
 
@@ -277,7 +267,6 @@ class PositionORM(Base):
     )
 
     item: Mapped[ItemORM] = relationship()
-
 
 class AnomalyEventORM(Base):
     """Price anomaly event triggered by deviation from 7-day moving average."""
@@ -306,7 +295,6 @@ class AnomalyEventORM(Base):
 
     item: Mapped[ItemORM] = relationship()
     market: Mapped[MarketORM] = relationship()
-
 
 class CollectionRunORM(Base):
     """Audit log of scheduled or manual collection executions per market."""

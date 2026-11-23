@@ -12,16 +12,12 @@
 </head>
 <body>
 
-  <!-- ====================================================================
-       ЕКРАН 1: ОБ'ЄМНИЙ 3D-ПОРТАЛ ВИБОРУ ГРИ (WARFRAME / RUST)
-       ==================================================================== -->
   <div id="splash-screen">
     <div class="splash-top-pill">
       <span>ECON.PULSE</span>
       <a href="/docs" target="_blank" rel="noopener">OpenAPI</a>
     </div>
 
-    <!-- ЛІВОРУЧ: WARFRAME (віддзеркалений арт + окремий шар персонажа) -->
     <section class="splash-pane" data-game="warframe">
       <div class="splash-layer-bg">
         <img src="/static/img/warframe_bg.jpg" alt="Warframe фон" />
@@ -36,7 +32,6 @@
       </div>
     </section>
 
-    <!-- ПРАВОРУЧ: RUST (хазмат окремим 3D-шаром поверх фону) -->
     <section class="splash-pane" data-game="rust">
       <div class="splash-layer-bg">
         <img src="/static/img/rust_bg.jpg" alt="Rust фон" />
@@ -52,9 +47,6 @@
     </section>
   </div>
 
-  <!-- ====================================================================
-       ЕКРАН 2: ОСНОВНИЙ ЗАСТОСУНОК (ДВІ АВТЕНТИЧНІ ТЕМИ ТА СИСТЕМИ КАТАЛОГУ)
-       ==================================================================== -->
   <div id="app-shell" class="hidden">
     <header class="topbar">
       <div class="topbar-inner">
@@ -86,9 +78,6 @@
       </div>
     </header>
 
-    <!-- ================================================================
-         WARFRAME: АТМОСФЕРНИЙ ФОТО-БАНЕР З ПОШУКОМ (ЯК НА WARFRAME.MARKET)
-         ================================================================ -->
     <section id="wf-hero-banner" class="wf-hero hidden">
       <div class="wf-hero-bg-clip">
         <img class="wf-hero-bg" src="/static/img/warframe_banner.jpg" alt="Warframe Market" />
@@ -120,12 +109,8 @@
 
     <main class="main-wrap">
 
-      <!-- ==============================================================
-           ВКЛАДКА: КАТАЛОГ (ОДИН ІЗ ДВОХ АВТЕНТИЧНИХ ІНТЕРФЕЙСІВ)
-           ============================================================== -->
       <section id="tab-catalog" class="tab-panel">
 
-        <!-- АВТЕНТИЧНИЙ ІНТЕРФЕЙС RUST (RUSTCLASH + КОНСОЛЬ РОЗРОБНИКА) -->
         <div id="rust-catalog-view" class="hidden">
           <div class="rust-skins-bar">
             <div class="rust-bar-left">
@@ -169,13 +154,11 @@
             </div>
           </div>
 
-          <!-- ВИПАДНА ПАНЕЛЬ СТОКОВИХ ІГРОВИХ ПРЕДМЕТІВ (ЯК У КОНСОЛІ RUST / RUSTCLASH) -->
           <div class="rust-picker-drawer hidden" id="rust-picker-drawer">
             <div class="rust-picker-tabs" id="rust-picker-tabs"></div>
             <div class="rust-picker-grid" id="rust-picker-grid"></div>
           </div>
 
-          <!-- СІТКА ОБ'ЄМНИХ КАРТОК СКІНІВ RUST -->
           <div class="rust-skins-grid" id="rust-skins-grid"></div>
 
           <div class="pagination-bar">
@@ -188,14 +171,10 @@
           </div>
         </div>
 
-        <!-- АВТЕНТИЧНИЙ ІНТЕРФЕЙС WARFRAME (ЯК НА WARFRAME.MARKET) -->
         <div id="wf-catalog-view" class="hidden">
           <div class="wf-controls-bar">
             <div class="wf-cat-tabs" id="wf-cat-tabs"></div>
             <div class="wf-filter-right">
-              <select class="select" id="wf-subcat-select">
-                <option value="">Усі підтипи</option>
-              </select>
               <select class="select" id="wf-rarity-select">
                 <option value="">Усі рідкості</option>
                 <option value="prime">Прайм</option>
@@ -214,7 +193,6 @@
             </div>
           </div>
 
-          <!-- ДВОКОЛОНКОВА СІТКА КАРТОК ОРДЕРІВ WARFRAME.MARKET -->
           <div class="wf-orders-grid" id="wf-orders-grid"></div>
 
           <div class="pagination-bar" style="margin-top:16px;">
@@ -229,9 +207,6 @@
 
       </section>
 
-      <!-- ==============================================================
-           ВКЛАДКА: СТАТИСТИКА ТА АНАЛІТИКА
-           ============================================================== -->
       <section id="tab-stats" class="tab-panel hidden">
         <div class="kpi-grid" id="stats-kpis"></div>
 
@@ -288,9 +263,6 @@
         </div>
       </section>
 
-      <!-- ==============================================================
-           ВКЛАДКА: АНОМАЛІЇ (ЗАКРИТТЯ ДЛЯ АНАЛІТИКА / АДМІНА)
-           ============================================================== -->
       <section id="tab-anomalies" class="tab-panel hidden">
         <div class="toolbar">
           <select class="select" id="anomaly-status-filter">
@@ -323,9 +295,6 @@
         </div>
       </section>
 
-      <!-- ==============================================================
-           ВКЛАДКА: ОСОБИСТИЙ ПОРТФЕЛЬ (ТРЕКЕР УГОД КОРИСТУВАЧА)
-           ============================================================== -->
       <section id="tab-portfolio" class="tab-panel hidden">
         <div class="info-banner">
           Особистий обліковий портфель трейдера: фіксуйте власні купівлі та продажі предметів із реальних торгових майданчиків, щоб відстежувати середньозважену ціну входу та фінансовий результат (PnL).
@@ -374,9 +343,6 @@
         </div>
       </section>
 
-      <!-- ==============================================================
-           ВКЛАДКА: СПОСТЕРЕЖЕННЯ ТА СПОВІЩЕННЯ
-           ============================================================== -->
       <section id="tab-alerts" class="tab-panel hidden">
         <div class="toolbar">
           <div class="universe-switch" id="alerts-game-filter">
@@ -412,9 +378,6 @@
         </div>
       </section>
 
-      <!-- ==============================================================
-           ВКЛАДКА: АДМІНІСТРУВАННЯ
-           ============================================================== -->
       <section id="tab-admin" class="tab-panel hidden">
         <div class="card">
           <div class="card-header">
@@ -443,9 +406,6 @@
     </main>
   </div>
 
-  <!-- ====================================================================
-       МОДАЛЬНЕ ВІКНО: ДЕТАЛЬНА КАРТКА ПРЕДМЕТА / СКІНА
-       ==================================================================== -->
   <div class="modal-backdrop hidden" id="item-modal">
     <div class="modal-panel">
       <div class="modal-head">
@@ -456,7 +416,6 @@
         <button class="modal-close" id="btn-close-item-modal">×</button>
       </div>
 
-      <!-- Двоколонковий макет як на RustClash (ліворуч ціни й характеристики, праворуч великий рендер) -->
       <div class="detail-top-grid">
         <div class="detail-left">
           <div id="modal-item-desc" class="item-desc-box hidden"></div>
@@ -500,13 +459,11 @@
         </div>
       </div>
 
-      <!-- Перехід між частинами одного комплекту (кресленик / частини / комплект) -->
       <div id="modal-related-wrap" class="related-parts-wrap hidden">
         <div class="related-parts-title">Склад комплекту та інші частини</div>
         <div id="modal-related-list" class="related-parts-grid"></div>
       </div>
 
-      <!-- Графік історії ціни + обсягу -->
       <div class="history-controls-row">
         <div class="universe-switch" id="history-step-switch">
           <button class="universe-btn" data-step="hour">Година</button>
@@ -519,7 +476,6 @@
         <canvas id="price-chart"></canvas>
       </div>
 
-      <!-- Швидкі дії авторизованого користувача (симетричні картки) -->
       <div id="modal-user-actions" class="grid-2 hidden" style="margin-top:16px;">
         <div class="card action-card">
           <div class="action-card-head">
@@ -590,7 +546,6 @@
         </div>
       </div>
 
-      <!-- Згорнута таблиця історії + акуратний експорт CSV всередині -->
       <details style="margin-top:16px;">
         <summary class="muted" style="cursor:pointer; font-size:13px;">Таблиця агрегованої історії (мін / макс / середнє / медіана)</summary>
         <div style="display:flex; justify-content:flex-end; margin-top:8px;">
@@ -606,9 +561,6 @@
     </div>
   </div>
 
-  <!-- ====================================================================
-       МОДАЛЬНЕ ВІКНО: АВТОРИЗАЦІЯ
-       ==================================================================== -->
   <div class="modal-backdrop hidden" id="auth-modal">
     <div class="modal-panel narrow">
       <div class="modal-head">

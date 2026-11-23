@@ -23,12 +23,10 @@ _NON_ALNUM_RE = re.compile(r"[^a-z0-9]+")
 _FOUR_PLACES = Decimal("0.0001")
 _TWO_PLACES = Decimal("0.01")
 
-
 def normalize_item_name(name: str) -> str:
     """Normalize an item name for deterministic cross-market matching."""
     cleaned = _WHITESPACE_RE.sub(" ", name.strip().lower())
     return _NON_ALNUM_RE.sub("_", cleaned).strip("_")
-
 
 def convert_currency(amount: Decimal, rate_to_usd: Decimal) -> Decimal:
     """Convert original currency amount into USD with 4-decimal precision."""
@@ -37,7 +35,6 @@ def convert_currency(amount: Decimal, rate_to_usd: Decimal) -> Decimal:
     if rate_to_usd <= Decimal("0"):
         raise DomainValidationError("Exchange rate must be strictly positive")
     return (amount * rate_to_usd).quantize(_FOUR_PLACES, rounding=ROUND_HALF_UP)
-
 
 def _matches_any(low: str, tokens: tuple[str, ...]) -> bool:
     for token in tokens:
@@ -48,12 +45,10 @@ def _matches_any(low: str, tokens: tuple[str, ...]) -> bool:
             return True
     return False
 
-
 def classify_rust_item(name: str) -> tuple[str, str, str]:
     """Classify a Rust skin name into (category, subcategory, rarity)."""
     low = name.lower()
 
-    # Check specific tools & deployables before short apparel tokens
     tools_map: list[tuple[tuple[str, ...], str]] = [
         (("hatchet", "axe"), "hatchet"),
         (("pickaxe", "pick"), "pickaxe"),
@@ -115,7 +110,6 @@ def classify_rust_item(name: str) -> tuple[str, str, str]:
 
     return ("other", "misc", _infer_rust_rarity(low))
 
-
 def _infer_rust_rarity(low_name: str) -> str:
     legendary_kw = ("big grin", "alien", "glory", "punishment", "tempered", "neon")
     rare_kw = ("gold", "dragon", "phantom", "blackout", "whiteout", "sinister")
@@ -127,7 +121,6 @@ def _infer_rust_rarity(low_name: str) -> str:
     if any(k in low_name for k in uncommon_kw):
         return "uncommon"
     return "common"
-
 
 def classify_warframe_item(tags: Sequence[str], name: str) -> tuple[str, str, str]:
     """Classify a Warframe Market item by tags into (category, subcategory, rarity)."""
@@ -172,7 +165,6 @@ def classify_warframe_item(tags: Sequence[str], name: str) -> tuple[str, str, st
         return ("weapons", "weapon_set" if "set" in tag_set else "weapon_part", rarity)
     return ("other", "misc", rarity)
 
-
 def validate_raw_quote(raw: RawMarketQuote, *, rate_to_usd: Decimal) -> ValidatedQuote:
     """Validate and convert a raw quote; raises DomainValidationError for bad records."""
     if not raw.name or not raw.name.strip():
@@ -208,7 +200,6 @@ def validate_raw_quote(raw: RawMarketQuote, *, rate_to_usd: Decimal) -> Validate
         released_at=raw.released_at,
     )
 
-
 def should_create_snapshot(
     last_price: Decimal | None,
     last_volume: int | None,
@@ -219,7 +210,6 @@ def should_create_snapshot(
     if last_price is None or last_volume is None:
         return True
     return last_price != new_price or last_volume != new_volume
-
 
 def recalculate_position(trades: Sequence[TradeRecord]) -> PositionState:
     """Replay trades in strict chronological order to compute position state.
@@ -260,7 +250,6 @@ def recalculate_position(trades: Sequence[TradeRecord]) -> PositionState:
         realized_pnl=realized_pnl,
     )
 
-
 def _threshold_condition_met(
     direction: WatchDirection,
     threshold: Decimal,
@@ -269,7 +258,6 @@ def _threshold_condition_met(
     if direction == WatchDirection.BELOW:
         return price <= threshold
     return price >= threshold
-
 
 def should_trigger_watch(
     *,
@@ -286,7 +274,6 @@ def should_trigger_watch(
     if not currently_met:
         return False
 
-    # Only fire on threshold crossing: if previous snapshot already met condition, suppress
     if previous_price is not None and _threshold_condition_met(
         direction, threshold, previous_price
     ):
@@ -297,7 +284,6 @@ def should_trigger_watch(
         and cooldown_minutes > 0
         and now - last_alert_at < timedelta(minutes=cooldown_minutes)
     )
-
 
 def evaluate_anomaly(
     *,

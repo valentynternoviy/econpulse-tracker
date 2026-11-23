@@ -17,7 +17,6 @@ logger = get_logger(__name__)
 
 _ASSET_BASE = "https://warframe.market/static/assets/"
 
-# Curated liquid slugs sampled during live collection to respect Warframe Market rate limits
 DEFAULT_WARFRAME_SLUGS: tuple[str, ...] = (
     "gauss_prime_set",
     "wisp_prime_set",
@@ -40,7 +39,6 @@ DEFAULT_WARFRAME_SLUGS: tuple[str, ...] = (
     "adaptation",
     "rolling_guard",
 )
-
 
 class WarframeMarketSource:
     """Fetch live Warframe player sell orders in Platinum via api.warframe.market/v2."""

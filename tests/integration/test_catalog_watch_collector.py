@@ -15,18 +15,15 @@ async def test_catalog_pagination_facets_card_and_csv_export(
 ) -> None:
     client, _ = seeded_app
 
-    # 1. Games endpoint with market totals
     games = (await client.get("/api/v1/games")).json()
     assert {g["code"] for g in games} == {"warframe", "rust"}
     assert sum(g["items_count"] for g in games) >= 300
 
-    # 2. Category facets for Rust include clothing -> hoodie and deployables -> furnace
     facets = (await client.get("/api/v1/categories?game=rust")).json()
     by_cat = {f["code"]: {s["code"] for s in f["subcategories"]} for f in facets}
     assert "hoodie" in by_cat["clothing"]
     assert "furnace" in by_cat["deployables"]
 
-    # 3. Pagination stability: page 1 and page 2 must have zero overlapping IDs
     p1 = (await client.get("/api/v1/items?game=rust&sort=price_desc&page=1&page_size=20")).json()
     p2 = (await client.get("/api/v1/items?game=rust&sort=price_desc&page=2&page_size=20")).json()
     ids1 = {it["id"] for it in p1["items"]}
@@ -35,20 +32,17 @@ async def test_catalog_pagination_facets_card_and_csv_export(
     assert len(ids2) == 20
     assert ids1.isdisjoint(ids2)
 
-    # 4. Server-side search + subcategory filter
     hoodies = (
         await client.get("/api/v1/items?game=rust&item_type=clothing&subcategory=hoodie&q=blackout")
     ).json()
     assert hoodies["total"] >= 1
     assert all("blackout" in it["name"].lower() for it in hoodies["items"])
 
-    # 5. Item card with cross-market quotes & spread
     item_id = hoodies["items"][0]["id"]
     card = (await client.get(f"/api/v1/items/{item_id}")).json()
     assert len(card["markets"]) == 2
     assert card["cheapest_price"] is not None
 
-    # 6. History JSON & CSV export
     hist_json = await client.get(f"/api/v1/items/{item_id}/prices?step=day")
     assert hist_json.status_code == 200
     assert len(hist_json.json()["points"]) >= 5
@@ -58,7 +52,6 @@ async def test_catalog_pagination_facets_card_and_csv_export(
     assert hist_csv.headers["content-type"].startswith("text/csv")
     assert "bucket_utc,min_price_usd" in hist_csv.text
 
-    # 7. Analytics overview & spread endpoints
     overview = (await client.get("/api/v1/stats/overview")).json()
     assert overview["total_items"] >= 300
     assert len(overview["game_indices"]) == 2
@@ -67,7 +60,6 @@ async def test_catalog_pagination_facets_card_and_csv_export(
     spreads = (await client.get("/api/v1/stats/spread?game=rust&limit=5")).json()
     assert len(spreads) == 5
 
-    # 8. Case-insensitive Ukrainian Cyrillic search & Prime set related parts linking
     uk_lower = (await client.get("/api/v1/items?game=warframe&q=ґаусс")).json()
     uk_upper = (await client.get("/api/v1/items?game=warframe&q=ҐАУСС")).json()
     assert uk_lower["total"] >= 1
@@ -79,13 +71,11 @@ async def test_catalog_pagination_facets_card_and_csv_export(
     assert len(gauss_card["related_parts"]) >= 3
     assert all(p["id"] != gauss_set["id"] for p in gauss_card["related_parts"])
 
-    # 9. Warframes category contains zero mods
     wf_only = (
         await client.get("/api/v1/items?game=warframe&item_type=warframes&page_size=50")
     ).json()
     assert wf_only["total"] >= 1
     assert all(it["item_type"] == "warframes" for it in wf_only["items"])
-
 
 @pytest.mark.integration
 async def test_watchlist_crud_dedup_and_alerts_flow(
@@ -98,7 +88,6 @@ async def test_watchlist_crud_dedup_and_alerts_flow(
     item_id = items[1]["id"]
     market_id = (await client.get("/api/v1/markets?game=rust")).json()[0]["id"]
 
-    # Create watch -> 201
     r1 = await client.post(
         "/api/v1/watch",
         json={
@@ -113,7 +102,6 @@ async def test_watchlist_crud_dedup_and_alerts_flow(
     assert r1.status_code == 201
     watch_id = r1.json()["id"]
 
-    # Duplicate watch for same item+market -> 200 returning existing ID
     r2 = await client.post(
         "/api/v1/watch",
         json={
@@ -127,7 +115,6 @@ async def test_watchlist_crud_dedup_and_alerts_flow(
     assert r2.status_code == 200
     assert r2.json()["id"] == watch_id
 
-    # Update threshold -> 200
     r_patch = await client.patch(
         f"/api/v1/watch/{watch_id}",
         json={"threshold": "420.50"},
@@ -136,7 +123,6 @@ async def test_watchlist_crud_dedup_and_alerts_flow(
     assert r_patch.status_code == 200
     assert r_patch.json()["threshold"] == "420.5000"
 
-    # List alerts & mark read (verify item_id & game_code populated for clickable rows)
     alerts = (await client.get("/api/v1/alerts?unread=true", headers=headers)).json()
     assert len(alerts) >= 1
     assert alerts[0]["item_id"] > 0
@@ -146,12 +132,10 @@ async def test_watchlist_crud_dedup_and_alerts_flow(
     assert r_read.status_code == 200
     assert r_read.json()["is_read"] is True
 
-    # Live/fallback FX rates endpoint for USD/UAH currency switching
     fx_resp = await client.get("/api/v1/fx-rates")
     assert fx_resp.status_code == 200
     fx_data = fx_resp.json()
     assert float(fx_data["usd_to_uah"]) > 0
     assert float(fx_data["eur_to_usd"]) > 0
 
-    # Delete watch -> 204
     assert (await client.delete(f"/api/v1/watch/{watch_id}", headers=headers)).status_code == 204
