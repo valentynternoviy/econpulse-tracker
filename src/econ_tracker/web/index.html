@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="warframe">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EconPulse — Игровая экономика Warframe & Rust</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&family=Oswald:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
+</head>
+<body>
+
+  <!-- ====================================================================
+       SCREEN 1: MINIMALIST SPLIT-SCREEN GAME SELECTOR
+       ==================================================================== -->
+  <div id="splash-screen">
+    <div class="splash-top-meta">
+      <span>ECON.PULSE</span>
+      <a href="/docs" target="_blank" rel="noopener">OpenAPI / Swagger</a>
+    </div>
+
+    <!-- LEFT: WARFRAME -->
+    <section class="splash-pane" data-game="warframe">
+      <div class="splash-art-stage">
+        <img class="splash-art" src="/static/img/warframe_hero.jpg" alt="Warframe" />
+      </div>
+      <div class="splash-gradient"></div>
+      <div class="splash-sheen"></div>
+      <div class="splash-footer">
+        <div class="splash-accent-bar"></div>
+        <h1 class="splash-title">WARFRAME</h1>
+        <div class="splash-market-cap" id="splash-cap-warframe">Загрузка рынка...</div>
+      </div>
+    </section>
+
+    <!-- RIGHT: RUST -->
+    <section class="splash-pane" data-game="rust">
+      <div class="splash-art-stage">
+        <img class="splash-art" src="/static/img/rust_hero.jpg" alt="Rust" />
+      </div>
+      <div class="splash-gradient"></div>
+      <div class="splash-sheen"></div>
+      <div class="splash-footer">
+        <div class="splash-accent-bar"></div>
+        <h1 class="splash-title">RUST</h1>
+        <div class="splash-market-cap" id="splash-cap-rust">Загрузка рынка...</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ====================================================================
+       SCREEN 2: THEMED GAME ECONOMY APPLICATION SHELL
+       ==================================================================== -->
+  <div id="app-shell" class="hidden">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="topbar-left">
+          <button class="btn btn-sm" id="btn-back-splash" title="Вернуться к выбору игры">← Игры</button>
+          <div class="game-switch-pill">
+            <button class="game-switch-btn" data-switch-game="warframe">Warframe</button>
+            <button class="game-switch-btn" data-switch-game="rust">Rust</button>
+          </div>
+        </div>
+
+        <nav class="nav-tabs" id="nav-tabs">
+          <button class="nav-tab active" data-tab="catalog">Каталог</button>
+          <button class="nav-tab" data-tab="stats">Статистика</button>
+          <button class="nav-tab" data-tab="portfolio">Портфель</button>
+          <button class="nav-tab" data-tab="alerts">
+            Алерты <span class="badge-count hidden" id="unread-badge">0</span>
+          </button>
+          <button class="nav-tab" data-tab="anomalies">Аномалии</button>
+          <button class="nav-tab hidden" data-tab="admin" id="nav-tab-admin">Админка</button>
+        </nav>
+
+        <div class="topbar-right">
+          <a class="btn btn-sm" href="/docs" target="_blank" rel="noopener">API Docs</a>
+          <span id="user-pill" class="muted mono hidden" style="font-size:12px;"></span>
+          <button class="btn btn-sm btn-primary" id="btn-auth">Войти</button>
+          <button class="btn btn-sm hidden" id="btn-logout">Выйти</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-wrap">
+      <!-- Compact Game Banner -->
+      <section class="game-banner" id="game-banner">
+        <div>
+          <h1 id="banner-title">WARFRAME</h1>
+          <div class="muted" id="banner-subtitle">Мониторинг рынка и истории цен</div>
+        </div>
+        <div class="game-banner-meta">
+          <div>
+            <div class="banner-stat-lbl">Предметов</div>
+            <div class="banner-stat-val" id="banner-items">—</div>
+          </div>
+          <div>
+            <div class="banner-stat-lbl">Лотов на продаже</div>
+            <div class="banner-stat-val" id="banner-offers">—</div>
+          </div>
+          <div>
+            <div class="banner-stat-lbl">Общая стоимость рынка</div>
+            <div class="banner-stat-val" id="banner-cap">—</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: CATALOG -->
+      <section id="tab-catalog" class="tab-panel">
+        <div class="section-label">Категории предметов</div>
+        <div class="category-bar" id="category-bar"></div>
+
+        <!-- Expandable Subcategory Outline Silhouettes -->
+        <div class="subcategory-strip hidden" id="subcategory-strip"></div>
+
+        <!-- Filter & Sort Toolbar -->
+        <div class="toolbar">
+          <input class="input search-input" id="filter-q" type="search" placeholder="Поиск по названию предмета или скина..." />
+          <select class="select" id="filter-rarity">
+            <option value="">Любая редкость</option>
+            <option value="legendary">Legendary</option>
+            <option value="prime">Prime</option>
+            <option value="rare">Rare</option>
+            <option value="uncommon">Uncommon</option>
+            <option value="common">Common</option>
+          </select>
+          <input class="input mono" id="filter-min" type="number" step="0.5" min="0" placeholder="От $" style="width:92px;" />
+          <input class="input mono" id="filter-max" type="number" step="0.5" min="0" placeholder="До $" style="width:92px;" />
+          <select class="select" id="filter-sort">
+            <option value="volume_desc">По кол-ву на рынке ↓</option>
+            <option value="price_desc">Сначала дорогие ↓</option>
+            <option value="price_asc">Сначала дешёвые ↑</option>
+            <option value="spread_desc">Макс. спред ↓</option>
+            <option value="change_desc">Рост за 24ч ↓</option>
+            <option value="name_asc">По названию А–Я</option>
+          </select>
+          <button class="btn btn-sm" id="btn-reset-filters">Сброс</button>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Предмет</th>
+                  <th>Редкость</th>
+                  <th>Цена</th>
+                  <th>На рынке (лотов)</th>
+                  <th>Спред</th>
+                  <th>24ч</th>
+                  <th>MA-7</th>
+                </tr>
+              </thead>
+              <tbody id="catalog-tbody"></tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span id="pagination-info">—</span>
+            <div class="pagination-controls">
+              <button class="btn btn-sm" id="btn-prev-page">← Назад</button>
+              <span class="mono" id="pagination-page">1 / 1</span>
+              <button class="btn btn-sm" id="btn-next-page">Вперёд →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: ANALYTICS / STATS -->
+      <section id="tab-stats" class="tab-panel hidden">
+        <div class="kpi-grid" id="stats-kpis"></div>
+
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card-header">
+            <h3>Наибольший разрыв цен между площадками (Спред)</h3>
+            <span class="muted" style="font-size:12px;">Сравнение в единой валюте USD</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Предмет</th>
+                  <th>Дешевле всего</th>
+                  <th>Дороже всего</th>
+                  <th>Разница ($)</th>
+                  <th>Спред (%)</th>
+                </tr>
+              </thead>
+              <tbody id="stats-spread-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-header"><h3>Лидеры роста за 24 часа</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Предмет</th><th>Цена</th><th>24ч</th></tr></thead>
+                <tbody id="stats-gainers-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><h3>Лидеры падения за 24 часа</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Предмет</th><th>Цена</th><th>24ч</th></tr></thead>
+                <tbody id="stats-losers-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><h3>Средняя цена по группам редкости</h3></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Редкость</th><th>Предметов</th><th>Средняя цена (USD)</th><th>Всего лотов</th></tr></thead>
+              <tbody id="stats-rarity-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: PORTFOLIO -->
+      <section id="tab-portfolio" class="tab-panel hidden">
+        <div id="portfolio-guest-notice" class="card" style="padding:28px; text-align:center;">
+          <p style="margin-bottom:14px;">Войдите в аккаунт, чтобы вести портфель сделок и отслеживать прибыль/убыток.</p>
+          <button class="btn btn-primary" onclick="window.__openAuthModal()">Войти / Демо-аккаунт</button>
+        </div>
+
+        <div id="portfolio-content" class="hidden">
+          <div class="kpi-grid" id="portfolio-kpis"></div>
+
+          <div class="card" style="margin-bottom:20px;">
+            <div class="card-header"><h3>Позиции портфеля</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Предмет</th>
+                    <th>Кол-во</th>
+                    <th>Средняя покупка</th>
+                    <th>Текущая цена</th>
+                    <th>Вложено</th>
+                    <th>Реализ. PnL</th>
+                    <th>Нереализ. PnL</th>
+                  </tr>
+                </thead>
+                <tbody id="portfolio-positions-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><h3>История сделок</h3></div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Предмет</th>
+                    <th>Площадка</th>
+                    <th>Сторона</th>
+                    <th>Кол-во</th>
+                    <th>Цена</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody id="portfolio-trades-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: WATCHLIST & ALERTS -->
+      <section id="tab-alerts" class="tab-panel hidden">
+        <div id="alerts-guest-notice" class="card" style="padding:28px; text-align:center;">
+          <p style="margin-bottom:14px;">Войдите, чтобы управлять пороговыми подписками и лентой уведомлений.</p>
+          <button class="btn btn-primary" onclick="window.__openAuthModal()">Войти / Демо-аккаунт</button>
+        </div>
+
+        <div id="alerts-content" class="hidden">
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header"><h3>Мои подписки (Watchlist)</h3></div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Предмет</th><th>Площадка</th><th>Условие</th><th>Пауза</th><th></th></tr></thead>
+                  <tbody id="watch-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h3>Лента уведомлений</h3>
+                <label style="font-size:12px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                  <input type="checkbox" id="alerts-unread-only" /> Только непрочитанные
+                </label>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>Сообщение</th><th>Время</th><th></th></tr></thead>
+                  <tbody id="alerts-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: ANOMALIES -->
+      <section id="tab-anomalies" class="tab-panel hidden">
+        <div class="toolbar">
+          <select class="select" id="anomaly-status-filter">
+            <option value="">Все события</option>
+            <option value="open" selected>Только открытые</option>
+            <option value="closed">Закрытые</option>
+          </select>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Ценовые аномалии (отклонение от 7-дневного скользящего среднего)</h3>
+            <span class="muted" style="font-size:12px;">Закрытие доступно ролям Analyst / Admin</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Предмет</th>
+                  <th>Площадка</th>
+                  <th>MA-7 → Цена</th>
+                  <th>Макс. отклонение</th>
+                  <th>Длительность</th>
+                  <th>Статус / Комментарий</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="anomalies-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB: ADMIN -->
+      <section id="tab-admin" class="tab-panel hidden">
+        <div class="card">
+          <div class="card-header">
+            <h3>Состояние сбора данных по площадкам</h3>
+            <button class="btn btn-primary btn-sm" id="btn-collect-all">Запустить сбор со всех площадок</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Площадка</th>
+                  <th>Игра</th>
+                  <th>Валюта</th>
+                  <th>Интервал</th>
+                  <th>Последний запуск</th>
+                  <th>Принято / Отклонено</th>
+                  <th>Статус / Ошибка</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="admin-status-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: ITEM DETAIL CARD + CHART.JS + CSV + WATCH / TRADE FORMS
+       ==================================================================== -->
+  <div class="modal-backdrop hidden" id="item-modal">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <div style="display:flex; gap:14px; align-items:center;">
+          <div class="item-outline-thumb" id="modal-item-icon" style="width:46px; height:46px;"></div>
+          <div>
+            <h2 id="modal-item-title" style="font-size:20px; font-weight:800;">Item</h2>
+            <div class="muted" id="modal-item-meta" style="font-size:12.5px; margin-top:3px;"></div>
+          </div>
+        </div>
+        <button class="modal-close" id="btn-close-item-modal">×</button>
+      </div>
+
+      <div id="modal-item-desc" class="item-desc-box hidden"></div>
+
+      <!-- Current prices across markets -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <h3>Текущие цены по площадкам</h3>
+          <span class="mono" id="modal-spread-badge" style="font-size:12.5px;"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Площадка</th><th>Исходная цена</th><th>В USD</th><th>На продаже (лотов)</th><th>Проверено</th></tr>
+            </thead>
+            <tbody id="modal-markets-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- History Chart + Step Switcher + CSV Export -->
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+        <div class="game-switch-pill" id="history-step-switch">
+          <button class="game-switch-btn" data-step="hour">Час</button>
+          <button class="game-switch-btn active" data-step="day">Сутки</button>
+          <button class="game-switch-btn" data-step="week">Неделя</button>
+        </div>
+        <a class="btn btn-sm" id="btn-export-csv" href="#" target="_blank">Скачать историю (CSV)</a>
+      </div>
+
+      <div class="chart-box">
+        <canvas id="price-chart"></canvas>
+      </div>
+
+      <!-- Quick Actions for Logged-in Users: Watch & Trade -->
+      <div id="modal-user-actions" class="grid-2 hidden">
+        <div class="card" style="padding:14px 16px;">
+          <h4 style="margin-bottom:10px; font-size:13.5px;">Добавить в отслеживание (Алерт)</h4>
+          <form id="form-quick-watch" class="form-grid">
+            <div class="field">
+              <label>Площадка</label>
+              <select class="select" id="watch-market-select"></select>
+            </div>
+            <div class="field">
+              <label>Условие</label>
+              <select class="select" id="watch-dir-select">
+                <option value="below">Ниже порога</option>
+                <option value="above">Выше порога</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Порог (USD)</label>
+              <input class="input mono" id="watch-threshold-input" type="number" step="0.01" min="0.01" required />
+            </div>
+            <button class="btn btn-primary btn-sm" type="submit">Подписаться</button>
+          </form>
+        </div>
+
+        <div class="card" style="padding:14px 16px;">
+          <h4 style="margin-bottom:10px; font-size:13.5px;">Записать сделку в портфель</h4>
+          <form id="form-quick-trade" class="form-grid">
+            <div class="field">
+              <label>Площадка</label>
+              <select class="select" id="trade-market-select"></select>
+            </div>
+            <div class="field">
+              <label>Операция</label>
+              <select class="select" id="trade-side-select">
+                <option value="buy">Покупка (Buy)</option>
+                <option value="sell">Продажа (Sell)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Кол-во</label>
+              <input class="input mono" id="trade-qty-input" type="number" min="1" value="1" required />
+            </div>
+            <div class="field">
+              <label>Цена (USD)</label>
+              <input class="input mono" id="trade-price-input" type="number" step="0.01" min="0.01" required />
+            </div>
+            <button class="btn btn-primary btn-sm" type="submit">Сохранить</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- History Table -->
+      <details style="margin-top:14px;">
+        <summary class="muted" style="cursor:pointer; font-size:12.5px;">Показать таблицу агрегированной истории (min / max / avg / median)</summary>
+        <div class="table-wrap" style="margin-top:10px; max-height:220px; overflow-y:auto;">
+          <table>
+            <thead><tr><th>Период (UTC)</th><th>Min</th><th>Max</th><th>Avg</th><th>Median</th><th>Объём</th></tr></thead>
+            <tbody id="modal-history-tbody"></tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       MODAL: AUTH (LOGIN / REGISTER / QUICK DEMO ROLES)
+       ==================================================================== -->
+  <div class="modal-backdrop hidden" id="auth-modal">
+    <div class="modal-panel narrow">
+      <div class="modal-head">
+        <div>
+          <h2 style="font-size:18px; font-weight:800;">Авторизация</h2>
+          <div class="muted" style="font-size:12px;">JWT-сессия и разграничение ролей</div>
+        </div>
+        <button class="modal-close" id="btn-close-auth-modal">×</button>
+      </div>
+
+      <form id="form-auth" style="display:flex; flex-direction:column; gap:12px;">
+        <div class="field">
+          <label>Логин</label>
+          <input class="input" id="auth-username" required minlength="3" placeholder="username" />
+        </div>
+        <div class="field">
+          <label>Пароль</label>
+          <input class="input" id="auth-password" type="password" required minlength="6" placeholder="••••••" />
+        </div>
+        <div style="display:flex; gap:8px; margin-top:4px;">
+          <button class="btn btn-primary" type="submit" data-auth-mode="login" style="flex:1;">Войти</button>
+          <button class="btn" type="button" id="btn-do-register" style="flex:1;">Регистрация</button>
+        </div>
+      </form>
+
+      <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border);">
+        <div class="section-label">Быстрый вход (демо-роли)</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-sm" data-demo-login="trader:trader123!">User (trader)</button>
+          <button class="btn btn-sm" data-demo-login="analyst:analyst123!">Analyst</button>
+          <button class="btn btn-sm" data-demo-login="admin:admin123!">Admin</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script type="module" src="/static/app.js"></script>
+</body>
+</html>
