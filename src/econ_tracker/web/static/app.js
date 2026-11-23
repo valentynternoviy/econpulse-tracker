@@ -15,6 +15,51 @@ const ROLE_UK = {
   admin: 'Адміністратор',
 };
 
+const CATEGORY_UK = {
+  weapons: 'Зброя',
+  clothing: 'Одяг та броня',
+  deployables: 'Конструкції та двері',
+  tools: 'Інструменти',
+  warframes: 'Варфрейми',
+  mods: 'Моди',
+  arcanes: 'Містифікатори',
+  relics: 'Реліквії',
+  companions: 'Компаньйони',
+  other: 'Інше',
+};
+
+const SUBCATEGORY_UK = {
+  prime_set: 'Прайм-комплект',
+  blueprint: 'Кресленик',
+  primary: 'Основна зброя',
+  secondary: 'Допоміжна зброя',
+  melee: 'Ближній бій',
+  mod: 'Мод',
+  aura: 'Аура',
+  stance: 'Стійка',
+  augment: 'Аугмент',
+  arcane: 'Містифікатор',
+  void_relic: 'Реліквія Порожнечі',
+  weapon_set: 'Комплект зброї',
+  weapon_part: 'Компонент зброї',
+  companion: 'Супутник',
+  misc: 'Інше',
+  general: 'Загальне',
+};
+
+function formatCategoryLabel(code) {
+  return CATEGORY_UK[code] || code;
+}
+
+function formatSubcategoryLabel(code, gameCode) {
+  if (SUBCATEGORY_UK[code]) return SUBCATEGORY_UK[code];
+  return String(code || '')
+    .split('_')
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(' ') || (gameCode === 'warframe' ? 'Предмет' : 'Скін');
+}
+
 const state = {
   game: 'warframe',
   tab: 'catalog',
@@ -93,6 +138,109 @@ function esc(str) {
 function rarityBadge(code) {
   const label = RARITY_UK[code] || code;
   return `<span class="rarity-pill ${esc(code)}">${esc(label)}</span>`;
+}
+
+// ============================================================================
+// CUSTOM DARK DROPDOWNS & SEGMENTED TOGGLES (ZERO NATIVE BLUE MENUS)
+// ============================================================================
+function closeAllCustomSelects(exceptWrap = null) {
+  document.querySelectorAll('.csel.open').forEach((w) => {
+    if (w !== exceptWrap) w.classList.remove('open');
+  });
+}
+
+function refreshCustomSelect(selectEl) {
+  if (!selectEl) return;
+  let wrap = selectEl._cselWrap;
+  if (!wrap) {
+    wrap = document.createElement('div');
+    wrap.className = 'csel';
+    selectEl.parentNode.insertBefore(wrap, selectEl);
+    wrap.appendChild(selectEl);
+    selectEl.classList.add('csel-native');
+
+    const trigger = document.createElement('button');
+    trigger.type = 'button';
+    trigger.className = 'csel-trigger';
+    trigger.innerHTML = `
+      <span class="csel-label"></span>
+      <svg class="csel-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 6l4 4 4-4"/>
+      </svg>
+    `;
+    const menu = document.createElement('div');
+    menu.className = 'csel-menu';
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const willOpen = !wrap.classList.contains('open');
+      closeAllCustomSelects(wrap);
+      wrap.classList.toggle('open', willOpen);
+    });
+
+    wrap.appendChild(trigger);
+    wrap.appendChild(menu);
+    selectEl._cselWrap = wrap;
+    selectEl._cselTriggerLabel = trigger.querySelector('.csel-label');
+    selectEl._cselMenu = menu;
+  }
+
+  const opts = Array.from(selectEl.options);
+  const activeOpt = opts.find((o) => o.value === selectEl.value) || opts[0];
+  selectEl._cselTriggerLabel.textContent = activeOpt ? activeOpt.textContent : '—';
+
+  const menu = selectEl._cselMenu;
+  menu.innerHTML = opts
+    .map(
+      (o) =>
+        `<button type="button" class="csel-option ${o.value === selectEl.value ? 'selected' : ''}" data-opt-val="${esc(o.value)}">${esc(o.textContent)}</button>`
+    )
+    .join('');
+
+  menu.querySelectorAll('.csel-option').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const val = btn.dataset.optVal;
+      const changed = selectEl.value !== val;
+      selectEl.value = val;
+      wrap.classList.remove('open');
+      refreshCustomSelect(selectEl);
+      if (changed) {
+        selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    });
+  });
+}
+
+function initCustomSelects() {
+  document.querySelectorAll('select.select').forEach((sel) => refreshCustomSelect(sel));
+  document.addEventListener('click', () => closeAllCustomSelects());
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAllCustomSelects();
+  });
+}
+
+function initSegmentedToggles() {
+  document.querySelectorAll('.seg-toggle').forEach((group) => {
+    const hidden = group.querySelector('input[type="hidden"]');
+    const btns = group.querySelectorAll('.seg-btn');
+    btns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (hidden) hidden.value = btn.dataset.val;
+        btns.forEach((b) => b.classList.toggle('active', b === btn));
+      });
+    });
+  });
+}
+
+function setSegmentedValue(groupId, val) {
+  const group = document.getElementById(groupId);
+  if (!group) return;
+  const hidden = group.querySelector('input[type="hidden"]');
+  if (hidden) hidden.value = val;
+  group.querySelectorAll('.seg-btn').forEach((b) => {
+    b.classList.toggle('active', b.dataset.val === val);
+  });
 }
 
 // ============================================================================
@@ -182,6 +330,17 @@ async function selectGame(gameCode) {
     sort: gameCode === 'rust' ? 'newest' : 'volume_desc',
     page: 1,
   };
+
+  document.getElementById('rust-search-input').value = '';
+  document.getElementById('wf-search-input').value = '';
+  document.getElementById('rust-rarity-select').value = '';
+  document.getElementById('rust-sort-select').value = 'newest';
+  document.getElementById('wf-rarity-select').value = '';
+  document.getElementById('wf-sort-select').value = 'volume_desc';
+  ['rust-rarity-select', 'rust-sort-select', 'wf-rarity-select', 'wf-sort-select'].forEach((id) =>
+    refreshCustomSelect(document.getElementById(id))
+  );
+  updateRustSelectedPill('', '');
 
   // Show Warframe.market photo hero ONLY on Warframe catalog
   const isWf = gameCode === 'warframe';
@@ -336,7 +495,7 @@ async function loadRustCatalog() {
   const recentCutoff = Date.now() - 180 * 86400 * 1000;
 
   if (!data.items.length) {
-    grid.innerHTML = `<div class="card" style="grid-column:1/-1; padding:32px; text-align:center;" class="muted">Скіни за вибраними фільтрами не знайдено.</div>`;
+    grid.innerHTML = `<div class="card muted" style="grid-column:1/-1; padding:32px; text-align:center;">Скіни за вибраними фільтрами не знайдено.</div>`;
   } else {
     grid.innerHTML = data.items
       .map((it) => {
@@ -349,7 +508,7 @@ async function loadRustCatalog() {
             </div>
             <div class="rust-skin-body">
               <div class="rust-skin-title">${esc(it.name)}</div>
-              <div class="rust-skin-sub">${esc(it.subcategory.replace(/_/g, ' '))} · ${esc(RARITY_UK[it.rarity] || it.rarity)}</div>
+              <div class="rust-skin-sub">${esc(formatSubcategoryLabel(it.subcategory, 'rust'))} · ${esc(RARITY_UK[it.rarity] || it.rarity)}</div>
               <div class="rust-skin-footer">
                 <span class="rust-skin-price num">${fmtUsd(it.latest_min_price)}</span>
                 <span class="rust-skin-vol num">${it.latest_total_volume} лотів · ${it.spread_pct !== null ? `+${Number(it.spread_pct).toFixed(0)}%` : ''}</span>
@@ -401,6 +560,7 @@ function renderWarframeCategoryTabs() {
     `<option value="">Усі підтипи</option>` +
     subs.map((s) => `<option value="${esc(s.code)}">${esc(s.label)} (${s.items_count})</option>`).join('');
   subSel.value = state.filters.subcategory;
+  refreshCustomSelect(subSel);
 }
 
 async function loadWarframeCatalog() {
@@ -419,11 +579,12 @@ async function loadWarframeCatalog() {
   const grid = document.getElementById('wf-orders-grid');
 
   if (!data.items.length) {
-    grid.innerHTML = `<div class="card" style="grid-column:1/-1; padding:32px; text-align:center;" class="muted">Предметів не знайдено.</div>`;
+    grid.innerHTML = `<div class="card muted" style="grid-column:1/-1; padding:32px; text-align:center;">Предметів не знайдено.</div>`;
   } else {
     grid.innerHTML = data.items
       .map((it) => {
         const plt = Math.max(1, Math.round(Number(it.latest_min_price || 0) / PLT_USD_RATE));
+        const subLabel = formatSubcategoryLabel(it.subcategory, 'warframe');
         return `
           <article class="wf-item-card" data-item-id="${it.id}">
             <div class="wf-card-left">
@@ -435,7 +596,8 @@ async function loadWarframeCatalog() {
                 <div class="wf-title-en">${esc(it.name_en || '')}</div>
                 <div class="wf-tags-row">
                   ${rarityBadge(it.rarity)}
-                  <span class="muted" style="font-size:11.5px;">${fmtPct(it.price_change_24h_pct)} за 24год</span>
+                  <span class="wf-subcat-pill">${esc(subLabel)}</span>
+                  <span class="muted" style="font-size:11.5px;">${fmtPct(it.price_change_24h_pct)}</span>
                 </div>
               </div>
             </div>
@@ -466,9 +628,14 @@ async function loadWarframeCatalog() {
 async function openItemModal(itemId) {
   state.activeItemId = itemId;
   state.activeHistoryStep = 'day';
-  document.getElementById('item-modal').classList.remove('hidden');
+  const modal = document.getElementById('item-modal');
+  const modalPanel = modal.querySelector('.modal-panel');
+  modal.classList.remove('hidden');
+  if (modalPanel) modalPanel.scrollTop = 0;
 
   const detail = await api(`/api/v1/items/${itemId}`);
+  if (modalPanel) modalPanel.scrollTop = 0;
+
   document.getElementById('modal-item-title').textContent = detail.name;
   document.getElementById('modal-item-subtitle').textContent =
     detail.name_en && detail.name_en !== detail.name
@@ -507,23 +674,60 @@ async function openItemModal(itemId) {
   const released = detail.released_at
     ? new Date(detail.released_at).toLocaleDateString('uk-UA')
     : 'Невідомо';
+  const subLabelTitle = detail.game_code === 'warframe' ? 'Тип предмета' : 'Базовий предмет';
   document.getElementById('modal-meta-tbody').innerHTML = `
-    <tr><td>Категорія</td><td>${esc(detail.item_type)}</td></tr>
-    <tr><td>Базовий предмет / підтип</td><td>${esc(detail.subcategory.replace(/_/g, ' '))}</td></tr>
+    <tr><td>Категорія</td><td>${esc(formatCategoryLabel(detail.item_type))}</td></tr>
+    <tr><td>${subLabelTitle}</td><td>${esc(formatSubcategoryLabel(detail.subcategory, detail.game_code))}</td></tr>
     <tr><td>Рідкість</td><td>${rarityBadge(detail.rarity)}</td></tr>
     <tr><td>Дата появи</td><td class="num">${released}</td></tr>
     <tr><td>Пропозицій на ринку</td><td class="num">${detail.latest_total_volume}</td></tr>
     <tr><td>7-денне середнє (MA-7)</td><td class="num">${fmtUsd(detail.ma7_price)}</td></tr>
   `;
 
+  // Related Prime Set Parts quick switcher
+  const relWrap = document.getElementById('modal-related-wrap');
+  const relList = document.getElementById('modal-related-list');
+  if (detail.related_parts && detail.related_parts.length > 0) {
+    relWrap.classList.remove('hidden');
+    relList.innerHTML = detail.related_parts
+      .map((p) => {
+        const plt = Math.max(1, Math.round(Number(p.latest_min_price || 0) / PLT_USD_RATE));
+        return `
+          <button type="button" class="related-part-chip" data-rel-item="${p.id}">
+            <div class="related-part-icon">
+              <img src="${esc(p.icon_url || '')}" alt="${esc(p.name)}" loading="lazy" referrerpolicy="no-referrer" />
+            </div>
+            <div class="related-part-info">
+              <div class="related-part-name">${esc(p.name)}</div>
+              <div class="related-part-price">${plt} PLT · ${fmtUsd(p.latest_min_price)}</div>
+            </div>
+          </button>
+        `;
+      })
+      .join('');
+    relList.querySelectorAll('[data-rel-item]').forEach((btn) => {
+      btn.addEventListener('click', () => openItemModal(Number(btn.dataset.relItem)));
+    });
+  } else {
+    relWrap.classList.add('hidden');
+    relList.innerHTML = '';
+  }
+
   const actionsWrap = document.getElementById('modal-user-actions');
   if (state.user && detail.markets.length) {
     actionsWrap.classList.remove('hidden');
     const opts = detail.markets.map((m) => `<option value="${m.market_id}">${esc(m.market_name)}</option>`).join('');
-    document.getElementById('watch-market-select').innerHTML = opts;
-    document.getElementById('trade-market-select').innerHTML = opts;
+    const watchSel = document.getElementById('watch-market-select');
+    const tradeSel = document.getElementById('trade-market-select');
+    watchSel.innerHTML = opts;
+    tradeSel.innerHTML = opts;
+    refreshCustomSelect(watchSel);
+    refreshCustomSelect(tradeSel);
+    setSegmentedValue('watch-dir-toggle', 'below');
+    setSegmentedValue('trade-side-toggle', 'buy');
     const basePrice = Number(detail.cheapest_price || 1).toFixed(2);
     document.getElementById('watch-threshold-input').value = basePrice;
+    document.getElementById('watch-cooldown-input').value = '60';
     document.getElementById('trade-price-input').value = basePrice;
   } else {
     actionsWrap.classList.add('hidden');
@@ -533,6 +737,7 @@ async function openItemModal(itemId) {
     b.classList.toggle('active', b.dataset.step === 'day');
   });
   await loadItemHistory(itemId, 'day', detail.ma7_price);
+  if (modalPanel) modalPanel.scrollTop = 0;
 }
 
 async function loadItemHistory(itemId, step, ma7Price) {
@@ -839,7 +1044,7 @@ async function loadAnomalies() {
     ? rows
         .map(
           (a) => `
-          <tr>
+          <tr class="clickable" data-open-item="${a.item_id}">
             <td><strong>${esc(a.item_name)}</strong></td>
             <td class="muted">${esc(a.market_name)}</td>
             <td class="num">${fmtUsd(a.ma7_price)} → ${fmtUsd(a.trigger_price)}</td>
@@ -862,8 +1067,13 @@ async function loadAnomalies() {
         .join('')
     : `<tr><td colspan="7" class="muted" style="text-align:center; padding:24px;">Подій не знайдено.</td></tr>`;
 
+  document.querySelectorAll('#anomalies-tbody tr[data-open-item]').forEach((row) => {
+    row.addEventListener('click', () => openItemModal(Number(row.dataset.openItem)));
+  });
+
   document.querySelectorAll('[data-close-anom]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
       const comment = window.prompt('Коментар аналітика щодо закриття аномалії:', 'Підтверджено: ринкове коливання стабілізувалось');
       if (!comment || comment.trim().length < 3) return;
       try {
@@ -1100,9 +1310,9 @@ function wireEvents() {
         body: {
           item_id: state.activeItemId,
           market_id: Number(document.getElementById('watch-market-select').value),
-          direction: document.getElementById('watch-dir-select').value,
+          direction: document.getElementById('watch-dir-value').value,
           threshold: document.getElementById('watch-threshold-input').value,
-          cooldown_minutes: 60,
+          cooldown_minutes: Number(document.getElementById('watch-cooldown-input').value || 60),
         },
       });
       showToast('Спостереження створено');
@@ -1119,7 +1329,7 @@ function wireEvents() {
         body: {
           item_id: state.activeItemId,
           market_id: Number(document.getElementById('trade-market-select').value),
-          side: document.getElementById('trade-side-select').value,
+          side: document.getElementById('trade-side-value').value,
           qty: Number(document.getElementById('trade-qty-input').value),
           price: document.getElementById('trade-price-input').value,
           traded_at: new Date().toISOString(),
@@ -1189,6 +1399,8 @@ function wireEvents() {
 
 async function boot() {
   initSplash();
+  initCustomSelects();
+  initSegmentedToggles();
   wireEvents();
   await Promise.all([loadGamesMeta(), syncUser()]);
 }

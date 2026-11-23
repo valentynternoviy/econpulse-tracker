@@ -67,6 +67,25 @@ async def test_catalog_pagination_facets_card_and_csv_export(
     spreads = (await client.get("/api/v1/stats/spread?game=rust&limit=5")).json()
     assert len(spreads) == 5
 
+    # 8. Case-insensitive Ukrainian Cyrillic search & Prime set related parts linking
+    uk_lower = (await client.get("/api/v1/items?game=warframe&q=ґаусс")).json()
+    uk_upper = (await client.get("/api/v1/items?game=warframe&q=ҐАУСС")).json()
+    assert uk_lower["total"] >= 1
+    assert uk_lower["total"] == uk_upper["total"]
+    gauss_set = next(
+        it for it in uk_lower["items"] if it["external_id"] == "gauss_prime_set"
+    )
+    gauss_card = (await client.get(f"/api/v1/items/{gauss_set['id']}")).json()
+    assert len(gauss_card["related_parts"]) >= 3
+    assert all(p["id"] != gauss_set["id"] for p in gauss_card["related_parts"])
+
+    # 9. Warframes category contains zero mods
+    wf_only = (
+        await client.get("/api/v1/items?game=warframe&item_type=warframes&page_size=50")
+    ).json()
+    assert wf_only["total"] >= 1
+    assert all(it["item_type"] == "warframes" for it in wf_only["items"])
+
 
 @pytest.mark.integration
 async def test_watchlist_crud_dedup_and_alerts_flow(

@@ -145,9 +145,6 @@ def classify_warframe_item(tags: Sequence[str], name: str) -> tuple[str, str, st
     else:
         rarity = "common"
 
-    if "warframe" in tag_set:
-        sub = "prime_set" if "set" in tag_set else "blueprint"
-        return ("warframes", sub, rarity)
     if "arcane_enhancement" in tag_set or "arcane" in tag_set:
         return ("arcanes", "arcane", rarity)
     if "mod" in tag_set:
@@ -158,6 +155,13 @@ def classify_warframe_item(tags: Sequence[str], name: str) -> tuple[str, str, st
         if "augment" in tag_set:
             return ("mods", "augment", rarity)
         return ("mods", "mod", rarity)
+    if "relic" in tag_set:
+        return ("relics", "void_relic", rarity)
+    if "sentinel" in tag_set or "companion" in tag_set:
+        return ("companions", "companion", rarity)
+    if "warframe" in tag_set:
+        sub = "prime_set" if "set" in tag_set else "blueprint"
+        return ("warframes", sub, rarity)
     if "weapon" in tag_set or "primary" in tag_set or "secondary" in tag_set or "melee" in tag_set:
         if "primary" in tag_set:
             return ("weapons", "primary", rarity)
@@ -166,10 +170,6 @@ def classify_warframe_item(tags: Sequence[str], name: str) -> tuple[str, str, st
         if "melee" in tag_set:
             return ("weapons", "melee", rarity)
         return ("weapons", "weapon_set" if "set" in tag_set else "weapon_part", rarity)
-    if "relic" in tag_set:
-        return ("relics", "void_relic", rarity)
-    if "sentinel" in tag_set or "companion" in tag_set:
-        return ("companions", "companion", rarity)
     return ("other", "misc", rarity)
 
 

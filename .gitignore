@@ -22,6 +22,8 @@ build/
 
 # Local SQLite / backups
 *.db
+*.db-wal
+*.db-shm
 *.sqlite3
 *.sql
 *.dump

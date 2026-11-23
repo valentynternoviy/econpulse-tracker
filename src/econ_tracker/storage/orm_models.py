@@ -92,6 +92,7 @@ class ItemORM(Base):
     item_type: Mapped[str] = mapped_column(String(64), nullable=False, default="other")
     subcategory: Mapped[str] = mapped_column(String(64), nullable=False, default="general")
     base_item_shortname: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    set_group: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
     rarity: Mapped[str] = mapped_column(String(32), nullable=False, default="common")
     external_id: Mapped[str] = mapped_column(String(160), nullable=False)
     is_available: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)

@@ -143,6 +143,15 @@ class MarketQuoteDTO(BaseModel):
     last_checked_at: datetime
 
 
+class RelatedItemDTO(BaseModel):
+    id: int
+    name: str
+    name_en: str | None = None
+    subcategory: str
+    icon_url: str | None = None
+    latest_min_price: Decimal | None = None
+
+
 class ItemSummaryResponse(BaseModel):
     id: int
     game_id: int
@@ -153,6 +162,7 @@ class ItemSummaryResponse(BaseModel):
     item_type: str
     subcategory: str
     base_item_shortname: str | None = None
+    set_group: str | None = None
     rarity: str
     external_id: str
     is_available: bool
@@ -181,6 +191,7 @@ class ItemDetailResponse(ItemSummaryResponse):
     cheapest_price: Decimal | None = None
     most_expensive_price: Decimal | None = None
     spread_abs: Decimal | None = None
+    related_parts: list[RelatedItemDTO] = Field(default_factory=list)
 
 
 class PriceHistoryPoint(BaseModel):

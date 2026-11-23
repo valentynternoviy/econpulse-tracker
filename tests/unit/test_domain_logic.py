@@ -55,6 +55,15 @@ def test_classifications_for_rust_and_warframe() -> None:
         "rare",
     )
     assert classify_warframe_item(["mod", "aura"], "Brief Respite") == ("mods", "aura", "common")
+    # Augment mods also carry the "warframe" tag — must still classify under mods, never warframes
+    assert classify_warframe_item(
+        ["mod", "zephyr", "warframe", "augment", "rare"], "Target Fixation"
+    ) == ("mods", "augment", "rare")
+    assert classify_warframe_item(["mod", "rifle", "primary", "rare"], "Split Chamber") == (
+        "mods",
+        "mod",
+        "rare",
+    )
 
 
 @pytest.mark.unit

@@ -95,7 +95,7 @@
       <div class="wf-hero-content">
         <div class="wf-hero-brand">WARFRAME MARKET · МОНІТОРИНГ</div>
         <div class="wf-search-bar">
-          <input id="wf-search-input" type="search" placeholder="Пошук предмета (українською або англійською)..." />
+          <input id="wf-search-input" type="search" placeholder="Пошук предмета..." />
           <button class="wf-search-btn" id="wf-search-btn" title="Знайти">🔍</button>
         </div>
         <div class="wf-hero-stats">
@@ -464,6 +464,12 @@
         </div>
       </div>
 
+      <!-- Перехід між частинами одного комплекту (кресленик / частини / комплект) -->
+      <div id="modal-related-wrap" class="related-parts-wrap hidden">
+        <div class="related-parts-title">Склад комплекту та інші частини</div>
+        <div id="modal-related-list" class="related-parts-grid"></div>
+      </div>
+
       <!-- Графік історії ціни + обсягу -->
       <div class="history-controls-row">
         <div class="universe-switch" id="history-step-switch">
@@ -477,53 +483,73 @@
         <canvas id="price-chart"></canvas>
       </div>
 
-      <!-- Швидкі дії авторизованого користувача -->
+      <!-- Швидкі дії авторизованого користувача (симетричні картки) -->
       <div id="modal-user-actions" class="grid-2 hidden" style="margin-top:16px;">
-        <div class="card" style="padding:14px 16px;">
-          <h4 style="margin-bottom:10px; font-size:13.5px;">Додати спостереження (Алерт)</h4>
-          <form id="form-quick-watch" class="form-grid">
-            <div class="field">
-              <label>Майданчик</label>
-              <select class="select" id="watch-market-select"></select>
+        <div class="card action-card">
+          <div class="action-card-head">
+            <h4>Додати спостереження</h4>
+            <span class="muted">Сповіщення при перетині порогу</span>
+          </div>
+          <form id="form-quick-watch" class="action-form">
+            <div class="action-row-2">
+              <div class="field">
+                <label>Майданчик</label>
+                <select class="select" id="watch-market-select"></select>
+              </div>
+              <div class="field">
+                <label>Умова спрацювання</label>
+                <div class="seg-toggle" id="watch-dir-toggle">
+                  <input type="hidden" id="watch-dir-value" value="below" />
+                  <button type="button" class="seg-btn active" data-val="below">Нижче</button>
+                  <button type="button" class="seg-btn" data-val="above">Вище</button>
+                </div>
+              </div>
             </div>
-            <div class="field">
-              <label>Умова</label>
-              <select class="select" id="watch-dir-select">
-                <option value="below">Нижче порогу</option>
-                <option value="above">Вище порогу</option>
-              </select>
+            <div class="action-row-2">
+              <div class="field">
+                <label>Ціновий поріг (USD)</label>
+                <input class="input num" id="watch-threshold-input" type="number" step="0.01" min="0.01" required />
+              </div>
+              <div class="field">
+                <label>Тиха пауза (хв)</label>
+                <input class="input num" id="watch-cooldown-input" type="number" min="0" value="60" required />
+              </div>
             </div>
-            <div class="field">
-              <label>Поріг (USD)</label>
-              <input class="input num" id="watch-threshold-input" type="number" step="0.01" min="0.01" required />
-            </div>
-            <button class="btn btn-primary btn-sm" type="submit">Стежити</button>
+            <button class="btn btn-primary action-submit-btn" type="submit">Додати спостереження</button>
           </form>
         </div>
 
-        <div class="card" style="padding:14px 16px;">
-          <h4 style="margin-bottom:10px; font-size:13.5px;">Зафіксувати угоду у портфелі</h4>
-          <form id="form-quick-trade" class="form-grid">
-            <div class="field">
-              <label>Майданчик</label>
-              <select class="select" id="trade-market-select"></select>
+        <div class="card action-card">
+          <div class="action-card-head">
+            <h4>Зафіксувати угоду у портфелі</h4>
+            <span class="muted">Автоперерахунок середньої ціни та PnL</span>
+          </div>
+          <form id="form-quick-trade" class="action-form">
+            <div class="action-row-2">
+              <div class="field">
+                <label>Майданчик</label>
+                <select class="select" id="trade-market-select"></select>
+              </div>
+              <div class="field">
+                <label>Тип операції</label>
+                <div class="seg-toggle" id="trade-side-toggle">
+                  <input type="hidden" id="trade-side-value" value="buy" />
+                  <button type="button" class="seg-btn is-buy active" data-val="buy">Купівля</button>
+                  <button type="button" class="seg-btn is-sell" data-val="sell">Продаж</button>
+                </div>
+              </div>
             </div>
-            <div class="field">
-              <label>Операція</label>
-              <select class="select" id="trade-side-select">
-                <option value="buy">Купівля</option>
-                <option value="sell">Продаж</option>
-              </select>
+            <div class="action-row-2">
+              <div class="field">
+                <label>Кількість</label>
+                <input class="input num" id="trade-qty-input" type="number" min="1" value="1" required />
+              </div>
+              <div class="field">
+                <label>Ціна за од. (USD)</label>
+                <input class="input num" id="trade-price-input" type="number" step="0.01" min="0.01" required />
+              </div>
             </div>
-            <div class="field">
-              <label>Кількість</label>
-              <input class="input num" id="trade-qty-input" type="number" min="1" value="1" required />
-            </div>
-            <div class="field">
-              <label>Ціна (USD)</label>
-              <input class="input num" id="trade-price-input" type="number" step="0.01" min="0.01" required />
-            </div>
-            <button class="btn btn-primary btn-sm" type="submit">Зберегти</button>
+            <button class="btn btn-primary action-submit-btn" type="submit">Зберегти угоду</button>
           </form>
         </div>
       </div>

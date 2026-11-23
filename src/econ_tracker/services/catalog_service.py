@@ -26,6 +26,7 @@ from econ_tracker.services.schemas import (
     PaginatedItemsResponse,
     PriceHistoryPoint,
     PriceHistoryResponse,
+    RelatedItemDTO,
     SubcategoryFacet,
 )
 from econ_tracker.storage.orm_models import GameORM, ItemORM, MarketORM, PriceSnapshotORM
@@ -298,6 +299,51 @@ class CatalogService:
             else None
         )
 
+        related_parts: list[RelatedItemDTO] = []
+        if item.set_group:
+            rel_rows = (
+                await session.scalars(
+                    select(ItemORM).where(
+                        ItemORM.game_id == item.game_id,
+                        ItemORM.set_group == item.set_group,
+                        ItemORM.id != item.id,
+                    )
+                )
+            ).all()
+
+            def _part_sort_key(part: ItemORM) -> tuple[int, str]:
+                if part.subcategory in ("prime_set", "weapon_set"):
+                    return (0, part.name)
+                if (
+                    part.external_id.endswith("_blueprint")
+                    and not any(
+                        part.external_id.endswith(suffix)
+                        for suffix in (
+                            "_neuroptics_blueprint",
+                            "_chassis_blueprint",
+                            "_systems_blueprint",
+                        )
+                    )
+                ):
+                    return (1, part.name)
+                return (2, part.name)
+
+            for part in sorted(rel_rows, key=_part_sort_key):
+                related_parts.append(
+                    RelatedItemDTO(
+                        id=part.id,
+                        name=part.name,
+                        name_en=part.name_en,
+                        subcategory=part.subcategory,
+                        icon_url=part.icon_url,
+                        latest_min_price=(
+                            Decimal(part.latest_min_price)
+                            if part.latest_min_price is not None
+                            else None
+                        ),
+                    )
+                )
+
         summary = _to_item_summary(item)
         return ItemDetailResponse(
             **summary.model_dump(),
@@ -305,6 +351,7 @@ class CatalogService:
             cheapest_price=cheapest,
             most_expensive_price=priciest,
             spread_abs=spread_abs,
+            related_parts=related_parts,
         )
 
     async def get_price_history(
@@ -432,6 +479,7 @@ def _to_item_summary(item: ItemORM) -> ItemSummaryResponse:
         item_type=item.item_type,
         subcategory=item.subcategory,
         base_item_shortname=item.base_item_shortname,
+        set_group=item.set_group,
         rarity=item.rarity,
         external_id=item.external_id,
         is_available=item.is_available,

@@ -63,6 +63,7 @@ class _SeedItemSpec:
     released_at: datetime | None
     history_days: int
     anomaly_spike: float = 0.0
+    set_group: str | None = None
 
 
 def _parse_iso_dt(raw: str | None, fallback: datetime) -> datetime:
@@ -178,7 +179,6 @@ def _load_real_specs(
 
     # ---------------- WARFRAME UKRAINIAN SPECS ----------------
     wf_all: list[dict[str, Any]] = cache.get("warframe", [])
-    gauss_entry = next((x for x in wf_all if x.get("slug") == "gauss_prime_set"), None)
     wf_raw = wf_all[:max_items_per_game] if max_items_per_game is not None else wf_all
 
     wf_specs: list[_SeedItemSpec] = []
@@ -233,22 +233,30 @@ def _load_real_specs(
                 released_at=now - timedelta(days=140 + (idx * 29) % 1600),
                 history_days=hist_days,
                 anomaly_spike=spike,
+                set_group=str(row.get("set_group") or "") or None,
             )
         )
 
-    # Guarantee Gauss Prime Set is always included (even if beyond slice or missing from top 420)
-    gauss_entry = next(
-        (x for x in wf_all if x.get("slug") == "gauss_prime_set"),
-        {
-            "slug": "gauss_prime_set",
-            "name_uk": "Ґаусс-Прайм (комплект)",
-            "name_en": "Gauss Prime Set",
-            "tags": ["prime", "warframe", "set"],
-            "icon_url": "https://warframe.market/static/assets/items/images/en/gauss_prime_set.df5aa569d863730a4de767fd449c107e.png",
-            "description": "Ртуть набуває форми. Ґаусс-прайм не хоче навіть чути про поразку.",
-        },
-    )
-    _append_wf(gauss_entry, 0)
+    # Guarantee Gauss Prime Set (and its set parts) are always included
+    gauss_parts = [
+        x
+        for x in wf_all
+        if x.get("slug") == "gauss_prime_set" or x.get("set_group") == "gauss_prime_set"
+    ]
+    if not gauss_parts:
+        gauss_parts = [
+            {
+                "slug": "gauss_prime_set",
+                "name_uk": "Ґаусс-Прайм (комплект)",
+                "name_en": "Gauss Prime Set",
+                "tags": ["prime", "warframe", "set"],
+                "icon_url": "https://warframe.market/static/assets/items/images/en/gauss_prime_set.df5aa569d863730a4de767fd449c107e.png",
+                "description": "Ртуть набуває форми. Ґаусс-прайм не хоче навіть чути про поразку.",
+                "set_group": "gauss_prime_set",
+            }
+        ]
+    for g_idx, g_row in enumerate(gauss_parts):
+        _append_wf(g_row, g_idx)
 
     for idx, row in enumerate(wf_raw, start=1):
         _append_wf(row, idx)
@@ -392,6 +400,7 @@ async def seed_database(
                 item_type=spec.item_type,
                 subcategory=spec.subcategory,
                 base_item_shortname=spec.base_item_shortname,
+                set_group=spec.set_group,
                 rarity=spec.rarity,
                 external_id=spec.external_id,
                 is_available=True,

@@ -74,6 +74,7 @@ def upgrade() -> None:
         sa.Column("item_type", sa.String(length=64), nullable=False),
         sa.Column("subcategory", sa.String(length=64), nullable=False),
         sa.Column("base_item_shortname", sa.String(length=80), nullable=True),
+        sa.Column("set_group", sa.String(length=120), nullable=True),
         sa.Column("rarity", sa.String(length=32), nullable=False),
         sa.Column("external_id", sa.String(length=160), nullable=False),
         sa.Column("is_available", sa.Boolean(), nullable=False),
@@ -98,6 +99,7 @@ def upgrade() -> None:
     op.create_index("ix_items_game_type_sub", "items", ["game_id", "item_type", "subcategory"])
     op.create_index("ix_items_game_rarity", "items", ["game_id", "rarity"])
     op.create_index("ix_items_latest_min_price", "items", ["latest_min_price"])
+    op.create_index("ix_items_set_group", "items", ["set_group"])
 
     op.create_table(
         "price_snapshots",

@@ -19,6 +19,24 @@ class Base(DeclarativeBase):
     """Declarative base for all ORM models."""
 
 
+def _unicode_lower(value: Any) -> Any:
+    return value.lower() if isinstance(value, str) else value
+
+
+def _attach_sqlite_unicode_lower(dbapi_connection: Any) -> None:
+    """Override SQLite's ASCII-only LOWER() with full Unicode case-folding."""
+    for candidate in (
+        dbapi_connection,
+        getattr(dbapi_connection, "_connection", None),
+        getattr(getattr(dbapi_connection, "_connection", None), "_conn", None),
+        getattr(dbapi_connection, "_conn", None),
+    ):
+        create_fn = getattr(candidate, "create_function", None)
+        if callable(create_fn):
+            create_fn("LOWER", 1, _unicode_lower)
+            return
+
+
 def create_engine_and_sessionmaker(
     database_url: str,
     *,
@@ -42,6 +60,7 @@ def create_engine_and_sessionmaker(
             cursor.execute("PRAGMA journal_mode=WAL")
             cursor.execute("PRAGMA busy_timeout=5000")
             cursor.close()
+            _attach_sqlite_unicode_lower(dbapi_connection)
 
     session_factory = async_sessionmaker(
         bind=engine,
