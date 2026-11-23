@@ -1,0 +1,19 @@
+# Render.com Blueprint for one-click HTTPS deployment (Free Tier)
+services:
+  - type: web
+    name: econ-pulse-tracker
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /healthz
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false  # Set to Neon.tech / Render PostgreSQL postgresql+asyncpg://... URL
+      - key: COLLECT_ENABLED
+        value: "true"
+      - key: LOG_JSON
+        value: "true"
