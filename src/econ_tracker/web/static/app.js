@@ -80,6 +80,13 @@ const state = {
   activeItemId: null,
   activeHistoryStep: 'day',
   chartInstance: null,
+  displayCurrency: localStorage.getItem('econ_cur') || 'USD',
+  fx: { usd_to_uah: 41.5, eur_to_usd: 1.08, plt_to_usd: 0.04999, source: 'fallback' },
+  lastDetail: null,
+  lastHistoryPoints: [],
+  alertsGameFilter: '',
+  sugItems: [],
+  sugIndex: -1,
 };
 
 // ============================================================================
@@ -108,9 +115,47 @@ function showToast(msg, isError = false) {
   toastTimer = setTimeout(() => el.classList.add('hidden'), 3400);
 }
 
+function toDisplayNum(usdVal) {
+  if (usdVal === null || usdVal === undefined || usdVal === '') return 0;
+  const n = Number(usdVal);
+  return state.displayCurrency === 'UAH' ? n * Number(state.fx.usd_to_uah || 41.5) : n;
+}
+
 function fmtUsd(val) {
   if (val === null || val === undefined || val === '') return '—';
   return `$${Number(val).toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function fmtDisplayMoney(usdVal) {
+  if (usdVal === null || usdVal === undefined || usdVal === '') return '—';
+  const converted = toDisplayNum(usdVal);
+  const symbol = state.displayCurrency === 'UAH' ? '₴' : '$';
+  return `${symbol}${converted.toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
+function isWfHalfBodyPortrait(item) {
+  if (!item || item.game_code !== 'warframe') return false;
+  const url = String(item.icon_url || '');
+  if (!url || url.includes('sub_icons/')) return false;
+  return item.item_type === 'warframes' || item.item_type === 'companions';
+}
+
+function formatDescHtml(rawText) {
+  const escaped = esc(rawText);
+  return escaped.replace(/([+-]?\d+(?:[.,]\d+)?\s*%?)/g, '<span class="stat-val">$1</span>');
+}
+
+function highlightMatch(text, query) {
+  const raw = String(text || '');
+  const q = String(query || '').trim();
+  if (!q) return esc(raw);
+  const idx = raw.toLowerCase().indexOf(q.toLowerCase());
+  if (idx < 0) return esc(raw);
+  return (
+    esc(raw.slice(0, idx)) +
+    `<mark class="wf-hl">${esc(raw.slice(idx, idx + q.length))}</mark>` +
+    esc(raw.slice(idx + q.length))
+  );
 }
 
 function fmtCompactUsd(val) {
@@ -585,11 +630,12 @@ async function loadWarframeCatalog() {
       .map((it) => {
         const plt = Math.max(1, Math.round(Number(it.latest_min_price || 0) / PLT_USD_RATE));
         const subLabel = formatSubcategoryLabel(it.subcategory, 'warframe');
+        const imgCls = isWfHalfBodyPortrait({ ...it, game_code: 'warframe' }) ? 'wf-portrait-fade' : '';
         return `
           <article class="wf-item-card" data-item-id="${it.id}">
             <div class="wf-card-left">
               <div class="wf-icon-frame">
-                <img src="${esc(it.icon_url || '')}" alt="${esc(it.name)}" loading="lazy" referrerpolicy="no-referrer" />
+                <img class="${imgCls}" src="${esc(it.icon_url || '')}" alt="${esc(it.name)}" loading="lazy" referrerpolicy="no-referrer" />
               </div>
               <div style="min-width:0;">
                 <div class="wf-title-uk">${esc(it.name)}</div>
@@ -603,7 +649,7 @@ async function loadWarframeCatalog() {
             </div>
             <div class="wf-card-right">
               <div class="wf-plat-price">${plt} Платини</div>
-              <div class="wf-usd-sub">${fmtUsd(it.latest_min_price)} · спред +${Number(it.spread_pct || 0).toFixed(1)}%</div>
+              <div class="wf-usd-sub">${fmtDisplayMoney(it.latest_min_price)} · спред +${Number(it.spread_pct || 0).toFixed(1)}%</div>
               <div class="wf-vol-sub">${it.latest_total_volume} активних ордерів</div>
             </div>
           </article>
@@ -625,37 +671,17 @@ async function loadWarframeCatalog() {
 // ============================================================================
 // ITEM DETAIL MODAL
 // ============================================================================
-async function openItemModal(itemId) {
-  state.activeItemId = itemId;
-  state.activeHistoryStep = 'day';
-  const modal = document.getElementById('item-modal');
-  const modalPanel = modal.querySelector('.modal-panel');
-  modal.classList.remove('hidden');
-  if (modalPanel) modalPanel.scrollTop = 0;
+function renderModalCurrencySection() {
+  const detail = state.lastDetail;
+  if (!detail) return;
 
-  const detail = await api(`/api/v1/items/${itemId}`);
-  if (modalPanel) modalPanel.scrollTop = 0;
-
-  document.getElementById('modal-item-title').textContent = detail.name;
-  document.getElementById('modal-item-subtitle').textContent =
-    detail.name_en && detail.name_en !== detail.name
-      ? `${detail.name_en} · ${detail.game_code.toUpperCase()}`
-      : detail.game_code.toUpperCase();
-
-  document.getElementById('modal-item-image').src = detail.icon_url || '';
-  document.getElementById('modal-item-image').alt = detail.name;
-
-  const descEl = document.getElementById('modal-item-desc');
-  if (detail.description) {
-    descEl.textContent = detail.description;
-    descEl.classList.remove('hidden');
-  } else {
-    descEl.classList.add('hidden');
-  }
+  document.querySelectorAll('#modal-currency-switch .col-cur-btn').forEach((b) => {
+    b.classList.toggle('active', b.dataset.cur === state.displayCurrency);
+  });
 
   document.getElementById('modal-spread-badge').textContent =
     detail.spread_abs !== null
-      ? `Спред: ${fmtUsd(detail.spread_abs)} (+${Number(detail.spread_pct || 0).toFixed(1)}%)`
+      ? `Спред: ${fmtDisplayMoney(detail.spread_abs)} (+${Number(detail.spread_pct || 0).toFixed(1)}%)`
       : '';
 
   document.getElementById('modal-markets-tbody').innerHTML = detail.markets
@@ -664,7 +690,7 @@ async function openItemModal(itemId) {
       <tr>
         <td><strong>${esc(m.market_name)}</strong></td>
         <td class="num">${Number(m.original_price).toFixed(m.original_currency === 'PLT' ? 0 : 2)} ${esc(m.original_currency)}</td>
-        <td class="num">${fmtUsd(m.normalized_price)}</td>
+        <td class="num">${fmtDisplayMoney(m.normalized_price)}</td>
         <td class="num">${m.volume}</td>
       </tr>
     `
@@ -681,8 +707,76 @@ async function openItemModal(itemId) {
     <tr><td>Рідкість</td><td>${rarityBadge(detail.rarity)}</td></tr>
     <tr><td>Дата появи</td><td class="num">${released}</td></tr>
     <tr><td>Пропозицій на ринку</td><td class="num">${detail.latest_total_volume}</td></tr>
-    <tr><td>7-денне середнє (MA-7)</td><td class="num">${fmtUsd(detail.ma7_price)}</td></tr>
+    <tr><td>7-денне середнє (MA-7)</td><td class="num">${fmtDisplayMoney(detail.ma7_price)}</td></tr>
   `;
+
+  if (state.lastHistoryPoints.length) {
+    renderPriceChart(state.lastHistoryPoints, detail.ma7_price);
+    renderHistoryRows(state.lastHistoryPoints);
+  }
+}
+
+function renderHistoryRows(points) {
+  document.getElementById('modal-history-tbody').innerHTML = points
+    .slice()
+    .reverse()
+    .map(
+      (p) => `
+      <tr>
+        <td class="num">${new Date(p.bucket).toLocaleString('uk-UA')}</td>
+        <td class="num">${fmtDisplayMoney(p.min_price)}</td>
+        <td class="num">${fmtDisplayMoney(p.max_price)}</td>
+        <td class="num">${fmtDisplayMoney(p.avg_price)}</td>
+        <td class="num">${fmtDisplayMoney(p.median_price)}</td>
+        <td class="num">${p.avg_volume}</td>
+      </tr>
+    `
+    )
+    .join('');
+}
+
+async function openItemModal(itemId) {
+  state.activeItemId = itemId;
+  state.activeHistoryStep = 'day';
+  hideWfSuggestions();
+  const modal = document.getElementById('item-modal');
+  const modalPanel = modal.querySelector('.modal-panel');
+  modal.classList.remove('hidden');
+  document.getElementById('ma7-popover').classList.add('hidden');
+  if (modalPanel) modalPanel.scrollTop = 0;
+
+  const detail = await api(`/api/v1/items/${itemId}`);
+  state.lastDetail = detail;
+  if (modalPanel) modalPanel.scrollTop = 0;
+
+  document.getElementById('modal-item-title').textContent = detail.name;
+  document.getElementById('modal-item-subtitle').textContent =
+    detail.name_en && detail.name_en !== detail.name
+      ? `${detail.name_en} · ${detail.game_code.toUpperCase()}`
+      : detail.game_code.toUpperCase();
+
+  const imgEl = document.getElementById('modal-item-image');
+  const stageEl = imgEl.parentElement;
+  imgEl.src = detail.icon_url || '';
+  imgEl.alt = detail.name;
+  imgEl.classList.toggle('wf-portrait-fade', isWfHalfBodyPortrait(detail));
+  stageEl.classList.toggle(
+    'wf-bp-stage',
+    detail.game_code === 'warframe' &&
+      detail.subcategory === 'blueprint' &&
+      !String(detail.icon_url || '').includes('sub_icons/')
+  );
+
+  const descEl = document.getElementById('modal-item-desc');
+  if (detail.description) {
+    const descHeading = detail.item_type === 'mods' ? 'Ефект модифікатора' : 'Опис предмета';
+    descEl.innerHTML = `<div class="item-desc-label">${descHeading}</div><div class="item-desc-text">${formatDescHtml(detail.description)}</div>`;
+    descEl.classList.remove('hidden');
+  } else {
+    descEl.classList.add('hidden');
+  }
+
+  renderModalCurrencySection();
 
   // Related Prime Set Parts quick switcher
   const relWrap = document.getElementById('modal-related-wrap');
@@ -692,14 +786,18 @@ async function openItemModal(itemId) {
     relList.innerHTML = detail.related_parts
       .map((p) => {
         const plt = Math.max(1, Math.round(Number(p.latest_min_price || 0) / PLT_USD_RATE));
+        const pImgCls =
+          !String(p.icon_url || '').includes('sub_icons/') && p.subcategory === 'blueprint'
+            ? 'wf-portrait-fade'
+            : '';
         return `
           <button type="button" class="related-part-chip" data-rel-item="${p.id}">
             <div class="related-part-icon">
-              <img src="${esc(p.icon_url || '')}" alt="${esc(p.name)}" loading="lazy" referrerpolicy="no-referrer" />
+              <img class="${pImgCls}" src="${esc(p.icon_url || '')}" alt="${esc(p.name)}" loading="lazy" referrerpolicy="no-referrer" />
             </div>
             <div class="related-part-info">
               <div class="related-part-name">${esc(p.name)}</div>
-              <div class="related-part-price">${plt} PLT · ${fmtUsd(p.latest_min_price)}</div>
+              <div class="related-part-price">${plt} PLT · ${fmtDisplayMoney(p.latest_min_price)}</div>
             </div>
           </button>
         `;
@@ -744,36 +842,26 @@ async function loadItemHistory(itemId, step, ma7Price) {
   state.activeHistoryStep = step;
   document.getElementById('btn-export-csv').href = `/api/v1/items/${itemId}/prices?step=${step}&format=csv`;
   const hist = await api(`/api/v1/items/${itemId}/prices?step=${step}`);
+  state.lastHistoryPoints = hist.points;
 
-  document.getElementById('modal-history-tbody').innerHTML = hist.points
-    .slice()
-    .reverse()
-    .map(
-      (p) => `
-      <tr>
-        <td class="num">${new Date(p.bucket).toLocaleString('uk-UA')}</td>
-        <td class="num">${fmtUsd(p.min_price)}</td>
-        <td class="num">${fmtUsd(p.max_price)}</td>
-        <td class="num">${fmtUsd(p.avg_price)}</td>
-        <td class="num">${fmtUsd(p.median_price)}</td>
-        <td class="num">${p.avg_volume}</td>
-      </tr>
-    `
-    )
-    .join('');
-
+  renderHistoryRows(hist.points);
   renderPriceChart(hist.points, ma7Price);
 }
 
 function renderPriceChart(points, ma7Price) {
-  const ctx = document.getElementById('price-chart');
+  const canvas = document.getElementById('price-chart');
   if (state.chartInstance) state.chartInstance.destroy();
   if (typeof window.Chart === 'undefined') return;
 
   const isRust = state.game === 'rust';
-  const lineColor = isRust ? '#cd412b' : '#3f8ea3';
-  const fillColor = isRust ? 'rgba(205, 65, 43, 0.14)' : 'rgba(63, 142, 163, 0.14)';
-  const barColor = isRust ? 'rgba(217, 119, 6, 0.25)' : 'rgba(201, 169, 97, 0.25)';
+  const curCode = state.displayCurrency;
+  const curSym = curCode === 'UAH' ? '₴' : '$';
+  const lineColor = isRust ? '#d9503a' : '#4ab1c9';
+  const barColor = isRust ? 'rgba(217, 150, 74, 0.18)' : 'rgba(201, 169, 97, 0.18)';
+  const ctx2d = canvas.getContext('2d');
+  const grad = ctx2d.createLinearGradient(0, 0, 0, 260);
+  grad.addColorStop(0, isRust ? 'rgba(205, 65, 43, 0.30)' : 'rgba(63, 142, 163, 0.32)');
+  grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
   const labels = points.map((p) => {
     const d = new Date(p.bucket);
@@ -785,12 +873,16 @@ function renderPriceChart(points, ma7Price) {
   const datasets = [
     {
       type: 'line',
-      label: 'Середня ціна (USD)',
-      data: points.map((p) => Number(p.avg_price)),
+      label: `Середня ціна (${curCode})`,
+      data: points.map((p) => Number(toDisplayNum(p.avg_price).toFixed(2))),
       borderColor: lineColor,
-      backgroundColor: fillColor,
-      borderWidth: 2,
-      tension: 0.25,
+      backgroundColor: grad,
+      borderWidth: 2.5,
+      pointRadius: 2.5,
+      pointHoverRadius: 5,
+      pointBackgroundColor: lineColor,
+      pointStyle: 'circle',
+      tension: 0.3,
       fill: true,
       yAxisID: 'y',
     },
@@ -799,34 +891,84 @@ function renderPriceChart(points, ma7Price) {
       label: 'Обсяг лотів',
       data: points.map((p) => p.avg_volume),
       backgroundColor: barColor,
+      borderRadius: 4,
+      barPercentage: 0.45,
+      categoryPercentage: 0.8,
+      pointStyle: 'rectRounded',
       yAxisID: 'y1',
     },
   ];
 
   if (ma7Price !== null && ma7Price !== undefined && points.length) {
+    const ma7Scaled = Number(toDisplayNum(ma7Price).toFixed(2));
     datasets.push({
       type: 'line',
       label: 'Ковзне середнє (MA-7)',
-      data: points.map(() => Number(ma7Price)),
-      borderColor: '#93a6b0',
-      borderDash: [5, 5],
-      borderWidth: 1.5,
+      data: points.map(() => ma7Scaled),
+      borderColor: '#d4a94e',
+      borderDash: [6, 4],
+      borderWidth: 1.6,
       pointRadius: 0,
+      pointHoverRadius: 0,
+      pointStyle: 'line',
       yAxisID: 'y',
     });
   }
 
-  state.chartInstance = new window.Chart(ctx, {
+  state.chartInstance = new window.Chart(canvas, {
     data: { labels, datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: 'index', intersect: false },
-      plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 12 } } } },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#cbd5e1',
+            font: { size: 12 },
+            usePointStyle: true,
+            boxWidth: 10,
+            padding: 16,
+          },
+        },
+        tooltip: {
+          backgroundColor: isRust ? 'rgba(22, 23, 28, 0.96)' : 'rgba(17, 25, 30, 0.96)',
+          titleColor: '#f8fafc',
+          titleFont: { size: 13, weight: 'bold' },
+          bodyColor: '#d8e3e8',
+          bodyFont: { size: 12.5 },
+          borderColor: isRust ? '#464854' : '#35505e',
+          borderWidth: 1,
+          cornerRadius: 8,
+          padding: 12,
+          boxPadding: 5,
+          usePointStyle: true,
+          callbacks: {
+            label(ctx) {
+              const v = ctx.parsed.y;
+              if (ctx.dataset.yAxisID === 'y1') {
+                return ` ${ctx.dataset.label}: ${Math.round(v)} шт.`;
+              }
+              return ` ${ctx.dataset.label}: ${curSym}${Number(v).toLocaleString('uk-UA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            },
+          },
+        },
+      },
       scales: {
-        x: { ticks: { color: '#93a6b0' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-        y: { position: 'left', ticks: { color: '#cbd5e1' }, grid: { color: 'rgba(255,255,255,0.05)' } },
-        y1: { position: 'right', ticks: { color: '#667983' }, grid: { drawOnChartArea: false } },
+        x: { ticks: { color: '#93a6b0' }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: {
+          position: 'left',
+          ticks: {
+            color: '#cbd5e1',
+            callback: (val) => `${curSym}${Number(val).toFixed(2)}`,
+          },
+          grid: { color: 'rgba(255,255,255,0.05)' },
+        },
+        y1: {
+          position: 'right',
+          ticks: { color: '#667983' },
+          grid: { drawOnChartArea: false },
+        },
       },
     },
   });
@@ -962,17 +1104,21 @@ async function loadPortfolio() {
 async function loadAlertsAndWatches() {
   if (!state.user) return;
   const unreadOnly = document.getElementById('alerts-unread-only').checked;
-  const [watches, alerts] = await Promise.all([
+  const [allWatches, allAlerts] = await Promise.all([
     api('/api/v1/watch'),
     api(`/api/v1/alerts?unread=${unreadOnly}`),
   ]);
+
+  const gf = state.alertsGameFilter;
+  const watches = gf ? allWatches.filter((w) => w.game_code === gf) : allWatches;
+  const alerts = gf ? allAlerts.filter((a) => !a.game_code || a.game_code === gf) : allAlerts;
 
   document.getElementById('watch-tbody').innerHTML = watches.length
     ? watches
         .map(
           (w) => `
-          <tr>
-            <td><strong>${esc(w.item_name)}</strong></td>
+          <tr class="clickable" data-open-item="${w.item_id}">
+            <td><strong>${esc(w.item_name)}</strong> <span class="muted" style="font-size:11.5px;">${esc((w.game_code || '').toUpperCase())}</span></td>
             <td class="muted">${esc(w.market_name)}</td>
             <td class="num">${w.direction === 'below' ? '≤' : '≥'} ${fmtUsd(w.threshold)}</td>
             <td class="num muted">${w.cooldown_minutes} хв</td>
@@ -987,8 +1133,11 @@ async function loadAlertsAndWatches() {
     ? alerts
         .map(
           (a) => `
-          <tr>
-            <td style="${a.is_read ? 'opacity:0.6;' : 'font-weight:500;'}">${esc(a.message)}</td>
+          <tr class="${a.item_id ? 'clickable' : ''}" ${a.item_id ? `data-open-item="${a.item_id}"` : ''}>
+            <td style="${a.is_read ? 'opacity:0.6;' : 'font-weight:500;'}">
+              ${a.game_code ? `<span class="rarity-pill ${a.game_code === 'rust' ? 'legendary' : 'rare'}" style="margin-right:6px;">${esc(a.game_code.toUpperCase())}</span>` : ''}
+              ${esc(a.message)}
+            </td>
             <td class="num muted">${new Date(a.created_at).toLocaleString('uk-UA')}</td>
             <td>${a.is_read ? '<span class="muted">Прочитано</span>' : `<button class="btn btn-sm" data-read-alert="${a.id}">Прочитано</button>`}</td>
           </tr>
@@ -997,8 +1146,13 @@ async function loadAlertsAndWatches() {
         .join('')
     : `<tr><td colspan="3" class="muted" style="text-align:center; padding:20px;">Сповіщень немає.</td></tr>`;
 
+  document.querySelectorAll('#tab-alerts tr[data-open-item]').forEach((row) => {
+    row.addEventListener('click', () => openItemModal(Number(row.dataset.openItem)));
+  });
+
   document.querySelectorAll('[data-del-watch]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
       await api(`/api/v1/watch/${btn.dataset.delWatch}`, { method: 'DELETE' });
       showToast('Спостереження видалено');
       await loadAlertsAndWatches();
@@ -1006,7 +1160,8 @@ async function loadAlertsAndWatches() {
   });
 
   document.querySelectorAll('[data-read-alert]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
       await api(`/api/v1/alerts/${btn.dataset.readAlert}/read`, { method: 'POST' });
       await refreshUnreadBadge();
       await loadAlertsAndWatches();
@@ -1248,16 +1403,54 @@ function wireEvents() {
     loadRustCatalog();
   });
 
-  // Warframe catalog controls
+  // Warframe catalog controls + autocomplete suggestions
   let wfTimer = null;
-  document.getElementById('wf-search-input').addEventListener('input', (e) => {
+  let wfSugTimer = null;
+  const wfInput = document.getElementById('wf-search-input');
+
+  wfInput.addEventListener('focus', () => {
+    loadWfSuggestions(wfInput.value);
+  });
+
+  wfInput.addEventListener('input', (e) => {
     state.filters.q = e.target.value;
     state.filters.page = 1;
     clearTimeout(wfTimer);
+    clearTimeout(wfSugTimer);
     wfTimer = setTimeout(loadWarframeCatalog, 220);
+    wfSugTimer = setTimeout(() => loadWfSuggestions(e.target.value), 140);
   });
+
+  wfInput.addEventListener('keydown', (e) => {
+    const box = document.getElementById('wf-search-suggestions');
+    if (box.classList.contains('hidden')) return;
+    const btns = box.querySelectorAll('.wf-sug-item');
+    if (e.key === 'ArrowDown' && btns.length) {
+      e.preventDefault();
+      state.sugIndex = (state.sugIndex + 1) % btns.length;
+      btns.forEach((b, i) => b.classList.toggle('active', i === state.sugIndex));
+    } else if (e.key === 'ArrowUp' && btns.length) {
+      e.preventDefault();
+      state.sugIndex = state.sugIndex <= 0 ? btns.length - 1 : state.sugIndex - 1;
+      btns.forEach((b, i) => b.classList.toggle('active', i === state.sugIndex));
+    } else if (e.key === 'Enter' && state.sugIndex >= 0 && btns[state.sugIndex]) {
+      e.preventDefault();
+      btns[state.sugIndex].click();
+    } else if (e.key === 'Escape') {
+      hideWfSuggestions();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.wf-search-wrap')) hideWfSuggestions();
+    if (!e.target.closest('.ma7-info-wrap')) {
+      document.getElementById('ma7-popover').classList.add('hidden');
+    }
+  });
+
   document.getElementById('wf-search-btn').addEventListener('click', () => {
-    state.filters.q = document.getElementById('wf-search-input').value;
+    hideWfSuggestions();
+    state.filters.q = wfInput.value;
     state.filters.page = 1;
     loadWarframeCatalog();
   });
@@ -1298,7 +1491,38 @@ function wireEvents() {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#history-step-switch button').forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      if (state.activeItemId) loadItemHistory(state.activeItemId, btn.dataset.step, null);
+      if (state.activeItemId) {
+        loadItemHistory(
+          state.activeItemId,
+          btn.dataset.step,
+          state.lastDetail ? state.lastDetail.ma7_price : null
+        );
+      }
+    });
+  });
+
+  document.querySelectorAll('#modal-currency-switch .col-cur-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.displayCurrency = btn.dataset.cur;
+      localStorage.setItem('econ_cur', state.displayCurrency);
+      renderModalCurrencySection();
+      if (state.game === 'warframe') loadWarframeCatalog();
+    });
+  });
+
+  document.getElementById('btn-ma7-help').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const pop = document.getElementById('ma7-popover');
+    pop.classList.toggle('hidden');
+  });
+
+  document.querySelectorAll('#alerts-game-filter button').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      state.alertsGameFilter = btn.dataset.alertGame;
+      document.querySelectorAll('#alerts-game-filter button').forEach((b) => {
+        b.classList.toggle('active', b === btn);
+      });
+      loadAlertsAndWatches();
     });
   });
 
@@ -1397,12 +1621,80 @@ function wireEvents() {
   });
 }
 
+async function loadFxRates() {
+  try {
+    const fx = await api('/api/v1/fx-rates');
+    state.fx = {
+      usd_to_uah: Number(fx.usd_to_uah || 41.5),
+      eur_to_usd: Number(fx.eur_to_usd || 1.08),
+      plt_to_usd: Number(fx.plt_to_usd || 0.04999),
+      source: fx.source || 'fallback',
+    };
+  } catch {
+    // keep safe fallback
+  }
+}
+
+function hideWfSuggestions() {
+  const box = document.getElementById('wf-search-suggestions');
+  if (box) box.classList.add('hidden');
+  state.sugIndex = -1;
+}
+
+async function loadWfSuggestions(query) {
+  const box = document.getElementById('wf-search-suggestions');
+  if (!box || state.game !== 'warframe' || state.tab !== 'catalog') return;
+
+  const q = String(query || '').trim();
+  const qs = new URLSearchParams({ game: 'warframe', page_size: '8', sort: 'volume_desc' });
+  if (q) qs.set('q', q);
+
+  try {
+    const data = await api(`/api/v1/items?${qs.toString()}`);
+    state.sugItems = data.items || [];
+    state.sugIndex = -1;
+
+    if (!state.sugItems.length) {
+      box.innerHTML = `<div class="wf-sug-empty">Нічого не знайдено за запитом «${esc(q)}»</div>`;
+      box.classList.remove('hidden');
+      return;
+    }
+
+    box.innerHTML = state.sugItems
+      .map((it) => {
+        const plt = Math.max(1, Math.round(Number(it.latest_min_price || 0) / PLT_USD_RATE));
+        return `
+          <button type="button" class="wf-sug-item" data-sug-id="${it.id}">
+            <div class="wf-sug-left">
+              <div class="wf-sug-ico">
+                <img src="${esc(it.icon_url || '')}" alt="" loading="lazy" referrerpolicy="no-referrer" />
+              </div>
+              <div style="min-width:0; flex:1;">
+                <div class="wf-sug-uk">${highlightMatch(it.name, q)}</div>
+                <div class="wf-sug-en">${highlightMatch(it.name_en || '', q)}</div>
+              </div>
+            </div>
+            <div class="wf-sug-price">${plt} PLT</div>
+          </button>
+        `;
+      })
+      .join('');
+
+    box.classList.remove('hidden');
+    box.querySelectorAll('[data-sug-id]').forEach((btn) => {
+      btn.addEventListener('click', () => openItemModal(Number(btn.dataset.sugId)));
+    });
+  } catch {
+    hideWfSuggestions();
+  }
+}
+
 async function boot() {
   initSplash();
   initCustomSelects();
   initSegmentedToggles();
   wireEvents();
-  await Promise.all([loadGamesMeta(), syncUser()]);
+  await Promise.all([loadFxRates(), loadGamesMeta(), syncUser()]);
 }
 
 boot();

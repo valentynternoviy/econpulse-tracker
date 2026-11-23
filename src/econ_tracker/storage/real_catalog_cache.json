@@ -15102,7 +15102,7 @@
         "component",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/gauss_prime_chassis_blueprint.df5aa569d863730a4de767fd449c107e.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для Ґаусса-прайм.",
       "set_group": "gauss_prime_set"
     },
@@ -15116,7 +15116,7 @@
         "component",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/gauss_prime_neuroptics_blueprint.df5aa569d863730a4de767fd449c107e.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для Ґаусса-прайм.",
       "set_group": "gauss_prime_set"
     },
@@ -15130,7 +15130,7 @@
         "component",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/gauss_prime_systems_blueprint.df5aa569d863730a4de767fd449c107e.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для Ґаусса-прайм.",
       "set_group": "gauss_prime_set"
     },
@@ -15170,7 +15170,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/loki_prime_chassis.abc05c280f92196bcb688643873fbf95.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Локі-прайм.",
       "set_group": "loki_prime_set"
     },
@@ -15184,7 +15184,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/loki_prime_neuroptics.abc05c280f92196bcb688643873fbf95.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Локі-прайм.",
       "set_group": "loki_prime_set"
     },
@@ -15198,7 +15198,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/loki_prime_systems.abc05c280f92196bcb688643873fbf95.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Локі-прайм.",
       "set_group": "loki_prime_set"
     },
@@ -15238,7 +15238,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/rhino_prime_chassis.22301207f9463fe9ab215e40eb23a326.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Райно-прайм.",
       "set_group": "rhino_prime_set"
     },
@@ -15252,7 +15252,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/rhino_prime_neuroptics.22301207f9463fe9ab215e40eb23a326.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Райно-прайм.",
       "set_group": "rhino_prime_set"
     },
@@ -15266,7 +15266,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/rhino_prime_systems.22301207f9463fe9ab215e40eb23a326.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Райно-прайм.",
       "set_group": "rhino_prime_set"
     },
@@ -15306,7 +15306,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mag_prime_chassis.2afb45373319b966737bd91cf05a813c.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Меґ-прайм.",
       "set_group": "mag_prime_set"
     },
@@ -15320,7 +15320,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mag_prime_neuroptics.2afb45373319b966737bd91cf05a813c.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Меґ-прайм.",
       "set_group": "mag_prime_set"
     },
@@ -15334,7 +15334,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mag_prime_systems.2afb45373319b966737bd91cf05a813c.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Меґ-прайм.",
       "set_group": "mag_prime_set"
     },
@@ -15374,7 +15374,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/frost_prime_chassis.4f8ff8605be1afaab9a0e5cc3c67cb21.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Фроста-прайм.",
       "set_group": "frost_prime_set"
     },
@@ -15388,7 +15388,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/frost_prime_neuroptics.4f8ff8605be1afaab9a0e5cc3c67cb21.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Фроста-прайм.",
       "set_group": "frost_prime_set"
     },
@@ -15402,7 +15402,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/frost_prime_systems.4f8ff8605be1afaab9a0e5cc3c67cb21.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Фроста-прайм.",
       "set_group": "frost_prime_set"
     },
@@ -15442,7 +15442,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/volt_prime_chassis.9481daa3eb02aaec1108cdbeeaeea159.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Вольта-прайм.",
       "set_group": "volt_prime_set"
     },
@@ -15456,7 +15456,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/volt_prime_neuroptics.9481daa3eb02aaec1108cdbeeaeea159.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Вольта-прайм.",
       "set_group": "volt_prime_set"
     },
@@ -15470,7 +15470,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/volt_prime_systems.9481daa3eb02aaec1108cdbeeaeea159.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Вольта-прайм.",
       "set_group": "volt_prime_set"
     },
@@ -15510,7 +15510,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/wukong_prime_chassis.6fa7196ae48a7a3901c35834476f3891.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для Вукона-прайм.",
       "set_group": "wukong_prime_set"
     },
@@ -15524,7 +15524,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/wukong_prime_neuroptics.6fa7196ae48a7a3901c35834476f3891.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для Вукона-прайм.",
       "set_group": "wukong_prime_set"
     },
@@ -15538,7 +15538,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/wukong_prime_systems.6fa7196ae48a7a3901c35834476f3891.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для Вукона-прайм.",
       "set_group": "wukong_prime_set"
     },
@@ -15578,7 +15578,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/saryn_prime_chassis.394094bef0383f954bd38d622bb075e5.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Зарини-прайм.",
       "set_group": "saryn_prime_set"
     },
@@ -15592,7 +15592,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/saryn_prime_neuroptics.394094bef0383f954bd38d622bb075e5.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Зарини-прайм.",
       "set_group": "saryn_prime_set"
     },
@@ -15606,7 +15606,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/saryn_prime_systems.394094bef0383f954bd38d622bb075e5.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Зарини-прайм.",
       "set_group": "saryn_prime_set"
     },
@@ -15646,7 +15646,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ember_prime_chassis.971255acc3f1ad8a374d236c6af1c816.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Ембер-прайм.",
       "set_group": "ember_prime_set"
     },
@@ -15660,7 +15660,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ember_prime_neuroptics.971255acc3f1ad8a374d236c6af1c816.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Ембер-прайм.",
       "set_group": "ember_prime_set"
     },
@@ -15674,7 +15674,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ember_prime_systems.971255acc3f1ad8a374d236c6af1c816.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Ембер-прайм.",
       "set_group": "ember_prime_set"
     },
@@ -15714,7 +15714,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nyx_prime_chassis.fd41c04c9e9bcc7e0e6963914f68f880.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Нікс-прайм.",
       "set_group": "nyx_prime_set"
     },
@@ -15728,7 +15728,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nyx_prime_neuroptics.fd41c04c9e9bcc7e0e6963914f68f880.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Нікс-прайм.",
       "set_group": "nyx_prime_set"
     },
@@ -15742,7 +15742,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nyx_prime_systems.fd41c04c9e9bcc7e0e6963914f68f880.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Нікс-прайм.",
       "set_group": "nyx_prime_set"
     },
@@ -15782,7 +15782,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nova_prime_chassis.639a9222e1cb351cd6dd09ef28155ef0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Нови-прайм.",
       "set_group": "nova_prime_set"
     },
@@ -15796,7 +15796,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nova_prime_neuroptics.639a9222e1cb351cd6dd09ef28155ef0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Нови-прайм.",
       "set_group": "nova_prime_set"
     },
@@ -15810,7 +15810,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nova_prime_systems.639a9222e1cb351cd6dd09ef28155ef0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Нови-прайм.",
       "set_group": "nova_prime_set"
     },
@@ -15850,7 +15850,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/trinity_prime_chassis.4115dba418ab8ee70197a7fdaee8da76.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Трініті-прайм.",
       "set_group": "trinity_prime_set"
     },
@@ -15864,7 +15864,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/trinity_prime_neuroptics.4115dba418ab8ee70197a7fdaee8da76.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Трініті-прайм.",
       "set_group": "trinity_prime_set"
     },
@@ -15878,7 +15878,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/trinity_prime_systems.4115dba418ab8ee70197a7fdaee8da76.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Трініті-прайм.",
       "set_group": "trinity_prime_set"
     },
@@ -15918,7 +15918,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ash_prime_chassis.9f3f82bee82a9741531857cf76eb6594.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Еша-прайм.",
       "set_group": "ash_prime_set"
     },
@@ -15932,7 +15932,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ash_prime_neuroptics.9f3f82bee82a9741531857cf76eb6594.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Еша-прайм.",
       "set_group": "ash_prime_set"
     },
@@ -15946,7 +15946,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ash_prime_systems.9f3f82bee82a9741531857cf76eb6594.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Еша-прайм.",
       "set_group": "ash_prime_set"
     },
@@ -15986,7 +15986,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/oberon_prime_chassis.d7f1623552bce11f166b715679e27022.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Оберона-прайм.",
       "set_group": "oberon_prime_set"
     },
@@ -16000,7 +16000,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/oberon_prime_neuroptics.d7f1623552bce11f166b715679e27022.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Оберона-прайм.",
       "set_group": "oberon_prime_set"
     },
@@ -16014,7 +16014,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/oberon_prime_systems.d7f1623552bce11f166b715679e27022.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Оберона-прайм.",
       "set_group": "oberon_prime_set"
     },
@@ -16054,7 +16054,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/hydroid_prime_chassis.5f1abb4ef137bf0dd41565a913f5232a.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Гідроїда-прайм.",
       "set_group": "hydroid_prime_set"
     },
@@ -16068,7 +16068,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/hydroid_prime_neuroptics.5f1abb4ef137bf0dd41565a913f5232a.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Гідроїда-прайм.",
       "set_group": "hydroid_prime_set"
     },
@@ -16082,7 +16082,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/hydroid_prime_systems.5f1abb4ef137bf0dd41565a913f5232a.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Гідроїда-прайм.",
       "set_group": "hydroid_prime_set"
     },
@@ -16122,7 +16122,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/zephyr_prime_chassis.4ffc19dd100b3c182beef5f1ef3d337e.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Зефіри-прайм.",
       "set_group": "zephyr_prime_set"
     },
@@ -16136,7 +16136,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/zephyr_prime_neuroptics.4ffc19dd100b3c182beef5f1ef3d337e.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Зефіри-прайм.",
       "set_group": "zephyr_prime_set"
     },
@@ -16150,7 +16150,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/zephyr_prime_systems.4ffc19dd100b3c182beef5f1ef3d337e.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Зефіри-прайм.",
       "set_group": "zephyr_prime_set"
     },
@@ -16190,7 +16190,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/valkyr_prime_chassis.a5c906d66a11ff70158f0ffad0c628e8.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Валькірії-прайм.",
       "set_group": "valkyr_prime_set"
     },
@@ -16204,7 +16204,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/valkyr_prime_neuroptics.a5c906d66a11ff70158f0ffad0c628e8.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Валькірії-прайм.",
       "set_group": "valkyr_prime_set"
     },
@@ -16218,7 +16218,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/valkyr_prime_systems.a5c906d66a11ff70158f0ffad0c628e8.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Валькірії-прайм.",
       "set_group": "valkyr_prime_set"
     },
@@ -16258,7 +16258,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/vauban_prime_chassis.9c15bb47d3ed4ed8e960c2502fac82f2.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Вобана-прайм.",
       "set_group": "vauban_prime_set"
     },
@@ -16272,7 +16272,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/vauban_prime_neuroptics.9c15bb47d3ed4ed8e960c2502fac82f2.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Вобана-прайм.",
       "set_group": "vauban_prime_set"
     },
@@ -16286,7 +16286,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/vauban_prime_systems.9c15bb47d3ed4ed8e960c2502fac82f2.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Вобана-прайм.",
       "set_group": "vauban_prime_set"
     },
@@ -16326,7 +16326,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/banshee_prime_chassis.a0956816beb733841bce57e69a568cd6.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Банші-прайм.",
       "set_group": "banshee_prime_set"
     },
@@ -16340,7 +16340,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/banshee_prime_neuroptics.a0956816beb733841bce57e69a568cd6.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Банші-прайм.",
       "set_group": "banshee_prime_set"
     },
@@ -16354,7 +16354,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/banshee_prime_systems.a0956816beb733841bce57e69a568cd6.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Банші-прайм.",
       "set_group": "banshee_prime_set"
     },
@@ -16394,7 +16394,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nekros_prime_chassis.523943a15c82985ebe7cf14eac98966d.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Некроса-прайм.",
       "set_group": "nekros_prime_set"
     },
@@ -16408,7 +16408,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nekros_prime_neuroptics.523943a15c82985ebe7cf14eac98966d.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Некроса-прайм.",
       "set_group": "nekros_prime_set"
     },
@@ -16422,7 +16422,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nekros_prime_systems.523943a15c82985ebe7cf14eac98966d.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Некроса-прайм.",
       "set_group": "nekros_prime_set"
     },
@@ -16462,7 +16462,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/wisp_prime_chassis_blueprint.609bc4e8676a77247cc126ca150cb132.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для Вісп-прайм.",
       "set_group": "wisp_prime_set"
     },
@@ -16476,7 +16476,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/wisp_prime_neuroptics_blueprint.609bc4e8676a77247cc126ca150cb132.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для Вісп-прайм.",
       "set_group": "wisp_prime_set"
     },
@@ -16490,7 +16490,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/wisp_prime_systems_blueprint.609bc4e8676a77247cc126ca150cb132.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для Вісп-прайм.",
       "set_group": "wisp_prime_set"
     },
@@ -16530,7 +16530,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mesa_prime_chassis.34d67af54de052f6de1d5ae64ed40197.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Меси-прайм.",
       "set_group": "mesa_prime_set"
     },
@@ -16544,7 +16544,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mesa_prime_neuroptics.34d67af54de052f6de1d5ae64ed40197.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Меси-прайм.",
       "set_group": "mesa_prime_set"
     },
@@ -16558,7 +16558,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mesa_prime_systems.34d67af54de052f6de1d5ae64ed40197.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Меси-прайм.",
       "set_group": "mesa_prime_set"
     },
@@ -16598,7 +16598,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mirage_prime_chassis.e7f8f484dd6ae6c35f0767fff35a5109.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для ворфрейма Міраж-прайм.",
       "set_group": "mirage_prime_set"
     },
@@ -16612,7 +16612,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mirage_prime_neuroptics.e7f8f484dd6ae6c35f0767fff35a5109.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для ворфрейма Міраж-прайм.",
       "set_group": "mirage_prime_set"
     },
@@ -16626,7 +16626,7 @@
         "blueprint",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/mirage_prime_systems.e7f8f484dd6ae6c35f0767fff35a5109.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для ворфрейма Міраж-прайм.",
       "set_group": "mirage_prime_set"
     },
@@ -16666,7 +16666,7 @@
         "prime",
         "component"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/octavia_prime_chassis.4e24ab1ec9ff333596952d391e69b397.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для Октавії-прайм.",
       "set_group": "octavia_prime_set"
     },
@@ -16680,7 +16680,7 @@
         "prime",
         "component"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/octavia_prime_neuroptics.4e24ab1ec9ff333596952d391e69b397.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для Октавії-прайм.",
       "set_group": "octavia_prime_set"
     },
@@ -16694,7 +16694,7 @@
         "prime",
         "component"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/octavia_prime_systems.4e24ab1ec9ff333596952d391e69b397.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для Октавії-прайм.",
       "set_group": "octavia_prime_set"
     },
@@ -16734,7 +16734,7 @@
         "prime",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/revenant_prime_chassis_blueprint.469f99b4183a5dda7769b78b2cde6658.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для Ревенанта-прайм.",
       "set_group": "revenant_prime_set"
     },
@@ -16748,7 +16748,7 @@
         "prime",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/revenant_prime_neuroptics_blueprint.469f99b4183a5dda7769b78b2cde6658.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для Ревенанта-прайм.",
       "set_group": "revenant_prime_set"
     },
@@ -16762,7 +16762,7 @@
         "prime",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/revenant_prime_systems_blueprint.469f99b4183a5dda7769b78b2cde6658.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для Ревенанта-прайм.",
       "set_group": "revenant_prime_set"
     },
@@ -16802,7 +16802,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/titania_prime_chassis.d783da2b4926bc3760d50bba21eff7db.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для Титанії-прайм.",
       "set_group": "titania_prime_set"
     },
@@ -16816,7 +16816,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/titania_prime_neuroptics.d783da2b4926bc3760d50bba21eff7db.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для Титанії-прайм.",
       "set_group": "titania_prime_set"
     },
@@ -16830,7 +16830,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/titania_prime_systems.d783da2b4926bc3760d50bba21eff7db.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для Титанії-прайм.",
       "set_group": "titania_prime_set"
     },
@@ -16870,7 +16870,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/khora_prime_chassis_blueprint.12b9da415ed4f659296947b5c7157dc0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для Хори-прайм.",
       "set_group": "khora_prime_set"
     },
@@ -16884,7 +16884,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/khora_prime_neuroptics_blueprint.12b9da415ed4f659296947b5c7157dc0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для Хори-прайм.",
       "set_group": "khora_prime_set"
     },
@@ -16898,7 +16898,7 @@
         "warframe",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/khora_prime_systems_blueprint.12b9da415ed4f659296947b5c7157dc0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для Хори-прайм.",
       "set_group": "khora_prime_set"
     },
@@ -16938,7 +16938,7 @@
         "prime",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/protea_prime_neuroptics_blueprint.c4d0269d10f68228b05510982f06e58b.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_helmet_128x128.png",
       "description": "Деталі нейроптики для Протеї-прайм.",
       "set_group": "protea_prime_set"
     },
@@ -16952,7 +16952,7 @@
         "prime",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/protea_prime_chassis_blueprint.c4d0269d10f68228b05510982f06e58b.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_chassis_128x128.png",
       "description": "Деталі каркаса для Протеї-прайм.",
       "set_group": "protea_prime_set"
     },
@@ -16966,7 +16966,7 @@
         "prime",
         "blueprint"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/protea_prime_systems_blueprint.c4d0269d10f68228b05510982f06e58b.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/warframe/prime_systems_128x128.png",
       "description": "Деталі систем для Протеї-прайм.",
       "set_group": "protea_prime_set"
     },
@@ -16993,7 +16993,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/braton_prime_barrel.ae229642d6179ebfb1547ed7d976e749.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "braton_prime_set"
     },
@@ -17020,7 +17020,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/braton_prime_receiver.ae229642d6179ebfb1547ed7d976e749.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "braton_prime_set"
     },
@@ -17033,7 +17033,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/braton_prime_stock.ae229642d6179ebfb1547ed7d976e749.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "braton_prime_set"
     },
@@ -17060,7 +17060,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/boltor_prime_barrel.a26157003dea5b1e1fe6660f46f3ea11.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "boltor_prime_set"
     },
@@ -17087,7 +17087,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/boltor_prime_receiver.a26157003dea5b1e1fe6660f46f3ea11.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "boltor_prime_set"
     },
@@ -17100,7 +17100,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/boltor_prime_stock.a26157003dea5b1e1fe6660f46f3ea11.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "boltor_prime_set"
     },
@@ -17127,7 +17127,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/latron_prime_barrel.5c8b8009acbdb97fd49177ba155ecfbe.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "latron_prime_set"
     },
@@ -17154,7 +17154,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/latron_prime_receiver.5c8b8009acbdb97fd49177ba155ecfbe.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "latron_prime_set"
     },
@@ -17167,7 +17167,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/latron_prime_stock.5c8b8009acbdb97fd49177ba155ecfbe.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "latron_prime_set"
     },
@@ -17194,7 +17194,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/lex_prime_barrel.13776cf63dfd68968067b517184a6ac0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "lex_prime_set"
     },
@@ -17221,7 +17221,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/lex_prime_receiver.13776cf63dfd68968067b517184a6ac0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "lex_prime_set"
     },
@@ -17248,7 +17248,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/vectis_prime_barrel.028e001af4469482df80bff29542e043.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "vectis_prime_set"
     },
@@ -17275,7 +17275,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/vectis_prime_receiver.028e001af4469482df80bff29542e043.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "vectis_prime_set"
     },
@@ -17288,7 +17288,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/vectis_prime_stock.028e001af4469482df80bff29542e043.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "vectis_prime_set"
     },
@@ -17315,7 +17315,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/boar_prime_barrel.5e8a5ba1520169c7a99c738624328d26.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "boar_prime_set"
     },
@@ -17342,7 +17342,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/boar_prime_receiver.5e8a5ba1520169c7a99c738624328d26.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "boar_prime_set"
     },
@@ -17355,7 +17355,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/boar_prime_stock.5e8a5ba1520169c7a99c738624328d26.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "boar_prime_set"
     },
@@ -17382,7 +17382,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/sicarus_prime_barrel.e7c07172e6d63d49ae349d508c56fc85.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "sicarus_prime_set"
     },
@@ -17409,7 +17409,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/sicarus_prime_receiver.e7c07172e6d63d49ae349d508c56fc85.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "sicarus_prime_set"
     },
@@ -17436,7 +17436,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/vasto_prime_barrel.213e4b3b9b3be0f4facb77fd5242b6a4.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "vasto_prime_set"
     },
@@ -17463,7 +17463,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/vasto_prime_receiver.213e4b3b9b3be0f4facb77fd5242b6a4.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "vasto_prime_set"
     },
@@ -17504,7 +17504,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ballistica_prime_lower_limb.4ed33348008ace40406d0383f692ecac.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_limb_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "ballistica_prime_set"
     },
@@ -17517,7 +17517,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ballistica_prime_receiver.4ed33348008ace40406d0383f692ecac.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "ballistica_prime_set"
     },
@@ -17530,7 +17530,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ballistica_prime_string.4ed33348008ace40406d0383f692ecac.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_string_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "ballistica_prime_set"
     },
@@ -17543,7 +17543,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/ballistica_prime_upper_limb.4ed33348008ace40406d0383f692ecac.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_limb_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "ballistica_prime_set"
     },
@@ -17570,7 +17570,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/fang_prime_blade.13b0c690a76382d0fbdebe84e4c509db.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_blade_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "fang_prime_set"
     },
@@ -17597,7 +17597,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/fang_prime_handle.13b0c690a76382d0fbdebe84e4c509db.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_handle_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "fang_prime_set"
     },
@@ -17638,7 +17638,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/bo_prime_handle.fad65cfb95d62a4275be60be30375846.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_handle_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "bo_prime_set"
     },
@@ -17651,7 +17651,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/bo_prime_ornament.fad65cfb95d62a4275be60be30375846.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_ornament_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "bo_prime_set"
     },
@@ -17692,7 +17692,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/paris_prime_grip.971f957f8304ce10617836343d47b238.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_grip_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "paris_prime_set"
     },
@@ -17705,7 +17705,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/paris_prime_lower_limb.971f957f8304ce10617836343d47b238.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_limb_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "paris_prime_set"
     },
@@ -17718,7 +17718,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/paris_prime_string.971f957f8304ce10617836343d47b238.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_string_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "paris_prime_set"
     },
@@ -17731,7 +17731,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/paris_prime_upper_limb.971f957f8304ce10617836343d47b238.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_limb_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "paris_prime_set"
     },
@@ -17772,7 +17772,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/aklex_prime_link.d4be2f3e545d5e1101d5b83a027e68fe.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_link_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "aklex_prime_set"
     },
@@ -17799,7 +17799,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/dual_kamas_prime_blade.7d95cad6d71a59fa98902cc8bfe87da2.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_blade_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "dual_kamas_prime_set"
     },
@@ -17826,7 +17826,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/dual_kamas_prime_handle.7d95cad6d71a59fa98902cc8bfe87da2.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_handle_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "dual_kamas_prime_set"
     },
@@ -17853,7 +17853,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/glaive_prime_blade.17767ab370f143a315df90177995ef92.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_blade_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "glaive_prime_set"
     },
@@ -17880,7 +17880,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/glaive_prime_disc.17767ab370f143a315df90177995ef92.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_disc_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "glaive_prime_set"
     },
@@ -17907,7 +17907,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nikana_prime_blade.2daac0807a52385bfcf62f71075f2221.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_blade_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "nikana_prime_set"
     },
@@ -17934,7 +17934,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/nikana_prime_hilt.2daac0807a52385bfcf62f71075f2221.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_handle_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "nikana_prime_set"
     },
@@ -17961,7 +17961,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/rubico_prime_barrel.2071211bc2436d4e768dbb61f98f6efd.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "rubico_prime_set"
     },
@@ -17988,7 +17988,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/rubico_prime_receiver.2071211bc2436d4e768dbb61f98f6efd.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "rubico_prime_set"
     },
@@ -18001,7 +18001,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/rubico_prime_stock.2071211bc2436d4e768dbb61f98f6efd.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "rubico_prime_set"
     },
@@ -18028,7 +18028,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/soma_prime_barrel.1bf4937a6c2106c373cffeb93b1c87e0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "soma_prime_set"
     },
@@ -18055,7 +18055,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/soma_prime_receiver.1bf4937a6c2106c373cffeb93b1c87e0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "soma_prime_set"
     },
@@ -18068,7 +18068,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/soma_prime_stock.1bf4937a6c2106c373cffeb93b1c87e0.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "soma_prime_set"
     },
@@ -18095,7 +18095,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/kronen_prime_blade.09023145e06199878b94a9c664e95ce7.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_blade_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "kronen_prime_set"
     },
@@ -18122,7 +18122,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/kronen_prime_handle.09023145e06199878b94a9c664e95ce7.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_handle_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "kronen_prime_set"
     },
@@ -18149,7 +18149,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/redeemer_prime_blade.92fcede37c1ab66d22a2287dc2334731.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_blade_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "redeemer_prime_set"
     },
@@ -18176,7 +18176,7 @@
         "weapon",
         "prime"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/redeemer_prime_handle.92fcede37c1ab66d22a2287dc2334731.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_handle_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "redeemer_prime_set"
     },
@@ -18203,7 +18203,7 @@
         "weapon",
         "component"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/acceltra_prime_barrel.b826cc938ba700ff8d8f07d2b38051f7.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "acceltra_prime_set"
     },
@@ -18230,7 +18230,7 @@
         "weapon",
         "component"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/acceltra_prime_receiver.b826cc938ba700ff8d8f07d2b38051f7.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "acceltra_prime_set"
     },
@@ -18243,7 +18243,7 @@
         "weapon",
         "component"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/acceltra_prime_stock.b826cc938ba700ff8d8f07d2b38051f7.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "acceltra_prime_set"
     },
@@ -18270,7 +18270,7 @@
         "prime",
         "weapon"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/epitaph_prime_barrel.a81cadf3c1f6e67c92c188534ced77b2.webp",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "epitaph_prime_set"
     },
@@ -18297,7 +18297,7 @@
         "prime",
         "weapon"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/epitaph_prime_receiver.a81cadf3c1f6e67c92c188534ced77b2.webp",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "epitaph_prime_set"
     },
@@ -18324,7 +18324,7 @@
         "component",
         "weapon"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/fulmin_prime_barrel.a7295ff536f9f735088ebb3adc7c5958.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_barrel_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "fulmin_prime_set"
     },
@@ -18351,7 +18351,7 @@
         "component",
         "weapon"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/fulmin_prime_receiver.a7295ff536f9f735088ebb3adc7c5958.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_receiver_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "fulmin_prime_set"
     },
@@ -18364,7 +18364,7 @@
         "component",
         "weapon"
       ],
-      "icon_url": "https://warframe.market/static/assets/items/images/en/fulmin_prime_stock.a7295ff536f9f735088ebb3adc7c5958.png",
+      "icon_url": "https://warframe.market/static/assets/sub_icons/weapon/prime_stock_128x128.png",
       "description": "Деталь прайм-зброї.",
       "set_group": "fulmin_prime_set"
     },

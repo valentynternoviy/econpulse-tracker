@@ -90,13 +90,23 @@
          WARFRAME: АТМОСФЕРНИЙ ФОТО-БАНЕР З ПОШУКОМ (ЯК НА WARFRAME.MARKET)
          ================================================================ -->
     <section id="wf-hero-banner" class="wf-hero hidden">
-      <img class="wf-hero-bg" src="/static/img/warframe_banner.jpg" alt="Warframe Market" />
-      <div class="wf-hero-overlay"></div>
+      <div class="wf-hero-bg-clip">
+        <img class="wf-hero-bg" src="/static/img/warframe_banner.jpg" alt="Warframe Market" />
+        <div class="wf-hero-overlay"></div>
+      </div>
       <div class="wf-hero-content">
         <div class="wf-hero-brand">WARFRAME MARKET · МОНІТОРИНГ</div>
-        <div class="wf-search-bar">
-          <input id="wf-search-input" type="search" placeholder="Пошук предмета..." />
-          <button class="wf-search-btn" id="wf-search-btn" title="Знайти">🔍</button>
+        <div class="wf-search-wrap">
+          <div class="wf-search-bar">
+            <input id="wf-search-input" type="search" autocomplete="off" placeholder="Пошук предмета..." />
+            <button class="wf-search-btn" id="wf-search-btn" title="Знайти" aria-label="Знайти">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="7"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+          </div>
+          <div id="wf-search-suggestions" class="wf-suggestions hidden"></div>
         </div>
         <div class="wf-hero-stats">
           <span id="wf-stat-items">—</span>
@@ -126,7 +136,12 @@
             <div class="rust-bar-center">
               <button class="rust-select-item-btn" id="btn-rust-select-item">
                 <span id="rust-selected-pill-content">Обрати предмет</span>
-                <span class="rust-search-ico">🔍</span>
+                <span class="rust-search-ico">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </span>
               </button>
               <button class="rust-clear-item-btn hidden" id="btn-rust-clear-item" title="Скинути обраний предмет">×</button>
             </div>
@@ -359,6 +374,13 @@
            ВКЛАДКА: СПОСТЕРЕЖЕННЯ ТА СПОВІЩЕННЯ
            ============================================================== -->
       <section id="tab-alerts" class="tab-panel hidden">
+        <div class="toolbar">
+          <div class="universe-switch" id="alerts-game-filter">
+            <button type="button" class="universe-btn active" data-alert-game="">Усі ігри</button>
+            <button type="button" class="universe-btn" data-alert-game="warframe">Warframe</button>
+            <button type="button" class="universe-btn" data-alert-game="rust">Rust</button>
+          </div>
+        </div>
         <div class="grid-2">
           <div class="card">
             <div class="card-header"><h3>Список спостереження (Пороги)</h3></div>
@@ -443,7 +465,17 @@
             <div class="table-wrap">
               <table>
                 <thead>
-                  <tr><th>Майданчик</th><th>Ориг. ціна</th><th>У USD</th><th>Лоти</th></tr>
+                  <tr>
+                    <th>Майданчик</th>
+                    <th>Ориг. ціна</th>
+                    <th>
+                      <div class="col-cur-switch" id="modal-currency-switch" title="Перемкнути валюту відображення (USD / UAH)">
+                        <button type="button" class="col-cur-btn active" data-cur="USD">У USD</button>
+                        <button type="button" class="col-cur-btn" data-cur="UAH">У UAH</button>
+                      </div>
+                    </th>
+                    <th>Лоти</th>
+                  </tr>
                 </thead>
                 <tbody id="modal-markets-tbody"></tbody>
               </table>
@@ -476,6 +508,15 @@
           <button class="universe-btn" data-step="hour">Година</button>
           <button class="universe-btn active" data-step="day">Доба</button>
           <button class="universe-btn" data-step="week">Тиждень</button>
+        </div>
+
+        <div class="ma7-info-wrap">
+          <button type="button" class="ma7-help-btn" id="btn-ma7-help" aria-expanded="false">
+            <span class="ma7-dot"></span> Ковзне середнє (MA-7) — що це?
+          </button>
+          <div class="ma7-popover hidden" id="ma7-popover">
+            <strong>Ковзне середнє за 7 діб (MA-7)</strong> — це середня ринкова ціна предмета за останній тиждень. Вона згладжує випадкові денні стрибки й допомагає оцінити справедливу вартість. Якщо поточна ціна відхиляється від MA-7 більш ніж на ±20%, система автоматично фіксує цінову аномалію.
+          </div>
         </div>
       </div>
 

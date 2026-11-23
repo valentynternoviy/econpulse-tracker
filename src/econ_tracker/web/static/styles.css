@@ -455,8 +455,16 @@ tbody tr.clickable:hover td { background: var(--surface-2); }
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  overflow: visible;
+  z-index: 40;
   border-bottom: 1px solid var(--border);
+}
+
+.wf-hero-bg-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .wf-hero-bg {
@@ -465,21 +473,21 @@ tbody tr.clickable:hover td { background: var(--surface-2); }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 28%;
-  filter: brightness(0.62);
+  object-position: center 45%;
+  filter: brightness(0.72);
 }
 
 .wf-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(19, 24, 27, 0.38), rgba(19, 24, 27, 0.92));
+  background: linear-gradient(to bottom, rgba(19, 24, 27, 0.36), rgba(19, 24, 27, 0.90));
 }
 
 .wf-hero-content {
   position: relative;
-  z-index: 3;
+  z-index: 5;
   width: 100%;
-  max-width: 660px;
+  max-width: 680px;
   padding: 28px 20px;
   text-align: center;
 }
@@ -492,13 +500,22 @@ tbody tr.clickable:hover td { background: var(--surface-2); }
   margin-bottom: 14px;
 }
 
+.wf-search-wrap {
+  position: relative;
+}
+
 .wf-search-bar {
   display: flex;
-  background: rgba(15, 20, 23, 0.92);
+  background: rgba(15, 20, 23, 0.94);
   border: 1px solid #354750;
-  border-radius: 4px;
+  border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  transition: border-color 0.16s ease;
+}
+
+.wf-search-bar:focus-within {
+  border-color: var(--accent);
 }
 
 .wf-search-bar input {
@@ -512,14 +529,121 @@ tbody tr.clickable:hover td { background: var(--surface-2); }
 }
 
 .wf-search-btn {
-  width: 50px;
+  width: 52px;
   border: none;
   background: var(--accent);
   color: #ffffff;
-  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: background 0.15s ease;
 }
 .wf-search-btn:hover { background: var(--accent-hover); }
+
+/* Warframe.market-style Live Search Autocomplete Dropdown */
+.wf-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 120;
+  max-height: 340px;
+  overflow-y: auto;
+  background: #171f24;
+  border: 1px solid #354750;
+  border-radius: 5px;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.68);
+  text-align: left;
+}
+
+.wf-sug-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s ease;
+}
+.wf-sug-item:last-child { border-bottom: none; }
+.wf-sug-item:hover,
+.wf-sug-item.active {
+  background: #222e35;
+}
+
+.wf-sug-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.wf-sug-ico {
+  width: 34px;
+  height: 34px;
+  border-radius: 4px;
+  background: #101619;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.wf-sug-ico img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.wf-sug-uk {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #edf4f7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wf-sug-en {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+mark.wf-hl {
+  background: transparent;
+  color: #3cc6d8;
+  font-weight: 700;
+}
+
+.wf-sug-price {
+  font-size: 12px;
+  font-weight: 700;
+  color: #d6a4e6;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.wf-sug-empty {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
 
 .wf-hero-stats {
   margin-top: 12px;
@@ -1026,13 +1150,21 @@ tbody tr.clickable:hover td { background: var(--surface-2); }
 .toolbar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
 
 .info-banner {
-  padding: 12px 16px;
+  padding: 13px 16px;
   margin-bottom: 16px;
   border-radius: var(--radius);
   background: var(--surface);
-  border-left: 3px solid var(--accent);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-card);
   color: var(--text-muted);
   font-size: 13px;
+  line-height: 1.5;
+}
+
+.rust-search-ico {
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-muted);
 }
 
 /* Modal */
@@ -1112,19 +1244,135 @@ tbody tr.clickable:hover td { background: var(--surface-2); }
   filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.75));
 }
 
+.detail-art-stage.wf-bp-stage {
+  background-image:
+    linear-gradient(rgba(63, 142, 163, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(63, 142, 163, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 50% 45%, #1d2d35, #0f1518);
+  background-size: 24px 24px, 24px 24px, 100% 100%;
+}
+
+.wf-portrait-fade {
+  -webkit-mask-image: linear-gradient(to bottom, #000000 72%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000000 72%, transparent 100%);
+}
+
 .meta-kv-table td:first-child { color: var(--text-muted); width: 45%; }
 .meta-kv-table td:last-child { font-weight: 500; text-align: right; }
 
 .item-desc-box {
-  padding: 12px 14px;
-  border-radius: var(--radius);
-  background: var(--stage);
-  border-left: 3px solid var(--accent);
-  color: #cbd5e1;
-  font-size: 13px;
-  line-height: 1.55;
-  white-space: pre-line;
+  padding: 13px 16px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border);
+  color: #edf2f5;
+  font-size: 13.5px;
+  line-height: 1.58;
   margin-bottom: 14px;
+}
+
+.item-desc-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.item-desc-text {
+  white-space: pre-line;
+  font-weight: 400;
+}
+
+.item-desc-text .stat-val {
+  color: #79d2e6;
+  font-weight: 700;
+}
+
+/* Inline USD / UAH switcher inside market table header */
+.col-cur-switch {
+  display: inline-flex;
+  align-items: center;
+  background: var(--stage);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.col-cur-btn {
+  padding: 2px 7px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.14s ease;
+}
+
+.col-cur-btn:hover { color: var(--text); }
+.col-cur-btn.active {
+  background: var(--accent);
+  color: #ffffff;
+}
+
+/* MA-7 explanation popover */
+.ma7-info-wrap {
+  position: relative;
+}
+
+.ma7-help-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 11px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--stage);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.ma7-help-btn:hover {
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.ma7-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #d4a94e;
+  display: inline-block;
+}
+
+.ma7-popover {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  width: 340px;
+  max-width: calc(100vw - 48px);
+  padding: 12px 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.65);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text);
+  z-index: 250;
+}
+
+.ma7-popover strong {
+  color: #e6c273;
+  display: block;
+  margin-bottom: 4px;
 }
 
 /* Related set parts inside Warframe item modal */

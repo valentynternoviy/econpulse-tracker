@@ -243,11 +243,20 @@ class WatchItemResponse(BaseModel):
 class AlertResponse(BaseModel):
     id: int
     watch_item_id: int
+    item_id: int = 0
+    game_code: str = ""
     snapshot_id: int
     triggered_price: Decimal
     message: str
     is_read: bool
     created_at: datetime
+
+
+class FxRatesResponse(BaseModel):
+    usd_to_uah: Decimal
+    eur_to_usd: Decimal
+    plt_to_usd: Decimal
+    source: str
 
 
 # ---------- Portfolio & Trades (Key State Operation) ----------

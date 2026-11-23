@@ -219,6 +219,8 @@ class AlertORM(Base):
         DateTime(timezone=True), nullable=False, default=_utcnow
     )
 
+    watch_item: Mapped[WatchItemORM] = relationship()
+
 
 class TradeORM(Base):
     """User portfolio buy/sell trade with idempotency key."""

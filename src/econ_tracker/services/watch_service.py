@@ -125,6 +125,11 @@ class WatchService:
     ) -> list[AlertResponse]:
         stmt = (
             select(AlertORM)
+            .options(
+                selectinload(AlertORM.watch_item)
+                .selectinload(WatchItemORM.item)
+                .selectinload(ItemORM.game)
+            )
             .where(AlertORM.user_id == user_id)
             .order_by(AlertORM.created_at.desc())
             .limit(200)
@@ -142,13 +147,18 @@ class WatchService:
         alert_id: int,
     ) -> AlertResponse:
         alert = await session.scalar(
-            select(AlertORM).where(AlertORM.id == alert_id, AlertORM.user_id == user_id)
+            select(AlertORM)
+            .options(
+                selectinload(AlertORM.watch_item)
+                .selectinload(WatchItemORM.item)
+                .selectinload(ItemORM.game)
+            )
+            .where(AlertORM.id == alert_id, AlertORM.user_id == user_id)
         )
         if alert is None:
             raise ResourceNotFoundError(f"Alert #{alert_id} not found")
         alert.is_read = True
         await session.commit()
-        await session.refresh(alert)
         return _to_alert_response(alert)
 
     async def _load_watch(
@@ -188,9 +198,14 @@ def _to_watch_response(w: WatchItemORM) -> WatchItemResponse:
 
 
 def _to_alert_response(a: AlertORM) -> AlertResponse:
+    watch = a.watch_item
+    item = watch.item if watch else None
+    game_code = item.game.code if item and item.game else ""
     return AlertResponse(
         id=a.id,
         watch_item_id=a.watch_item_id,
+        item_id=watch.item_id if watch else 0,
+        game_code=game_code,
         snapshot_id=a.snapshot_id,
         triggered_price=Decimal(a.triggered_price),
         message=a.message,

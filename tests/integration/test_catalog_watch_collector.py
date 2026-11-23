@@ -136,13 +136,22 @@ async def test_watchlist_crud_dedup_and_alerts_flow(
     assert r_patch.status_code == 200
     assert r_patch.json()["threshold"] == "420.5000"
 
-    # List alerts & mark read
+    # List alerts & mark read (verify item_id & game_code populated for clickable rows)
     alerts = (await client.get("/api/v1/alerts?unread=true", headers=headers)).json()
     assert len(alerts) >= 1
+    assert alerts[0]["item_id"] > 0
+    assert alerts[0]["game_code"] in {"warframe", "rust"}
     aid = alerts[0]["id"]
     r_read = await client.post(f"/api/v1/alerts/{aid}/read", headers=headers)
     assert r_read.status_code == 200
     assert r_read.json()["is_read"] is True
+
+    # Live/fallback FX rates endpoint for USD/UAH currency switching
+    fx_resp = await client.get("/api/v1/fx-rates")
+    assert fx_resp.status_code == 200
+    fx_data = fx_resp.json()
+    assert float(fx_data["usd_to_uah"]) > 0
+    assert float(fx_data["eur_to_usd"]) > 0
 
     # Delete watch -> 204
     assert (await client.delete(f"/api/v1/watch/{watch_id}", headers=headers)).status_code == 204
