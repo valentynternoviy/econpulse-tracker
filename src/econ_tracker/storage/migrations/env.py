@@ -11,8 +11,8 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from econ_tracker.config import get_settings
-from econ_tracker.storage.database import Base
 from econ_tracker.storage import orm_models  # noqa: F401
+from econ_tracker.storage.database import Base
 
 config = context.config
 

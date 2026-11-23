@@ -282,14 +282,11 @@ def should_trigger_watch(
     ):
         return False
 
-    if (
+    return not (
         last_alert_at is not None
         and cooldown_minutes > 0
         and now - last_alert_at < timedelta(minutes=cooldown_minutes)
-    ):
-        return False
-
-    return True
+    )
 
 
 def evaluate_anomaly(
