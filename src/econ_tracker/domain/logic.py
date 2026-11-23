@@ -39,13 +39,47 @@ def convert_currency(amount: Decimal, rate_to_usd: Decimal) -> Decimal:
     return (amount * rate_to_usd).quantize(_FOUR_PLACES, rounding=ROUND_HALF_UP)
 
 
+def _matches_any(low: str, tokens: tuple[str, ...]) -> bool:
+    for token in tokens:
+        if len(token) <= 4 and " " not in token:
+            if re.search(rf"\b{re.escape(token)}\b", low):
+                return True
+        elif token in low:
+            return True
+    return False
+
+
 def classify_rust_item(name: str) -> tuple[str, str, str]:
     """Classify a Rust skin name into (category, subcategory, rarity)."""
     low = name.lower()
 
-    # Subcategory & category rules matching Rust Labs / Steam Market taxonomy
+    # Check specific tools & deployables before short apparel tokens
+    tools_map: list[tuple[tuple[str, ...], str]] = [
+        (("hatchet", "axe"), "hatchet"),
+        (("pickaxe", "pick"), "pickaxe"),
+        (("rock",), "rock"),
+        (("hammer", "jackhammer"), "hammer"),
+        (("satchel", "c4", "explosive"), "raiding"),
+    ]
+    for tokens, sub in tools_map:
+        if _matches_any(low, tokens):
+            return ("tools", sub, _infer_rust_rarity(low))
+
+    deployables_map: list[tuple[tuple[str, ...], str]] = [
+        (("garage door",), "garage_door"),
+        (("armored door", "armoured door", "double door"), "armored_door"),
+        (("sheet metal door", "metal door", "wooden door", "door"), "sheet_metal_door"),
+        (("furnace",), "furnace"),
+        (("large wood box", "large box", "wood box", "small box", "box", "chest"), "storage_box"),
+        (("sleeping bag", "bag", "bed"), "sleeping_bag"),
+        (("rug", "carpet", "table", "chair", "fridge", "vending", "locker"), "base_decor"),
+    ]
+    for tokens, sub in deployables_map:
+        if _matches_any(low, tokens):
+            return ("deployables", sub, _infer_rust_rarity(low))
+
     weapons_map: list[tuple[tuple[str, ...], str]] = [
-        (("ak47", "ak-47", "assault rifle", " ar", "ar "), "ak47"),
+        (("ak47", "ak-47", "assault rifle", "ar"), "ak47"),
         (("mp5",), "mp5"),
         (("lr-300", "lr300"), "lr300"),
         (("thompson",), "thompson"),
@@ -53,13 +87,13 @@ def classify_rust_item(name: str) -> tuple[str, str, str]:
         (("bolt", "l96"), "sniper"),
         (("smg", "custom smg"), "custom_smg"),
         (("python", "revolver", "pistol", "m92", "sap", "eoka"), "pistol"),
-        (("shotgun", "pump", "db ", "double barrel", "spas"), "shotgun"),
+        (("shotgun", "pump", "db", "double barrel", "spas"), "shotgun"),
         (("rocket", "launcher", "m249", "hmlmg"), "heavy"),
         (("bow", "crossbow"), "bow"),
         (("sword", "combat knife", "knife", "machete", "cleaver"), "melee"),
     ]
     for tokens, sub in weapons_map:
-        if any(t in low for t in tokens):
+        if _matches_any(low, tokens):
             return ("weapons", sub, _infer_rust_rarity(low))
 
     clothing_map: list[tuple[tuple[str, ...], str]] = [
@@ -76,32 +110,8 @@ def classify_rust_item(name: str) -> tuple[str, str, str]:
         (("hazmat",), "hazmat"),
     ]
     for tokens, sub in clothing_map:
-        if any(t in low for t in tokens):
+        if _matches_any(low, tokens):
             return ("clothing", sub, _infer_rust_rarity(low))
-
-    deployables_map: list[tuple[tuple[str, ...], str]] = [
-        (("garage door",), "garage_door"),
-        (("armored door", "armoured door", "double door"), "armored_door"),
-        (("sheet metal door", "metal door", "wooden door", "door"), "sheet_metal_door"),
-        (("furnace",), "furnace"),
-        (("large wood box", "large box", "wood box", "small box", "box", "chest"), "storage_box"),
-        (("sleeping bag", "bag", "bed"), "sleeping_bag"),
-        (("rug", "carpet", "table", "chair", "fridge", "vending", "locker"), "base_decor"),
-    ]
-    for tokens, sub in deployables_map:
-        if any(t in low for t in tokens):
-            return ("deployables", sub, _infer_rust_rarity(low))
-
-    tools_map: list[tuple[tuple[str, ...], str]] = [
-        (("hatchet", "axe"), "hatchet"),
-        (("pickaxe", "pick"), "pickaxe"),
-        (("rock",), "rock"),
-        (("hammer", "jackhammer"), "hammer"),
-        (("satchel", "c4", "explosive"), "raiding"),
-    ]
-    for tokens, sub in tools_map:
-        if any(t in low for t in tokens):
-            return ("tools", sub, _infer_rust_rarity(low))
 
     return ("other", "misc", _infer_rust_rarity(low))
 

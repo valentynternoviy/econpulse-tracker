@@ -54,7 +54,7 @@ select = [
 ignore = ["B008", "RUF001", "RUF002", "RUF003"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["econ_tracker"]
+known-first-party = ["econ_tracker", "tests"]
 
 [tool.ruff.lint.per-file-ignores]
 "src/econ_tracker/storage/seed.py" = ["E501"]
