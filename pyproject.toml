@@ -42,6 +42,14 @@ econ-cli = "econ_tracker.cli:app"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+econ_tracker = [
+    "web/index.html",
+    "web/static/*",
+    "web/static/img/*",
+    "storage/real_catalog_cache.json",
+]
+
 [tool.ruff]
 target-version = "py312"
 line-length = 100
